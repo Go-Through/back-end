@@ -1,19 +1,7 @@
-const axios = require('axios');
-const fs = require('fs');
 const util = require('util');
-
-const url = 'http://api.visitkorea.or.kr/openapi/service/rest/KorService';
-const dataResult = JSON.parse(fs.readFileSync('../service-key.json', 'utf8'));
-const baseParams = {
-  params: {
-    ServiceKey: dataResult.key,
-    numOfRows: '100',
-    pageNo: '1',
-    MobileOS: 'ETC',
-    MobileApp: 'AppTest',
-    _type: 'json',
-  },
-};
+const {
+  models, baseParams, callService,
+} = require('./init-module');
 
 const contentTypeIds = [
   { id: 12, name: '관광지' },
@@ -25,23 +13,6 @@ const contentTypeIds = [
   { id: 38, name: '쇼핑' },
   { id: 39, name: '음식' },
 ];
-
-async function callService(service, params) {
-  let resultItem;
-  try {
-    const axiosResult = await axios.get(`${url}/${service}`, params);
-    if (axiosResult.data.response.header.resultCode === '0000') {
-      resultItem = axiosResult.data.response.body.items.item;
-    } else {
-      console.log(axiosResult.data.response.header);
-      resultItem = null;
-    }
-  } catch (err) {
-    console.error(err.message);
-    resultItem = null;
-  }
-  return resultItem;
-}
 
 async function callFullLocation() {
   const service = 'areaCode';
@@ -56,7 +27,7 @@ async function callFullLocation() {
       areaFirsts.push(item);
     }
   } else {
-    console.log('axios error');
+    console.error('axios error');
     return null;
   }
 
@@ -67,18 +38,20 @@ async function callFullLocation() {
       const info = {};
       info.areaCode = area.code;
       info.areaName = area.name;
-      info.sigungu = resultItem;
+      info.sigungu = [];
+      if (Array.isArray(resultItem)) {
+        info.sigungu = resultItem;
+      } else {
+        info.sigungu.push(resultItem);
+      }
       areas.push(info);
     } else {
-      console.log('axios error');
+      console.error('axios error');
       return null;
     }
   }
   return areas;
 }
-/* callFullLocation().then((result) => {
-  console.log(util.inspect(result, false, null, true));
-}); */
 
 async function callFullCategory(categoryParams) {
   const service = 'categoryCode';
@@ -98,7 +71,7 @@ async function callFullCategory(categoryParams) {
       firstCats.push(resultItem);
     }
   } else {
-    console.log('Axios Error');
+    console.error('axios error');
     return null;
   }
 
@@ -119,7 +92,7 @@ async function callFullCategory(categoryParams) {
       }
       secondCats.push(info);
     } else {
-      console.log('Axios Error');
+      console.error('axios error');
       return null;
     }
   }
@@ -135,7 +108,12 @@ async function callFullCategory(categoryParams) {
         info.name1 = sCat.name1;
         info.cat2 = ssCat.code;
         info.name2 = ssCat.name;
-        info.cat3 = resultItem;
+        info.cat3 = [];
+        if (Array.isArray(resultItem)) {
+          info.cat3 = resultItem;
+        } else {
+          info.cat3.push(resultItem);
+        }
         fullCats.push(info);
       } else {
         console.log('Axios Error');
@@ -146,7 +124,7 @@ async function callFullCategory(categoryParams) {
   return fullCats;
 }
 
-async function contentAllCategory(contentArr) {
+async function callContentAllCategory(contentArr) {
   const allContentCats = [];
   for (const content of contentArr) {
     const categoryParams = JSON.parse(JSON.stringify(baseParams));
@@ -159,9 +137,83 @@ async function contentAllCategory(contentArr) {
   }
   return allContentCats;
 }
-/* contentAllCategory(contentTypeIds).then((result) => {
-  console.log(util.inspect(result, false, null, true));
-}); */
+
+async function findOrCreateCategory(cCode, cName) {
+  try {
+    await models.tourCategory.findOrCreate({
+      where: {
+        categoryCode: cCode,
+      },
+      defaults: {
+        categoryCode: cCode,
+        categoryName: cName,
+      },
+    });
+  } catch (err) {
+    console.error('findOrCreateCategory() error');
+    console.error(err.message);
+    throw err;
+  }
+}
+
+async function createTourInfo() {
+  const areaResult = await callFullLocation();
+  console.log(util.inspect(areaResult, false, null, true));
+  const contentCategorys = await callContentAllCategory(contentTypeIds);
+  console.log(util.inspect(contentCategorys, false, null, true));
+  try {
+    for (const areaInfo of areaResult) {
+      await models.tourArea.create({
+        areaCode: areaInfo.areaCode,
+        areaName: areaInfo.areaName,
+        sigunguCode: null,
+        sigunguName: null,
+      });
+      for (const sigunguInfo of areaInfo.sigungu) {
+        await models.tourArea.create({
+          areaCode: areaInfo.areaCode,
+          areaName: areaInfo.areaName,
+          sigunguCode: sigunguInfo.code,
+          sigunguName: sigunguInfo.name,
+        });
+      }
+    }
+    for (const contentInfo of contentCategorys) {
+      const categoryInfo = {
+        cat1: [],
+        cat2: [],
+        cat3: [],
+      };
+      const categorySet1 = new Set();
+      const categorySet2 = new Set();
+      const category3 = [];
+      for (const category of contentInfo.categorys) {
+        await findOrCreateCategory(category.cat1, category.name1);
+        categorySet1.add(category.cat1);
+        await findOrCreateCategory(category.cat2, category.name2);
+        categorySet2.add(category.cat2);
+        for (const item of category.cat3) {
+          await findOrCreateCategory(item.code, item.name);
+          category3.push(item.code);
+        }
+      }
+      categoryInfo.cat1 = Array.from(categorySet1);
+      categoryInfo.cat2 = Array.from(categorySet2);
+      categoryInfo.cat3 = category3;
+      await models.tourContent.create({
+        contentCode: contentInfo.contentId,
+        contentName: contentInfo.contentName,
+        category: categoryInfo,
+      });
+    }
+    return true;
+  } catch (err) {
+    console.error('createTourInfo() error');
+    console.error(err.message);
+    throw err;
+  }
+}
 
 module.exports = {
+  createTourInfo,
 };
