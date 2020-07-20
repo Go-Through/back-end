@@ -1,9 +1,9 @@
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define('tourArea', {
     areaCode: {
-      field: 'area_code', // column 이름
-      type: DataTypes.INTEGER, // 데이터 타입
-      allowNull: false, // Null 허용
+      field: 'area_code',
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
     areaName: {
       field: 'area_name',

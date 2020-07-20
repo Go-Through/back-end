@@ -29,3 +29,8 @@ CREATE DATABASE 데이타베이스_이름 DEFAULT CHARACTER SET utf8 COLLATE utf
 git rm -r --cached .
 ```
 을 한 뒤 .gitignore 에 추가
+
+5. passport.js
+```shell script
+npm install --save passport passport-local express-session
+```

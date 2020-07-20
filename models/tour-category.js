@@ -1,9 +1,9 @@
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define('tourCategory', {
     categoryCode: {
-      field: 'category_code', // column 이름
-      type: DataTypes.STRING, // 데이터 타입
-      allowNull: false, // Null 허용
+      field: 'category_code',
+      type: DataTypes.STRING,
+      allowNull: false,
       primaryKey: true,
     },
     categoryName: {

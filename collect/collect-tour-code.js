@@ -1,7 +1,7 @@
 const util = require('util');
 const {
   models, baseParams, callService,
-} = require('./init-module');
+} = require('../service/init-module');
 
 const contentTypeIds = [
   { id: 12, name: '관광지' },

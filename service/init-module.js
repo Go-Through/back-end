@@ -11,7 +11,7 @@ const baseParams = {
     numOfRows: '100',
     pageNo: '1',
     MobileOS: 'ETC',
-    MobileApp: 'AppTest',
+    MobileApp: 'KN-Trip',
     _type: 'json',
   },
 };

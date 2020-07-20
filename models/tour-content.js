@@ -1,9 +1,9 @@
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define('tourContent', {
     contentCode: {
-      field: 'content_code', // column 이름
-      type: DataTypes.INTEGER, // 데이터 타입
-      allowNull: false, // Null 허용
+      field: 'content_code',
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
     contentName: {
       field: 'content_name',
