@@ -7,6 +7,7 @@ const logger = require('morgan');
 const passport = require('passport');
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
+const fs = require('fs');
 
 const env = 'envForSession';
 const options = require(`${__dirname}/config/config.json`)[env];
@@ -16,7 +17,7 @@ const passportConfig = require('./passport');
 const commonModule = require('./service/init-module');
 const indexRouter = require('./routes/index');
 
-const { generateKey } = require('./session-key');
+const secretResult = JSON.parse(fs.readFileSync(`${__dirname}/session-key.json`, 'utf8'));
 
 const app = express();
 
@@ -33,10 +34,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(session({
-  secret: generateKey(),
+  secret: secretResult.secret,
   resave: false,
   saveUninitialized: true,
   store: sessionStore,
+  cookie: { maxAge: 2 * 60 * 60 * 1000 },
 }));
 app.use(passport.initialize());
 app.use(passport.session());

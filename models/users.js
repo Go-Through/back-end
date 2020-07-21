@@ -9,28 +9,21 @@ module.exports = (sequelize, DataTypes) => {
     memID: {
       field: 'mem_id',
       type: DataTypes.STRING,
-      allowNull: true,
-      unique: true,
+      allowNull: false,
+    },
+    socialType: {
+      field: 'social_type',
+      type: DataTypes.STRING, // naver, kakao
+      allowNull: false,
     },
     memPW: {
       field: 'mem_pw',
       type: DataTypes.STRING,
       allowNull: true,
     },
-    socialFlag: {
-      field: 'social_flag',
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: false,
-    },
-    socialID: {
-      field: 'social_id',
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
     withID: {
       field: 'with_id',
-      type: DataTypes.STRING,
+      type: DataTypes.JSON, // ID, social type 함께
       allowNull: true,
     },
     testIdx: {

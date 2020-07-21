@@ -1,7 +1,38 @@
 const bcrypt = require('bcrypt');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const NaverStrategy = require('passport-naver').Strategy;
+const KakaoStrategy = require('passport-kakao').Strategy;
+const fs = require('fs');
 const { users } = require('./models');
+
+const authConfig = JSON.parse(fs.readFileSync(`${__dirname}/config/federated.json`, 'utf8'));
+
+async function loginByThirdparty(info, done) {
+  console.log(`process: ${info.auth_type}`);
+  const sqlResult = await users.findOne({
+    where: {
+      memID: info.auth_id,
+      socialType: info.auth_type,
+    },
+  });
+  if (sqlResult) {
+    console.log('Old User'); // 기존 유저 로그인 처리
+    done(null, {
+      user_id: sqlResult.dataValue.memID,
+      nickname: sqlResult.dataValue.nickname,
+    });
+  } else { // 신규 유저 회원 가입
+    await users.create({
+      memID: info.auth_id,
+      socialType: info.auth_type,
+    });
+    done(null, {
+      user_id: info.auth_id,
+      nickname: info.nickname,
+    });
+  }
+}
 
 module.exports = () => {
   passport.serializeUser((user, done) => { // Strategy 성공 시 호출
@@ -76,5 +107,39 @@ module.exports = () => {
         message: 'Something went wrong with your sign in',
       });
     });
+  }));
+
+  // accessToken: OAuth token 이용해 오픈 API 호출
+  // refreshToken: token 만료됐을 때 재발급 요청
+  // profile: 사용자 정보
+  // naver sign in
+  passport.use('naver-signin', new NaverStrategy({
+    clientID: authConfig.naver.clientID,
+    clientSecret: authConfig.naver.clientSecret,
+    callbackURL: authConfig.naver.callbackURL,
+    passReqToCallback: true,
+  }, (req, accessToken, refreshToken, profile, done) => {
+    const _profile = profile._json;
+
+    loginByThirdparty({
+      auth_type: 'naver',
+      auth_id: _profile.id,
+    }, done);
+  }));
+
+  // kakao sing in
+  passport.use('kakao-signin', new KakaoStrategy({
+    clientID: authConfig.kakao.clientID,
+    callbackURL: authConfig.kakao.callbackURL,
+    passReqToCallback: true,
+  }, (req, accessToken, refreshToken, profile, done) => {
+    const _profile = profile._json;
+
+    loginByThirdparty({
+      auth_type: 'kakao',
+      auth_id: _profile.id,
+      auth_name: _profile.properties.nickname,
+      auth_email: _profile.id,
+    }, done);
   }));
 };

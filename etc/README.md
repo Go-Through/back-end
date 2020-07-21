@@ -49,13 +49,15 @@ Resource Server: 서비스에 자신의 API 를 제공하는 타사 서비스
 
 Resource Owner: 타사 서비스 API 정보의 주인, 우리가 만든 서비스를 타사 서비스를 통해 이용하려는 사용자
 
-1. Resource Server API 사용 위해 Resource Server 에 등록, Resource Server 는 Client 식별할 수 있는 Client ID, Client Secret 발급
-
-2. Resource Owner 가 우리가 만든 Client 에서 Google 계정으로 로그인을 통해 로그인을 요청
-
-3. Client 는 Resource Owner 에게 Resource Server 의 로그인 창을 띄어줌.
-
-4. Resource Owner 는 Client 가 Resource Server 에 있는 자신의 정보에 접근에 대한 동의를 구하는 창을 보고 동의를 함.
-
-5. Resource Owner 가 Client 에게 Resource Server 에 있는 자신의 정보에 접근 허락 시 Resource Server 는 Client 에게 일련의 암호화 코드를 제공하고 
+1) Resource Server API 사용 위해 Resource Server 에 등록, Resource Server 는 Client 식별할 수 있는 Client ID, Client Secret 발급
+2) Resource Owner 가 우리가 만든 Client 에서 Google 계정으로 로그인을 통해 로그인을 요청
+3) Client 는 Resource Owner 에게 Resource Server 의 로그인 창을 띄어줌.
+4) Resource Owner 는 Client 가 Resource Server 에 있는 자신의 정보에 접근에 대한 동의를 구하는 창을 보고 동의를 함.
+5) Resource Owner 가 Client 에게 Resource Server 에 있는 자신의 정보에 접근 허락 시 Resource Server 는 Client 에게 일련의 암호화 코드를 제공하고 
 이 코드와 함께 해당 정보의 사용 등록을 했는지의 여부를 판단하는 Client ID 와 Client Secret 함께 보내 모든 것이 일치한다면 최종 접근 권한 부여 암호인 Access Token 발급
+
+4. Login 설계
+
+- 로그인이 되어 있지 않은 상태에서 서버 내의 모든 페이지에 접근하면 자동으로 로그인 페이지로 이동
+
+- 로그인 세션은 2시간으로 제한
