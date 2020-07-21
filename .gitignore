@@ -3,4 +3,3 @@ node_modules
 sessions
 config/config.json
 service-key.json
-session-key.json

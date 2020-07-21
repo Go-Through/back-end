@@ -9,7 +9,7 @@ router.get('/', (req, res, next) => {
 });
 
 router.get('/main', (req, res, next) => {
-  res.send('main');
+  res.send('Main');
 });
 
 router.post('/signup', passport.authenticate('local-signup', {
@@ -18,8 +18,18 @@ router.post('/signup', passport.authenticate('local-signup', {
 }));
 
 router.post('/login', passport.authenticate('local-signin', {
-  successRedirect: '/main',
   failureRedirect: '/',
-}));
+}), (req, res) => {
+  req.session.save(() => {
+    res.send(req.user);
+  });
+});
+
+router.get('/logout', (req, res, next) => {
+  req.logout();
+  req.session.save(() => {
+    res.redirect('/');
+  });
+});
 
 module.exports = router;
