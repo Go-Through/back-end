@@ -29,7 +29,7 @@ async function callService(service, params) {
   } catch (err) {
     console.error('callService() error');
     console.error(err.message);
-    return null;
+    throw err;
   }
   return resultItem;
 }
@@ -38,11 +38,11 @@ async function connectDB() {
   try {
     await models.sequelize.sync();
     console.log('DB 연결 성공');
-    return true;
   } catch (err) {
     console.error('connectDB() error');
     throw err;
   }
+  return true;
 }
 connectDB().then(console.log);
 

@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     socialType: {
       field: 'social_type',
-      type: DataTypes.STRING, // naver, kakao
+      type: DataTypes.STRING, // naver, kakao, local
       allowNull: false,
     },
     memPW: {

@@ -3,12 +3,16 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-// const cors = require('cors');
 const passport = require('passport');
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
 const fs = require('fs');
+// const cors = require('cors');
 
+// session key
+const secretResult = JSON.parse(fs.readFileSync(`${__dirname}/session-key.json`, 'utf8'));
+
+// for session database
 const env = 'envForSession';
 const options = require(`${__dirname}/config/config.json`)[env];
 const sessionStore = new MySQLStore(options);
@@ -17,18 +21,18 @@ const passportConfig = require('./passport');
 const commonModule = require('./service/init-module');
 const indexRouter = require('./routes/index');
 
-const secretResult = JSON.parse(fs.readFileSync(`${__dirname}/session-key.json`, 'utf8'));
-
 const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+// CORS 허용
 // app.use(cors);
 /* app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', 'http://127.0.0.1:3000');
 }); */
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -46,6 +50,7 @@ passportConfig();
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Router
 app.use('/', indexRouter);
 
 // catch 404 and forward to error handler

@@ -11,20 +11,21 @@ const authenticateUser = (req, res, next) => {
   }
 };
 
-/* GET home page. */
 router.get('/', (req, res, next) => {
-  res.send('Hello');
+  res.send('Before Login Main');
 });
-
 router.get('/main', authenticateUser, (req, res, next) => {
-  res.send('Main');
+  res.send('After Login Main');
 });
 
+// local sign up
 router.post('/signup', passport.authenticate('local-signup', {
-  successRedirect: '/',
-  failureRedirect: '/signup',
-}));
+  failureRedirect: '/',
+}), (req, res) => {
+  res.send('Sign up success');
+});
 
+// local login
 router.post('/login', passport.authenticate('local-signin', {
   failureRedirect: '/',
 }), (req, res) => {
@@ -33,18 +34,12 @@ router.post('/login', passport.authenticate('local-signin', {
   });
 });
 
+// logout
 router.get('/logout', (req, res, next) => {
-  if (req.session) {
-    res.session.destroy((err) => {
-      if (err) {
-        console.error(err.message);
-      } else {
-        res.redirect('/');
-      }
-    });
-  } else {
+  req.logout();
+  req.session.save(() => {
     res.redirect('/');
-  }
+  });
 });
 
 // naver 로그인
