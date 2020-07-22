@@ -24,21 +24,12 @@ router.post('/signup', passport.authenticate('local-signup', {
 }), (req, res) => {
   res.send('Sign up success');
 });
-
 // local login
 router.post('/login', passport.authenticate('local-signin', {
   failureRedirect: '/',
 }), (req, res) => {
   req.session.save(() => {
     res.send(req.user);
-  });
-});
-
-// logout
-router.get('/logout', (req, res, next) => {
-  req.logout();
-  req.session.save(() => {
-    res.redirect('/');
   });
 });
 
@@ -62,6 +53,20 @@ router.get('/login/kakao/callback', passport.authenticate('kakao-signin', {
   req.session.save(() => {
     res.send(req.user);
   });
+});
+
+// logout
+router.get('/logout', (req, res, next) => {
+  req.logout();
+  req.session.save(() => {
+    res.redirect('/');
+  });
+});
+
+// Session destroy
+router.get('/session-destroy', (req, res) => {
+  req.session.destroy();
+  res.send('Session Destroyed!');
 });
 
 module.exports = router;

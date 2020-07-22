@@ -9,6 +9,43 @@ const { users } = require('./models');
 
 const authConfig = JSON.parse(fs.readFileSync(`${__dirname}/config/federated.json`, 'utf8'));
 
+function isIdValidate(id) {
+  return id.length !== 0;
+}
+
+function isPasswordValidate(pw) {
+  if (pw.length === 0) {
+    return false;
+  }
+  const regPwd = /^.*(?=.{6,20})(?=.*[0-9])(?=.*[a-zA-Z]).*$/; // 6 ~ 20 글자수의 영문, 숫자 판별 정규식
+  return regPwd.test(pw);
+}
+
+function loginByThirdparty(info, done) {
+  users.findOne({
+    where: {
+      memID: info.auth_id,
+      socialType: info.auth_type,
+    },
+  }).then((sqlResult) => {
+    if (sqlResult) {
+      const userInfo = sqlResult.get();
+      return done(null, userInfo);
+    }
+    // 신규 유저 회원 가입
+    users.create({
+      nickname: info.auth_nickname,
+      memID: info.auth_email,
+      socialType: info.auth_type,
+      email: info.auth_email,
+      image: info.auth_image,
+    }).then((sqlCreateResult) => {
+      const userInfo = sqlCreateResult.get();
+      return done(null, userInfo);
+    });
+  });
+}
+
 module.exports = () => {
   passport.serializeUser((user, done) => { // Strategy 성공 시 호출
     console.log('세션에 기록하기');
@@ -20,12 +57,14 @@ module.exports = () => {
     done(null, user);
   });
 
-  passport.use('local-signup', new LocalStrategy({ // local 전략 세움
+  passport.use('local-signup', new LocalStrategy({
     usernameField: 'id',
     passwordField: 'password',
     session: false,
     passReqToCallback: true,
   }, (req, id, password, done) => {
+    if (!isIdValidate(id)) return done(null, false, { message: 'ID length error' });
+    if (!isPasswordValidate(password)) return done(null, false, { message: 'PW length error' });
     const generateHash = (pw) => bcrypt.hashSync(pw, bcrypt.genSaltSync(8), null);
     users.findOne({
       where: {
@@ -39,8 +78,9 @@ module.exports = () => {
         });
       }
       const userPassword = generateHash(password);
+      const nick = req.body.nickname;
       const data = {
-        nickname: req.body.nickname,
+        nickname: nick,
         memID: id,
         memPW: userPassword,
         socialType: 'local',
@@ -59,8 +99,9 @@ module.exports = () => {
     usernameField: 'id',
     passwordField: 'password',
     session: true,
-    passReqToCallback: false,
   }, (id, password, done) => {
+    if (!isIdValidate(id)) return done(null, false, { message: 'ID length error' });
+    if (!isPasswordValidate(password)) return done(null, false, { message: 'PW length error' });
     const isValidPassword = (userPass, pw) => bcrypt.compareSync(pw, userPass);
     users.findOne({
       where: {
@@ -96,13 +137,16 @@ module.exports = () => {
     clientID: authConfig.naver.clientID,
     clientSecret: authConfig.naver.clientSecret,
     callbackURL: authConfig.naver.callbackURL,
-    passReqToCallback: true,
-  }, (req, accessToken, refreshToken, profile, done) => {
+    session: true,
+  }, (accessToken, refreshToken, profile, done) => {
     const _profile = profile._json;
 
-    loginByThirdparty({
+    return loginByThirdparty({
       auth_type: 'naver',
       auth_id: _profile.id,
+      auth_email: _profile.email,
+      auth_nickname: _profile.nickname,
+      auth_image: _profile.profile_image,
     }, done);
   }));
 
@@ -110,41 +154,16 @@ module.exports = () => {
   passport.use('kakao-signin', new KakaoStrategy({
     clientID: authConfig.kakao.clientID,
     callbackURL: authConfig.kakao.callbackURL,
-    passReqToCallback: true,
-  }, (req, accessToken, refreshToken, profile, done) => {
+    session: true,
+  }, (accessToken, refreshToken, profile, done) => {
     const _profile = profile._json;
 
-    loginByThirdparty({
+    return loginByThirdparty({
       auth_type: 'kakao',
+      auth_nickname: _profile.properties.nickname,
       auth_id: _profile.id,
-      auth_name: _profile.properties.nickname,
-      auth_email: _profile.id,
+      auth_email: _profile.kakao_account.email,
+      auth_image: _profile.properties.profile_image,
     }, done);
   }));
 };
-
-async function loginByThirdparty(info, done) {
-  console.log(`process: ${info.auth_type}`);
-  const sqlResult = await users.findOne({
-    where: {
-      memID: info.auth_id,
-      socialType: info.auth_type,
-    },
-  });
-  if (sqlResult) {
-    console.log('Old User'); // 기존 유저 로그인 처리
-    done(null, {
-      user_id: sqlResult.dataValues.memID,
-      nickname: sqlResult.dataValues.nickname,
-    });
-  } else { // 신규 유저 회원 가입
-    await users.create({
-      memID: info.auth_id,
-      socialType: info.auth_type,
-    });
-    done(null, {
-      user_id: info.auth_id,
-      nickname: info.nickname,
-    });
-  }
-}

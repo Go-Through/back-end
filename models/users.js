@@ -3,8 +3,7 @@ module.exports = (sequelize, DataTypes) => {
     nickname: {
       field: 'nickname',
       type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
+      allowNull: true,
     },
     memID: {
       field: 'mem_id',
@@ -13,17 +12,27 @@ module.exports = (sequelize, DataTypes) => {
     },
     socialType: {
       field: 'social_type',
-      type: DataTypes.STRING, // naver, kakao, local
+      type: DataTypes.STRING,
       allowNull: false,
+    },
+    email: {
+      field: 'email',
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     memPW: {
       field: 'mem_pw',
       type: DataTypes.STRING,
       allowNull: true,
     },
+    image: {
+      field: 'image',
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     withID: {
       field: 'with_id',
-      type: DataTypes.JSON, // ID, social type 함께
+      type: DataTypes.INTEGER,
       allowNull: true,
     },
     testIdx: {
