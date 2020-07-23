@@ -74,3 +74,17 @@ enkins -u root jenkins/jenkins:lts
 (터미널 접속 해서) cat /var/jenkins_home/secrets/initialAdminPassword 으로 초기 initialAdminPassword 확인
 ```
 Suggested Install > 등록 > 가입
+
+Plungin 설치
+
+Github plugin: Jenkins와 Github 통합
+
+Global Slack Notifier Plugin: Slack 연동(Job 알림 설정)
+
+Publish Over SSH: ssh로 빌드 파일 보내기
+
+Embeddable Build Status Plugin: Github 레포지토리에 빌드 상태바 생성
+
+Managed Scripts: Node.js 기반의 서버를 배포하기 위한 스크립트
+
+Authorize Project: Project Authorization 관리
