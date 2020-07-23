@@ -40,6 +40,6 @@ db.tourContent = require('./tour-content')(sequelize, Sequelize);
 db.tourCategory = require('./tour-category')(sequelize, Sequelize);
 
 db.users.belongsTo(db.tests, { foreignKey: 'test_idx' });
-db.users.belongsTo(db.users, { foreignKey: 'id' });
+// db.users.belongsTo(db.users, { foreignKey: 'id' });
 
 module.exports = db;
