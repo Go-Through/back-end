@@ -1,6 +1,5 @@
 .idea
 node_modules
-sessions
 config/config.json
 config/federated.json
 service-key.json

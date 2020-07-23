@@ -30,7 +30,7 @@ app.set('view engine', 'ejs');
 // CORS 허용
 // app.use(cors);
 /* app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.header('Access-Control-Allow-Origin', 'http://localhost:8000');
 }); */
 
 app.use(logger('dev'));
