@@ -58,15 +58,12 @@ router.get('/login/kakao/callback', passport.authenticate('kakao-signin', {
 // logout
 router.get('/logout', (req, res, next) => {
   req.logout();
+  req.session.destroy();
+  res.clearCookie('');
   req.session.save(() => {
     res.redirect('/');
   });
 });
 
-// Session destroy
-router.get('/session-destroy', (req, res) => {
-  req.session.destroy();
-  res.send('Session Destroyed!');
-});
 
 module.exports = router;
