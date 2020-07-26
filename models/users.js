@@ -35,6 +35,12 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: true,
     },
+    withEvent: {
+      field: 'with_event',
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
     testIdx: {
       field: 'test_idx',
       type: DataTypes.INTEGER,
