@@ -40,7 +40,7 @@ router.get('/login/naver/callback', passport.authenticate('naver-signin', {
   failureRedirect: '/',
 }), (req, res) => {
   req.session.save(() => {
-    res.send(req.user);
+    res.redirect('http://localhost:3000');
   });
 });
 
