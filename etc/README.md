@@ -77,14 +77,50 @@ Suggested Install > 등록 > 가입
 
 Plungin 설치
 
-Github plugin: Jenkins와 Github 통합
+- Github plugin: Jenkins와 Github 통합
+- Global Slack Notifier Plugin: Slack 연동(Job 알림 설정)
+- Publish Over SSH: ssh로 빌드 파일 보내기
+- Embeddable Build Status Plugin: Github 레포지토리에 빌드 상태바 생성
+- Managed Scripts: Node.js 기반의 서버를 배포하기 위한 스크립트
+- Authorize Project: Project Authorization 관리
 
-Global Slack Notifier Plugin: Slack 연동(Job 알림 설정)
+- Jenkins 관리 > 시스템 설정
+    - Github 탭 Github 에서 생성한 Person Access Tokens 등록
+    - 토큰 복사 후 Manage hooks 체크
+    - Credentials Add > Jenkins
+    - Kind: Secret text, Secret: Personal access token, ID: Github ID
+    
+- Publish Over SSH
+    - Remote 서버에 ssh 통해서 배포 하기 위함.
+    - 배포를 위해 scp를 사용하여 Jenkins에 있는 프로젝트 코드를 AWS 서버에 복사해야 한다.
+```
+Jenkins(Docker) 에서 ssh 키를 생성한다. ssh-keygen -t rsa
+Jenkins(Docker) 에서는 AWS 서버를 호스트로, AWS 서버에서는 Jenkins 서버(Docker)의 공개 키를 허가받은 키로 등록
+-> Jenkins 서버에서 AWS 서버를 known_hosts로 등록 ssh-keyscan -H (AWS 서버)ip >> ~/.ssh/known_hosts
+Jenkins에서 생성한 키 중에 공개 키(id_rsa.pub)를 NAVER Cloud 서버에서 생성한 authorized_keys에 입력한다. vi ~/.ssh/authorized_keys
+```
+- 권한 설정
+``` shell script
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/id_rsa
+chmod 644 ~/.ssh/id_rsa.pub  
+chmod 644 ~/.ssh/authorized_keys
+chmod 644 ~/.ssh/known_hosts
+```
+Jenkins 시스템 설정 Path to Key 에 Jenkins 서버 개인키 Path
 
-Publish Over SSH: ssh로 빌드 파일 보내기
+SSH Server 에 배포하고자 하는 SSH 서버 (현재는 Docker를 통해 내부에서 젠킨스를 사용하기 때문에 내부망 IP)
+```shell script
+docker inspect CONTAINER_NAME
+```
+Name(작명), Hostname(IP 주소), Username(접속하고자 하는 계정 이름), Remote Directory (배포 경로 설정 안되어 있을 경우 이곳에 배포) 설정
 
-Embeddable Build Status Plugin: Github 레포지토리에 빌드 상태바 생성
-
-Managed Scripts: Node.js 기반의 서버를 배포하기 위한 스크립트
-
-Authorize Project: Project Authorization 관리
+Jenkins Managed Scripts
+script file 작성
+```shell script
+-#!/bin/sh
+ssh root@AWS서버ip <<EOF
+ 서버 안 명령어
+ exit
+EOF
+```
