@@ -34,12 +34,12 @@ db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 db.users = require('./users')(sequelize, Sequelize); // 이미 회원가입 된 사람들 다시 DB에 정보 넣어줘야 됨.
-// db.tests = require('./tests')(sequelize, Sequelize);
-// db.tourArea = require('./tour-area')(sequelize, Sequelize);
-// db.tourContent = require('./tour-content')(sequelize, Sequelize);
-// db.tourCategory = require('./tour-category')(sequelize, Sequelize);
+db.tests = require('./tests')(sequelize, Sequelize);
+db.tourArea = require('./tour-area')(sequelize, Sequelize);
+db.tourContent = require('./tour-content')(sequelize, Sequelize);
+db.tourCategory = require('./tour-category')(sequelize, Sequelize);
 
-// db.users.belongsTo(db.tests, { foreignKey: 'test_idx' });
-// db.users.belongsTo(db.users, { foreignKey: 'id' });
+db.users.belongsTo(db.tests, { foreignKey: 'test_idx' });
+db.users.belongsTo(db.users, { foreignKey: 'id' });
 
 module.exports = db;

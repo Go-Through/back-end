@@ -40,15 +40,16 @@ async function connectDB() {
     console.log('DB 연결 성공');
   } catch (err) {
     console.error('connectDB() error');
+    console.error(err.message);
     throw err;
   }
   return true;
 }
-connectDB().then(console.log);
 
 module.exports = {
   axios,
   models,
   baseParams,
   callService,
+  connectDB
 };
