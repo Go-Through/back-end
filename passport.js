@@ -5,6 +5,8 @@ const NaverStrategy = require('passport-naver').Strategy;
 const KakaoStrategy = require('passport-kakao').Strategy;
 const fs = require('fs');
 
+// const Upload = require('./service/upload-to-s3');
+
 const { users } = require('./models');
 
 const authConfig = JSON.parse(fs.readFileSync(`${__dirname}/config/federated.json`, 'utf8'));
@@ -79,11 +81,14 @@ module.exports = () => {
       }
       const userPassword = generateHash(password);
       const nick = req.body.nickname;
+      const profileImage = null;
+      // const profileImage = Upload.uploadFile(`${id} Image`, req.body.image);
       const data = {
         nickname: nick,
         memID: id,
         memPW: userPassword,
         socialType: 'local',
+        image: profileImage,
       };
       users.create(data).then((newUser) => {
         if (!newUser) {

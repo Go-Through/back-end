@@ -46,10 +46,19 @@ async function connectDB() {
   return true;
 }
 
+const authenticateUser = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    next();
+  } else {
+    res.status(301).redirect('/');
+  }
+};
+
 module.exports = {
   axios,
   models,
   baseParams,
   callService,
-  connectDB
+  connectDB,
+  authenticateUser
 };

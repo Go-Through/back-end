@@ -19,7 +19,13 @@ const sessionStore = new MySQLStore(options);
 
 const passportConfig = require('./passport');
 const commonModule = require('./service/init-module');
+
+commonModule.connectDB().then(console.log);
+
 const indexRouter = require('./routes/index');
+const shortestRouter = require('./routes/shortest');
+const testRouter = require('./routes/test');
+const tripInfoRouter = require('./routes/trip-info');
 
 const app = express();
 
@@ -42,7 +48,6 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
   store: sessionStore,
-  cookie: { maxAge: 2 * 60 * 60 * 1000 },
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -52,6 +57,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Router
 app.use('/', indexRouter);
+app.use('/shortest', shortestRouter);
+app.use('/test', testRouter);
+app.use('/trip-info', tripInfoRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

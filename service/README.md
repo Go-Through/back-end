@@ -124,3 +124,24 @@ ssh root@AWS서버ip <<EOF
  exit
 EOF
 ```
+
+6. PM2 Log Rotate
+```shell script
+pm2 install pm2-logrotate
+```
+기본 설정
+```shell script
+$ pm2 set pm2-logrotate:max_size 10M
+$ pm2 set pm2-logrotate:retain 30
+$ pm2 set pm2-logrotate:compress false
+$ pm2 set pm2-logrotate:dateFormat YYYY-MM-DD_HH-mm-ss
+$ pm2 set pm2-logrotate:workerInterval 30
+$ pm2 set pm2-logrotate:rotateInterval 0 0 * * *
+$ pm2 set pm2-logrotate:rotateModule true
+```
+수정하기 위해서는
+```shell script
+pm2 set pm2-logrotate:max_size 1K
+pm2 set pm2-logrotate:compress true
+pm2 set pm2-logrotate:rotateInterval '*/1 * * * *'
+```
