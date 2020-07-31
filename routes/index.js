@@ -16,7 +16,6 @@ router.get('/main', authenticateUser, (req, res, next) => {
 router.post('/sign_up', passport.authenticate('local-signup', {
   failureRedirect: '/',
 }), (req, res) => {
-  console.log(req.users, req.sessions);
   res.send('Sign up success');
 });
 // local login
@@ -24,8 +23,7 @@ router.post('/login', passport.authenticate('local-signin', {
   failureRedirect: '/',
 }), (req, res) => {
   req.session.save(() => {
-    console.log(req.users, req.sessions);
-    res.send(req.user);
+    res.send(req.session);
   });
 });
 
@@ -36,7 +34,6 @@ router.get('/login/naver/callback', passport.authenticate('naver-signin', {
   failureRedirect: '/',
 }), (req, res) => {
   req.session.save(() => {
-    console.log(req.users, req.sessions);
     res.send(req.session);
   });
 });
@@ -48,20 +45,21 @@ router.get('/login/kakao/callback', passport.authenticate('kakao-signin', {
   failureRedirect: '/',
 }), (req, res) => {
   req.session.save(() => {
-    console.log(req.users, req.sessions);
-    res.send(req.user);
+    console.log(req.user, req.session);
+    res.send(req.session);
   });
 });
 
 // logout
 router.get('/logout', (req, res, next) => {
   req.logout();
-  req.session.destroy();
-  res.clearCookie('');
   req.session.save(() => {
-    console.log(req.users, req.sessions);
     res.redirect('/');
   });
+  /* req.session.destroy((err) => {
+    console.error(err.message);
+    res.redirect('/');
+  }); */
 });
 
 module.exports = router;

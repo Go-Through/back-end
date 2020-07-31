@@ -50,13 +50,25 @@ function loginByThirdparty(info, done) {
 
 module.exports = () => {
   passport.serializeUser((user, done) => { // Strategy 성공 시 호출
-    console.log('세션에 기록하기');
-    done(null, user); // 여기의 user 가 deserializeUser 의 첫 번째 매개 변수로 이동
+    console.log('serializeUser', user);
+    done(null, user.id); // 여기의 user 가 deserializeUser 의 첫 번째 매개 변수로 이동
   });
 
-  passport.deserializeUser((user, done) => { // 매개변수 user 는 serializeUser의 done의 인자 user를 받은 것
-    console.log('세션에서 사용자 정보 읽기');
-    done(null, user);
+  passport.deserializeUser(async (id, done) => { // 매개변수 user 는 serializeUser의 done의 인자 user를 받은 것
+    try {
+      const sqlResult = await users.findOne({
+        where: {
+          id: id,
+        },
+      });
+      const userInfo = sqlResult.get();
+      console.log('deserializeUser', userInfo);
+      done(null, userInfo);
+    } catch (err) {
+      console.error('deserialize() error');
+      console.error(err.message);
+      throw err;
+    }
   });
 
   passport.use('local-signup', new LocalStrategy({
@@ -94,7 +106,7 @@ module.exports = () => {
         if (!newUser) {
           return done(null, false);
         }
-        return done(null, newUser);
+        return done(null, newUser.get());
       });
     });
   }));
