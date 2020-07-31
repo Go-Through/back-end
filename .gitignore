@@ -1,6 +1,7 @@
 .idea
 node_modules
-config/config.json
-config/federated.json
+config
+doc
 service-key.json
 session-key.json
+routes/apidoc.json

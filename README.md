@@ -36,3 +36,13 @@ git rm -r --cached .
 ```shell script
 npm install --save passport passport-local express-session
 ```
+
+6.apidoc
+```shell script
+npm install apidoc -g
+apidoc -i routes/ -o doc/
+```
+DOCS API 추가하기
+```javascript
+app.use('/docs', express.static(path.join(__dirname, 'doc')));
+```

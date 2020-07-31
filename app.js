@@ -57,6 +57,7 @@ app.use('/', indexRouter);
 app.use('/shortest', shortestRouter);
 app.use('/test', testRouter);
 app.use('/trip-info', tripInfoRouter);
+app.use('/docs', express.static(path.join(__dirname, 'doc')));
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
