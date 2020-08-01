@@ -6,130 +6,151 @@ const { authenticateUser } = require('../service/init-module');
 const router = express.Router();
 
 /**
- * @api {get} /user/:id Request User information
- * @apiName GetUser
- * @apiGroup User
+ * @api {get} / 1. Before Login Call API (TEST)
+ * @apiName before
+ * @apiGroup 1. User
  *
- * @apiParam {Number} id Users unique ID.
- *
- * @apiSuccess {String} firstname Firstname of the User.
- * @apiSuccess {String} lastname  Lastname of the User.
+ * @apiSuccess {JSON} message 'fail'
+ * @apiSuccessExample {JSON} Success-Response:
+ *  HTTP/1.1 200 OK
+ *  {
+ *    message: 'fail'
+ *  }
  */
 router.get('/', (req, res, next) => {
-  res.send('Fail');
+  res.send({
+    message: 'Fail',
+  });
 });
 
 /**
- * @api {get} /user/:id Request User information
- * @apiName GetUser
- * @apiGroup User
+ * @api {get} /main 2. After Login Call API (TEST)
+ * @apiName main
+ * @apiGroup 1. User
  *
- * @apiParam {Number} id Users unique ID.
- *
- * @apiSuccess {String} firstname Firstname of the User.
- * @apiSuccess {String} lastname  Lastname of the User.
+ * @apiSuccess {JSON} message 'success'
+ * @apiSuccessExample {JSON} Success-Response:
+ * HTTP/1.1 200 OK
+ *  {
+ *    message: 'success'
+ *  }
  */
 router.get('/main', authenticateUser, (req, res, next) => {
-  res.send('Success');
+  res.send({
+    message: 'Success',
+  });
 });
 
 /**
- * @api {get} /user/:id Request User information
- * @apiName GetUser
- * @apiGroup User
+ * @api {post} /sign_up 3. Local Sign up
+ * @apiName sign_up
+ * @apiGroup 1. User
  *
- * @apiParam {Number} id Users unique ID.
+ * @apiParam {String} nickname Users nickname
+ * @apiParam {String} id Users unique ID
+ * @apiParam {String} password Users PW
  *
- * @apiSuccess {String} firstname Firstname of the User.
- * @apiSuccess {String} lastname  Lastname of the User.
+ * @apiSuccess {JSON} message 'sign up success'
+ * @apiSuccessExample {JSON} Success-Response:
+ * HTTP/1.1 200 OK
+ *  {
+ *    message: 'sign up success'
+ *  }
  */
-// local sign up
 router.post('/sign_up', passport.authenticate('local-signup', {
   failureRedirect: '/',
 }), (req, res) => {
-  res.send('Sign up success');
+  res.send({
+    message: 'Sign up success',
+  });
 });
+
 /**
- * @api {get} /user/:id Request User information
- * @apiName GetUser
- * @apiGroup User
+ * @api {post} /login 4. Local Login
+ * @apiName login
+ * @apiGroup 1. User
  *
- * @apiParam {Number} id Users unique ID.
+ * @apiParam {String} id Users unique ID
+ * @apiParam {String} password Users PW
  *
- * @apiSuccess {String} firstname Firstname of the User.
- * @apiSuccess {String} lastname  Lastname of the User.
+ * @apiSuccess {JSON} user user info
+ * @apiSuccessExample {JSON} Success-Response:
+ * HTTP/1.1 200 OK
+ *  {
+ *    id: ""
+ *  }
  */
-// local login
 router.post('/login', passport.authenticate('local-signin', {
   failureRedirect: '/',
 }), (req, res) => {
   req.session.save(() => {
-    res.send(req.session);
+    res.send(req.user);
   });
 });
+
 /**
- * @api {get} /user/:id Request User information
- * @apiName GetUser
- * @apiGroup User
+ * @api {get} /login/naver 5. Naver Login
+ * @apiName login naver
+ * @apiGroup 1. User
  *
- * @apiParam {Number} id Users unique ID.
- *
- * @apiSuccess {String} firstname Firstname of the User.
- * @apiSuccess {String} lastname  Lastname of the User.
+ * @apiSuccess {JSON} user user info
+ * @apiSuccessExample {JSON} Success-Response:
+ * HTTP/1.1 200 OK
+ *  {
+ *    id: ""
+ *  }
  */
-// naver 로그인
 router.get('/login/naver', passport.authenticate('naver-signin'));
 // naver 로그인 연동 콜백
 router.get('/login/naver/callback', passport.authenticate('naver-signin', {
   failureRedirect: '/',
 }), (req, res) => {
   req.session.save(() => {
-    res.send(req.session);
+    res.send(req.user);
   });
 });
 
 /**
- * @api {get} /user/:id Request User information
- * @apiName GetUser
- * @apiGroup User
+ * @api {get} /login/kakao 6. Kakao Login
+ * @apiName login kakao
+ * @apiGroup 1. User
  *
- * @apiParam {Number} id Users unique ID.
- *
- * @apiSuccess {String} firstname Firstname of the User.
- * @apiSuccess {String} lastname  Lastname of the User.
+ * @apiSuccess {JSON} user user info
+ * @apiSuccessExample {JSON} Success-Response:
+ * HTTP/1.1 200 OK
+ *  {
+ *    id: ""
+ *  }
  */
-// kakao 로그인
 router.get('/login/kakao', passport.authenticate('kakao-signin'));
 // kakao 로그인 연동 콜백
 router.get('/login/kakao/callback', passport.authenticate('kakao-signin', {
   failureRedirect: '/',
 }), (req, res) => {
   req.session.save(() => {
-    console.log(req.user, req.session);
-    res.send(req.session);
+    res.send(req.user);
   });
 });
 
 /**
- * @api {get} /user/:id Request User information
- * @apiName GetUser
- * @apiGroup User
+ * @api {get} /logout 7. Logout
+ * @apiName logout
+ * @apiGroup 1. User
  *
- * @apiParam {Number} id Users unique ID.
- *
- * @apiSuccess {String} firstname Firstname of the User.
- * @apiSuccess {String} lastname  Lastname of the User.
+ * @apiSuccess {JSON} message 'logout'
+ * @apiSuccessExample {JSON} Success-Response:
+ * HTTP/1.1 200 OK
+ *  {
+ *    message: 'logout'
+ *  }
  */
-// logout
 router.get('/logout', (req, res, next) => {
   req.logout();
   req.session.save(() => {
-    res.redirect('/');
+    res.send({
+      message: 'logout',
+    });
   });
-  /* req.session.destroy((err) => {
-    console.error(err.message);
-    res.redirect('/');
-  }); */
 });
 
 module.exports = router;

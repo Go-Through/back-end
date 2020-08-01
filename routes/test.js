@@ -6,44 +6,52 @@ const { enrollTest } = require('../service/manage-test');
 const router = express.Router();
 
 /**
- * @api {get} /user/:id Request User information
- * @apiName GetUser
- * @apiGroup User
+ * @api {get} /test 1. Test Main
+ * @apiName test main
+ * @apiGroup 2. Test
  *
- * @apiParam {Number} id Users unique ID.
- *
- * @apiSuccess {String} firstname Firstname of the User.
- * @apiSuccess {String} lastname  Lastname of the User.
+ * @apiSuccess {JSON} message 'test'
+ * @apiSuccessExample {JSON} Success-Response:
+ * HTTP/1.1 200 OK
+ *  {
+ *    message: 'test'
+ *  }
  */
 router.get('/', authenticateUser, (req, res, next) => {
-  res.send('test');
+  res.send({
+    message: 'test',
+  });
 });
 
 /**
- * @api {get} /user/:id Request User information
- * @apiName GetUser
- * @apiGroup User
+ * @api {get} /test 2. Post Test
+ * @apiName post test
+ * @apiGroup 2. Test
  *
- * @apiParam {Number} id Users unique ID.
+ * @apiParam {Int} id User unique index for database
+ * @apiParam {JSON} test test 안에는 location(array type), concept(array type) 존재
  *
- * @apiSuccess {String} firstname Firstname of the User.
- * @apiSuccess {String} lastname  Lastname of the User.
+ * @apiSuccess {JSON} message 'success'
+ * @apiSuccessExample {JSON} Success-Response:
+ * HTTP/1.1 200 OK
+ *  {
+ *    message: 'success'
+ *  }
  */
-/*
-post_test body 형태
-{
-  id: [int]
-  test: {
-    location: [Array Type],
-    concept: [Array Type],
-  }
-}
-*/
 router.post('/post_test', authenticateUser, async (req, res, next) => {
   const userIdx = req.body.id;
   const testObject = req.body.test;
-  const enrollResult = await enrollTest(userIdx, testObject);
-  res.send(enrollResult);
+  let enrollResult;
+  try {
+    enrollResult = await enrollTest(userIdx, testObject);
+  } catch (err) {
+    console.error('post_test() error');
+    console.error(err.message);
+    throw err;
+  }
+  res.send({
+    message: enrollResult,
+  });
 });
 
 module.exports = router;
