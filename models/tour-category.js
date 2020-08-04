@@ -4,7 +4,6 @@ module.exports = (sequelize, DataTypes) => {
       field: 'category_code',
       type: DataTypes.STRING,
       allowNull: false,
-      primaryKey: true,
     },
     categoryName: {
       field: 'category_name',

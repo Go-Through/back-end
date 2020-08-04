@@ -33,12 +33,12 @@ Object.keys(db).forEach((modelName) => {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-db.users = require('./users')(sequelize, Sequelize);
 db.tests = require('./tests')(sequelize, Sequelize);
-db.citys = require('./citys')(sequelize, Sequelize);
+db.users = require('./users')(sequelize, Sequelize);
 db.tourArea = require('./tour-area')(sequelize, Sequelize);
 db.tourContent = require('./tour-content')(sequelize, Sequelize);
 db.tourCategory = require('./tour-category')(sequelize, Sequelize);
+db.citys = require('./citys')(sequelize, Sequelize);
 
 db.users.belongsTo(db.tests, { foreignKey: 'test_idx' });
 db.users.belongsTo(db.users, { foreignKey: 'id' });

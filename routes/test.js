@@ -29,7 +29,7 @@ router.get('/', authenticateUser, (req, res, next) => {
  * @apiGroup 2. Test
  *
  * @apiParam {Int} id User unique index for database
- * @apiParam {JSON} test test 안에는 location(array type), concept(array type) 존재
+ * @apiParam {JSON} test test 안에는 place(array type), concept(array type) 존재
  *
  * @apiSuccess {JSON} message 'success'
  * @apiSuccessExample {JSON} Success-Response:

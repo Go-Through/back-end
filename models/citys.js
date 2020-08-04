@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
       field: 'city_count',
       type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: 0,
+      defaultValue: 1,
     },
     areaIndex: {
       field: 'area_index',

@@ -1,11 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define('tests', {
-    testIdx: {
-      field: 'test_idx',
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      primaryKey: true,
-    },
     likePlaces: {
       field: 'like_places',
       type: DataTypes.JSON,
