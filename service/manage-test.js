@@ -44,7 +44,7 @@ async function enrollTest(userIdx, testObject) {
         areaIDs: areaIds,
       },
       likeContents: {
-        contentsIDs: categoryIds,
+        categoryIDs: categoryIds,
       },
     }, { transaction: tx });
     const testId = (sqlResult.get()).id;
@@ -92,8 +92,58 @@ async function enrollTest(userIdx, testObject) {
 }
 
 // DB상 저장되어 있는 정보 가져와서, Tour API Call 형식으로 가져와줌. 또한 커플 ID가 있을 경우 적용시켜줌.
-async function getTest(userIdx) {
-
+async function getTest(userId) {
+  const result = {};
+  try {
+    let sqlResult = await models.users.findOne({
+      where: {
+        id: userId,
+      },
+      attributes: ['test_idx', 'with_id'],
+    });
+    const userInfo = sqlResult.get();
+    const testId = userInfo.test_idx;
+    result.with = userInfo.with_id;
+    if (testId === null) {
+      return result;
+    }
+    sqlResult = await models.tests.findOne({
+      where: {
+        id: testId,
+      },
+      attributes: ['like_places', 'like_contents'],
+    });
+    const testInfo = sqlResult.get();
+    const likeAreaIds = testInfo.like_places.areaIDs;
+    const likeCategoryIds = testInfo.like_contents.categoryIDs;
+    let sqlResultSet = await models.tourArea.findAll({
+      where: {
+        id: likeAreaIds,
+      },
+      attributes: ['id', 'area_code', 'area_name'],
+    });
+    const areaInfo = [];
+    for (sqlResult of sqlResultSet) {
+      areaInfo.push(sqlResult.get());
+    }
+    sqlResultSet = await models.tourCategory.findAll({
+      where: {
+        id: likeCategoryIds,
+      },
+      attributes: ['id', 'category_code', 'category_name'],
+    });
+    const categoryInfo = [];
+    for (sqlResult of sqlResultSet) {
+      categoryInfo.push(sqlResult.get());
+    }
+    result.area = areaInfo;
+    result.category = categoryInfo;
+  } catch (err) {
+    console.error('getTest() error');
+    console.error(err.message);
+    throw err;
+  }
+  return result;
 }
 
 module.exports = {
