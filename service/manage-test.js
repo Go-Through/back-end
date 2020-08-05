@@ -1,5 +1,4 @@
-const { callService, changeToTourName, findIncludeName } = require('./init-module');
-const models = require('../models');
+const { models, changeToTourName, findIncludeName } = require('./init-module');
 
 // Test 등록하는 함수 - 유저 정보에도 입력하고, place 의 경우 도시 테이블에도 결과 반영해줘야한다.
 async function enrollTest(userIdx, testObject) {
@@ -38,7 +37,6 @@ async function enrollTest(userIdx, testObject) {
         categoryIds.push(item.id);
       }
     });
-    console.log(areaIds, categoryIds);
     // 테스트 등록
     let sqlResult;
     sqlResult = await models.tests.create({
@@ -93,6 +91,12 @@ async function enrollTest(userIdx, testObject) {
   return 'Success';
 }
 
+// DB상 저장되어 있는 정보 가져와서, Tour API Call 형식으로 가져와줌. 또한 커플 ID가 있을 경우 적용시켜줌.
+async function getTest(userIdx) {
+
+}
+
 module.exports = {
   enrollTest,
+  getTest,
 };
