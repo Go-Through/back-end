@@ -24,7 +24,7 @@ router.get('/', authenticateUser, (req, res, next) => {
 });
 
 /**
- * @api {get} /test 2. Post Test
+ * @api {get} /post_test 2. Post Test
  * @apiName post test
  * @apiGroup 2. Test
  *

@@ -116,25 +116,34 @@ async function getTest(userId) {
     const testInfo = sqlResult.get();
     const likeAreaIds = testInfo.like_places.areaIDs;
     const likeCategoryIds = testInfo.like_contents.categoryIDs;
-    let sqlResultSet = await models.tourArea.findAll({
-      where: {
-        id: likeAreaIds,
-      },
-      attributes: ['id', 'area_code', 'area_name'],
-    });
+    let sqlResultSet;
     const areaInfo = [];
-    for (sqlResult of sqlResultSet) {
-      areaInfo.push(sqlResult.get());
-    }
-    sqlResultSet = await models.tourCategory.findAll({
-      where: {
-        id: likeCategoryIds,
-      },
-      attributes: ['id', 'category_code', 'category_name'],
-    });
     const categoryInfo = [];
-    for (sqlResult of sqlResultSet) {
-      categoryInfo.push(sqlResult.get());
+    if (likeAreaIds.includes(0)) {
+      areaInfo.push(0);
+    } else {
+      sqlResultSet = await models.tourArea.findAll({
+        where: {
+          id: likeAreaIds,
+        },
+        attributes: ['id', 'area_code', 'area_name'],
+      });
+      for (sqlResult of sqlResultSet) {
+        areaInfo.push(sqlResult.get());
+      }
+    }
+    if (likeCategoryIds.includes(0)) {
+      categoryInfo.push(0);
+    } else {
+      sqlResultSet = await models.tourCategory.findAll({
+        where: {
+          id: likeCategoryIds,
+        },
+        attributes: ['id', 'category_code', 'category_name'],
+      });
+      for (sqlResult of sqlResultSet) {
+        categoryInfo.push(sqlResult.get());
+      }
     }
     result.area = areaInfo;
     result.category = categoryInfo;

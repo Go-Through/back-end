@@ -21,7 +21,7 @@ async function callService(service, params) {
   try {
     const axiosResult = await axios.get(`${url}/${service}`, params);
     if (axiosResult.data.response.header.resultCode === '0000') {
-      resultItem = axiosResult.data.response.body.items.item;
+      resultItem = axiosResult.data.response.body;
     } else {
       console.log(axiosResult.data.response.header);
       resultItem = null;
@@ -93,6 +93,9 @@ function changeToTourName(testIdx, testArr) {
           break;
         case '액티비티':
           result.push('레포츠');
+          break;
+        case '역사':
+          result.push('역사관광지');
           break;
         default:
           result.push(conceptName);

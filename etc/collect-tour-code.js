@@ -3,6 +3,7 @@ const {
   models, baseParams, callService,
 } = require('../service/init-module');
 
+// 기본 Tour API Content Type
 const contentTypeIds = [
   { id: 12, name: '관광지' },
   { id: 14, name: '문화시설' },
@@ -14,6 +15,7 @@ const contentTypeIds = [
   { id: 39, name: '음식' },
 ];
 
+// Area 정보 모으는 함수 (area sigungu)
 async function callFullLocation() {
   const service = 'areaCode';
   const areaParams = JSON.parse(JSON.stringify(baseParams));
@@ -21,7 +23,7 @@ async function callFullLocation() {
   const areas = [];
 
   let resultItem;
-  resultItem = await callService(service, areaParams); // result = 도, 시 code
+  resultItem = (await callService(service, areaParams)).items.item; // result = 도, 시 code
   if (resultItem) {
     for (const item of resultItem) {
       areaFirsts.push(item);
@@ -33,7 +35,7 @@ async function callFullLocation() {
 
   for (const area of areaFirsts) {
     areaParams.params.areaCode = area.code;
-    resultItem = await callService(service, areaParams);
+    resultItem = (await callService(service, areaParams)).items.item;
     if (resultItem) {
       const info = {};
       info.areaCode = area.code;
@@ -53,6 +55,7 @@ async function callFullLocation() {
   return areas;
 }
 
+// Category 정보 모으는 함수
 async function callFullCategory(categoryParams) {
   const service = 'categoryCode';
   const firstCats = [];
@@ -61,7 +64,7 @@ async function callFullCategory(categoryParams) {
   let info = {};
 
   let resultItem;
-  resultItem = await callService(service, categoryParams);
+  resultItem = (await callService(service, categoryParams)).items.item;
   if (resultItem) {
     if (Array.isArray(resultItem)) {
       for (const item of resultItem) {
@@ -77,7 +80,7 @@ async function callFullCategory(categoryParams) {
 
   for (const cat of firstCats) {
     categoryParams.params.cat1 = cat.code;
-    resultItem = await callService(service, categoryParams);
+    resultItem = (await callService(service, categoryParams)).items.item;
     if (resultItem) {
       info = {};
       info.cat1 = cat.code;
@@ -101,7 +104,7 @@ async function callFullCategory(categoryParams) {
     categoryParams.params.cat1 = sCat.cat1;
     for (const ssCat of sCat.cat2) {
       categoryParams.params.cat2 = ssCat.code;
-      resultItem = await callService(service, categoryParams);
+      resultItem = (await callService(service, categoryParams)).items.item;
       if (resultItem) {
         info = {};
         info.cat1 = sCat.cat1;
@@ -124,6 +127,7 @@ async function callFullCategory(categoryParams) {
   return fullCats;
 }
 
+// Content 별 Category 모으는 함수
 async function callContentAllCategory(contentArr) {
   const allContentCats = [];
   for (const content of contentArr) {
@@ -138,6 +142,7 @@ async function callContentAllCategory(contentArr) {
   return allContentCats;
 }
 
+// Area 업데이트 하는 함수
 async function createAndUpdateArea(areaInfo) {
   try {
     let sqlResult = await models.tourArea.findOne({
@@ -167,6 +172,7 @@ async function createAndUpdateArea(areaInfo) {
   }
 }
 
+// Category 업데이트 하는 함수
 async function createAndUpdateCategory(cCode, cName) {
   try {
     let sqlResult = await models.tourCategory.findOne({
@@ -203,6 +209,7 @@ async function createAndUpdateCategory(cCode, cName) {
   }
 }
 
+// Contents 업데이트 하는 함수
 async function createOrUpdateContents(contentsInfo) {
   try {
     const sqlResult = await models.tourContent.findOne({
@@ -227,6 +234,7 @@ async function createOrUpdateContents(contentsInfo) {
   }
 }
 
+// Tour Info 모두 생성하고 업데이트 하는 함수
 async function createTourInfo() {
   const areaResult = await callFullLocation();
   console.log(util.inspect(areaResult, false, null, true));

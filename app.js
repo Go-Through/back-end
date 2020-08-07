@@ -26,6 +26,7 @@ const indexRouter = require('./routes/index');
 const shortestRouter = require('./routes/shortest');
 const testRouter = require('./routes/test');
 const tripInfoRouter = require('./routes/trip-info');
+const myInfoRouter = require('./routes/my_info');
 
 const app = express();
 
@@ -57,6 +58,7 @@ app.use('/', indexRouter);
 app.use('/shortest', shortestRouter);
 app.use('/test', testRouter);
 app.use('/trip-info', tripInfoRouter);
+app.use('/my-info', myInfoRouter);
 app.use('/docs', express.static(path.join(__dirname, 'doc')));
 
 // catch 404 and forward to error handler
