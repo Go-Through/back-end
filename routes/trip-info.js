@@ -12,17 +12,30 @@ const router = express.Router();
  *
  * @apiParam order 정렬 순서 선택 0-count, 1-bascket, 2-title
  *
- * @apiSuccess {JSON} message
+ * @apiSuccess {JSON} Info 추천여행지 정보
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {
+ *   "items": [
+ *       {
+ *           "image": "http://tong.visitkorea.or.kr/cms/resource/41/2023841_image2_1.jpg",
+ *           "title": "청계산",
+ *           "address": "서울특별시 서초구 원터길",
+ *           "contentID": 125452,
+ *           "cotentTypeID": 12,
+ *           "placeCount": 0,
+ *           "placeHeart": 0
+ *       },
+ *       ...
+ *   ],
+ *   totalCount: 145
  *  }
  */
 router.get('/', authenticateUser, async (req, res, next) => {
   let tripInfoResult;
   try {
     // eslint-disable-next-line max-len
-    tripInfoResult = await getMyPlace(req.user.id, req.query.order);
+    tripInfoResult = await getMyPlace(req.user.id, parseInt(req.query.order, 10));
   } catch (err) {
     console.error('trip info error');
     console.error(err.message);

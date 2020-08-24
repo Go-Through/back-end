@@ -12,7 +12,7 @@ const router = express.Router();
  *
  * @apiSuccess {JSON} message 'fail'
  * @apiSuccessExample {JSON} Success-Response:
- *  HTTP/1.1 200 OK
+ * HTTP/1.1 200 OK
  *  {
  *    message: 'fail'
  *  }
@@ -77,16 +77,16 @@ router.post('/sign_up', passport.authenticate('local-signup', {
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {
-      "cookie": {
-          "originalMaxAge": null,
-          "expires": null,
-          "httpOnly": true,
-          "path": "/"
-      },
-      "passport": {
-          "user": 1
-      }
-    }
+ *    "cookie": {
+ *      "originalMaxAge": null,
+ *      "expires": null,
+ *      "httpOnly": true,
+ *      "path": "/"
+ *    },
+ *    "passport": {
+ *      "user": 1
+ *    }
+ *  }
  */
 router.post('/login', passport.authenticate('local-signin', {
   failureRedirect: '/',
@@ -105,7 +105,15 @@ router.post('/login', passport.authenticate('local-signin', {
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {
- *    id: ""
+ *    "cookie": {
+ *      "originalMaxAge": null,
+ *      "expires": null,
+ *      "httpOnly": true,
+ *      "path": "/"
+ *    },
+ *    "passport": {
+ *      "user": 1
+ *    }
  *  }
  */
 router.get('/login/naver', passport.authenticate('naver-signin'));
@@ -127,7 +135,15 @@ router.get('/login/naver/callback', passport.authenticate('naver-signin', {
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {
- *    id: ""
+ *    "cookie": {
+ *      "originalMaxAge": null,
+ *      "expires": null,
+ *      "httpOnly": true,
+ *      "path": "/"
+ *    },
+ *    "passport": {
+ *      "user": 1
+ *    }
  *  }
  */
 router.get('/login/kakao', passport.authenticate('kakao-signin'));

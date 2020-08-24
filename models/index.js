@@ -42,7 +42,7 @@ db.citys = require('./citys')(sequelize, Sequelize);
 db.places = require('./places')(sequelize, Sequelize);
 
 db.users.belongsTo(db.tests, { foreignKey: 'test_idx' });
-// db.users.belongsTo(db.users, { foreignKey: 'id' });
+db.users.belongsTo(db.users, { foreignKey: 'id' });
 db.citys.belongsTo(db.tourArea, { foreignKey: 'area_index' });
 
 module.exports = db;

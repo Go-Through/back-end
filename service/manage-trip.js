@@ -206,7 +206,6 @@ async function getMyPlace(userId, sortOption = 0) {
     throw err;
   }
 }
-getMyPlace(1).then(console.log);
 
 // 세부 정보 조회 페이지에서 호출, 세부 정보 조회 시 조회 수 올라가고 최근 조회한 여행지에 추가.
 async function getTripInfo(userId, contentId){

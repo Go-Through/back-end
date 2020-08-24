@@ -61,43 +61,42 @@ router.post('/post_test', authenticateUser, async (req, res, next) => {
  * @apiSuccess {JSON} Object Test object with my friend
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
- * {
-      "with": null,
-      "area": [
-          {
-             "id": 1,
-             "area_code": 1,
-             "area_name": "서울"
-         },
-         {
-             "id": 27,
-             "area_code": 2,
-             "area_name": "인천"
-         },
-         {
-             "id": 247,
-             "area_code": 39,
-             "area_name": "제주도"
-         }
-      ],
-      "category": [
-          {
-              "id": 6,
-              "category_code": "A01010400",
-              "category_name": "산"
-         },
-         {
-             "id": 11,
-             "category_code": "A01010900",
-             "category_name": "계곡"
-         },
-         {
-             "id": 14,
-             "category_code": "A01011200",
-             "category_name": "해수욕장"
-         }
-      ]
- * }
+ *  {
+ *   "area": [
+ *       {
+ *           "id": 1,
+ *           "area_code": 1,
+ *           "area_name": "서울"
+ *       },
+ *       {
+ *           "id": 27,
+ *           "area_code": 2,
+ *           "area_name": "인천"
+ *       },
+ *       {
+ *           "id": 247,
+ *           "area_code": 39,
+ *           "area_name": "제주도"
+ *       }
+ *   ],
+ *   "category": [
+ *       {
+ *           "id": 6,
+ *           "category_code": "A01010400",
+ *           "category_name": "산"
+ *       },
+ *       {
+ *           "id": 11,
+ *           "category_code": "A01010900",
+ *           "category_name": "계곡"
+ *       },
+ *       {
+ *           "id": 14,
+ *           "category_code": "A01011200",
+ *           "category_name": "해수욕장"
+ *       }
+ *   ]
+ *  }
  */
 router.get('/get_test', authenticateUser, async (req, res, next) => {
   let testResult;

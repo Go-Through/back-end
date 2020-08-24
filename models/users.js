@@ -37,7 +37,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     withEvent: {
       field: 'with_event',
-      type: DataTypes.BOOLEAN,
+      type: DataTypes.INTEGER,
+      // idx 들어오면 커플 수락 요청 (place 수정), idx 0 이면 커플 해제 (place 수정), idx 없으면 이벤트 없음.
       allowNull: false,
       defaultValue: false,
     },
