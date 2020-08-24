@@ -1,8 +1,8 @@
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define('places', {
-    placeName: {
-      field: 'place_name',
-      type: DataTypes.STRING,
+    contentID: {
+      field: 'content_id',
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     placeCount: {
@@ -11,10 +11,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: 1,
     },
-    contentID: {
-      field: 'content_id',
+    placeHeart: {
+      field: 'place_heart',
       type: DataTypes.INTEGER,
       allowNull: false,
+      defaultValue: 1,
     },
   }, {
     timestamps: true,

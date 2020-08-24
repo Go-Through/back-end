@@ -88,10 +88,10 @@ async function enrollTest(userIdx, testObject) {
     console.error(err.message);
     throw err;
   }
-  return 'Success';
+  return 'success';
 }
 
-// DB상 저장되어 있는 정보 가져와서, Tour API Call 형식으로 가져와줌. 또한 커플 ID가 있을 경우 적용시켜줌.
+// DB상 저장되어 있는 정보 가져와서, Tour API Call 형식으로 가져와줌.
 async function getTest(userId) {
   const result = {};
   try {
@@ -104,8 +104,9 @@ async function getTest(userId) {
     const userInfo = sqlResult.get();
     const testId = userInfo.test_idx;
     result.with = userInfo.with_id;
+    // 테스트 정보 없으면 여행지 정보 쓸 수 없음.
     if (testId === null) {
-      return result;
+      return null;
     }
     sqlResult = await models.tests.findOne({
       where: {
@@ -155,7 +156,65 @@ async function getTest(userId) {
   return result;
 }
 
+function reFormatResult(testResult, coupleResult, attribute) {
+  const totalResult = {};
+  let intersection;
+
+  if (testResult[attribute].includes(0)) { // 나는 전체 선택했을 경우
+    if (coupleResult[attribute].includes(0)) { // 커플은 전체 선택했을 경우
+      totalResult[attribute] = [];
+    } else { // 커플은 전체 선택 안했을 경우
+      totalResult[attribute] = coupleResult[attribute];
+    }
+  } else { // 나는 전체 선택 안했을 경우
+    if (coupleResult[attribute].includes(0)) { // 커플은 전체 선택했을 경우
+      totalResult[attribute] = testResult[attribute];
+    } else { // 둘 다 전체 선택 안했을 경우
+      const idList = [[], []];
+      for (const myInfo of testResult[attribute]) {
+        idList[0].push(myInfo.id);
+      }
+      for (const coupleInfo of coupleResult[attribute]) {
+        idList[1].push(coupleInfo.id);
+      }
+      intersection = idList[0].filter((x) => idList[1].includes(x));
+      for (const myInfo of testResult[attribute]) {
+        if ((intersection.includes(myInfo.id)) && (!(totalResult[attribute].includes(myInfo.id)))) {
+          totalResult[attribute].push(myInfo);
+        }
+      }
+      for (const coupleInfo of coupleResult[attribute]) {
+        // eslint-disable-next-line max-len
+        if ((intersection.includes(coupleInfo.id)) && (!(totalResult[attribute].includes(coupleInfo.id)))) {
+          totalResult[attribute].push(coupleInfo);
+        }
+      }
+    }
+  }
+  return totalResult;
+}
+
+async function getTotalTest(userId) {
+  const testResult = await getTest(userId);
+  let coupleResult;
+  if (testResult.with !== null) {
+    coupleResult = await getTest(testResult.with);
+  } else {
+    coupleResult = null;
+  }
+  const totalResult = {};
+  // 커플이 등록되어 있는데 테스트를 안했거나, 커플이 등록 안되어있거나
+  if (coupleResult === null) {
+    totalResult.area = testResult.area; // [id, areaCode, areaName]
+    totalResult.category = testResult.category; // [id, categoryCode, categoryName]
+  } else { // 커플 등록되어 있는데 테스트도 한 경우
+    totalResult.area = (reFormatResult(testResult, coupleResult, 'area', totalResult)).area;
+    totalResult.category = (reFormatResult(testResult, coupleResult, 'category', totalResult)).category;
+  }
+  return totalResult;
+}
+
 module.exports = {
   enrollTest,
-  getTest,
+  getTotalTest,
 };

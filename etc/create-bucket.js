@@ -1,4 +1,5 @@
 const AWS = require('aws-sdk');
+
 const ID = 'Access key ID';
 const SECRET = '';
 const BUCKET_NAME = '';

@@ -5,8 +5,6 @@ const NaverStrategy = require('passport-naver').Strategy;
 const KakaoStrategy = require('passport-kakao').Strategy;
 const fs = require('fs');
 
-// const Upload = require('./service/upload-to-s3');
-
 const { users } = require('./models');
 
 const authConfig = JSON.parse(fs.readFileSync(`${__dirname}/config/federated.json`, 'utf8'));
@@ -50,7 +48,7 @@ function loginByThirdparty(info, done) {
 
 module.exports = () => {
   passport.serializeUser((user, done) => { // Strategy 성공 시 호출
-    console.log('serializeUser', user);
+    console.log('serializeUser');
     done(null, user.id); // 여기의 user 가 deserializeUser 의 첫 번째 매개 변수로 이동
   });
 
@@ -60,9 +58,10 @@ module.exports = () => {
         where: {
           id: id,
         },
+        attributes: ['id', 'nickname', 'mem_id', 'social_type'],
       });
       const userInfo = sqlResult.get();
-      console.log('deserializeUser', userInfo);
+      console.log('deserializeUser');
       done(null, userInfo);
     } catch (err) {
       console.error('deserialize() error');
@@ -94,7 +93,6 @@ module.exports = () => {
       const userPassword = generateHash(password);
       const nick = req.body.nickname;
       const profileImage = null;
-      // const profileImage = Upload.uploadFile(`${id} Image`, req.body.image);
       const data = {
         nickname: nick,
         memID: id,

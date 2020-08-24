@@ -1,7 +1,7 @@
 const express = require('express');
 
 const { authenticateUser } = require('../service/init-module');
-const { enrollTest } = require('../service/manage-test');
+const { enrollTest, getTotalTest } = require('../service/manage-test');
 
 const router = express.Router();
 
@@ -51,6 +51,64 @@ router.post('/post_test', authenticateUser, async (req, res, next) => {
   res.send({
     message: enrollResult,
   });
+});
+
+/**
+ * @api {get} /get_test 3. get Test
+ * @apiName get test
+ * @apiGroup 3. Test
+ *
+ * @apiSuccess {JSON} Object Test object with my friend
+ * @apiSuccessExample {JSON} Success-Response:
+ * HTTP/1.1 200 OK
+ * {
+      "with": null,
+      "area": [
+          {
+             "id": 1,
+             "area_code": 1,
+             "area_name": "서울"
+         },
+         {
+             "id": 27,
+             "area_code": 2,
+             "area_name": "인천"
+         },
+         {
+             "id": 247,
+             "area_code": 39,
+             "area_name": "제주도"
+         }
+      ],
+      "category": [
+          {
+              "id": 6,
+              "category_code": "A01010400",
+              "category_name": "산"
+         },
+         {
+             "id": 11,
+             "category_code": "A01010900",
+             "category_name": "계곡"
+         },
+         {
+             "id": 14,
+             "category_code": "A01011200",
+             "category_name": "해수욕장"
+         }
+      ]
+ * }
+ */
+router.get('/get_test', authenticateUser, async (req, res, next) => {
+  let testResult;
+  try {
+    testResult = await getTotalTest(req.user.id);
+  } catch (err) {
+    console.error('get_test() error');
+    console.error(err.message);
+    throw err;
+  }
+  res.send(testResult);
 });
 
 module.exports = router;

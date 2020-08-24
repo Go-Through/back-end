@@ -10,9 +10,7 @@ const router = express.Router();
  * @apiName trip info
  * @apiGroup 3. Trip
  *
- * @apiParam pos 조회하기 시작하는 인덱스 값 default = 0
- * @apiParam offset 몇 개 가져올 것인지 선택 default = 5
- * @apiParam order 정렬 순서 선택 0-bascket, 1-title, 2-location, 3-view count
+ * @apiParam order 정렬 순서 선택 0-count, 1-bascket, 2-title
  *
  * @apiSuccess {JSON} message
  * @apiSuccessExample {JSON} Success-Response:
@@ -24,7 +22,7 @@ router.get('/', authenticateUser, async (req, res, next) => {
   let tripInfoResult;
   try {
     // eslint-disable-next-line max-len
-    tripInfoResult = await getMyPlace(req.user.id, req.query.pos, req.query.offset, req.query.order);
+    tripInfoResult = await getMyPlace(req.user.id, req.query.order);
   } catch (err) {
     console.error('trip info error');
     console.error(err.message);

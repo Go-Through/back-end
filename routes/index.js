@@ -77,14 +77,22 @@ router.post('/sign_up', passport.authenticate('local-signup', {
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {
- *    id: ""
- *  }
+      "cookie": {
+          "originalMaxAge": null,
+          "expires": null,
+          "httpOnly": true,
+          "path": "/"
+      },
+      "passport": {
+          "user": 1
+      }
+    }
  */
 router.post('/login', passport.authenticate('local-signin', {
   failureRedirect: '/',
 }), (req, res) => {
   req.session.save(() => {
-    res.send(req.user);
+    res.send(req.session);
   });
 });
 
@@ -106,7 +114,7 @@ router.get('/login/naver/callback', passport.authenticate('naver-signin', {
   failureRedirect: '/',
 }), (req, res) => {
   req.session.save(() => {
-    res.send(req.user);
+    res.send(req.session);
   });
 });
 
@@ -128,7 +136,7 @@ router.get('/login/kakao/callback', passport.authenticate('kakao-signin', {
   failureRedirect: '/',
 }), (req, res) => {
   req.session.save(() => {
-    res.send(req.user);
+    res.send(req.session);
   });
 });
 

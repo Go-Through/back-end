@@ -46,6 +46,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: true,
     },
+    userPlaces: {
+      field: 'user_places',
+      type: DataTypes.JSON,
+      allowNull: true,
+    },
     searchPlaces: {
       field: 'search_places',
       type: DataTypes.JSON,

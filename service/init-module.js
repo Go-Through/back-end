@@ -8,8 +8,8 @@ const dataResult = JSON.parse(fs.readFileSync(`${__dirname}/../service-key.json`
 const baseParams = {
   params: {
     ServiceKey: dataResult.key,
-    numOfRows: '100',
-    pageNo: '1',
+    numOfRows: 100,
+    pageNo: 1,
     MobileOS: 'ETC',
     MobileApp: 'KN-Trip',
     _type: 'json',
@@ -80,10 +80,6 @@ function changeToTourName(testIdx, testArr) {
           break;
         case '바다':
           result.push('해수욕장');
-          result.push('섬');
-          result.push('항구/포구');
-          result.push('어촌');
-          result.push('등대');
           break;
         case '체험':
           result.push('체험관광지');
@@ -110,7 +106,7 @@ function changeToTourName(testIdx, testArr) {
 async function findIncludeName(result, tableName, name) {
   if (name === 0) {
     result.push(0);
-    return result;
+    return true;
   }
   const { Op } = models.Sequelize;
   let statement;
@@ -131,13 +127,25 @@ async function findIncludeName(result, tableName, name) {
     } else if (tableName === 'tourCategory') {
       statement = {
         where: {
-          categoryName: {
-            [Op.like]: `%${name}%`,
-          },
+          categoryName: name,
         },
-        attributes: ['id'],
       };
-      sqlResultSet = await models.tourCategory.findAll(statement);
+      sqlResultSet = await models.tourCategory.findOne(statement);
+      // 같은 단어가 없을 시 단어를 포함하는 단어들을 찾는다.
+      if (!sqlResultSet) {
+        statement = {
+          where: {
+            categoryName: {
+              [Op.like]: `%${name}%`,
+            },
+          },
+          attributes: ['id'],
+        };
+        sqlResultSet = await models.tourCategory.findAll(statement);
+      } else {
+        result.push(sqlResultSet.get());
+        return true;
+      }
     }
     for (const sqlResult of sqlResultSet) {
       result.push(sqlResult.get());

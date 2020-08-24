@@ -1,4 +1,5 @@
 const AWS = require('aws-sdk');
+
 const BUCKET_NAME = '';
 const s3 = new AWS.S3({ accessKeyId: '', secretAccessKey: '' });
 const uploadFile = (fileName, fileContent) => {
