@@ -77,7 +77,7 @@ router.get('/', authenticateUser, async (req, res, next) => {
  *   "homepage": "<a href=\"http://sema.seoul.go.kr/\"target=\"_blank\" title=\"새창: 서울시립미술관\">http://sema.seoul.go.kr/</a>",
  *   "firstimage": "http://tong.visitkorea.or.kr/cms/resource/61/2030361_image2_1.jpg",
  *   "firstimage2": "http://tong.visitkorea.or.kr/cms/resource/61/2030361_image3_1.jpg"
-    }
+ *  }
  */
 router.get('/detail', authenticateUser, async (req, res, next) => {
   let detailInfo;
