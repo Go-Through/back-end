@@ -104,24 +104,29 @@ async function getTotalPlace(userId) {
         }
         if (Array.isArray(result.items.item)) {
           for (const content of result.items.item) {
-            const tempItem = {};
-            tempItem.contentID = content.contentid;
-            tempItem.cotentTypeID = content.contenttypeid;
-            tempItem.title = content.title;
-            tempItem.address = content.addr1;
-            tempItem.image = content.firstimage;
-            tripResult.items.push(tempItem);
+            // 여행 코스 컨텐츠는 추가 안함.
+            if (content.contenttypeid !== 25) {
+              const tempItem = {};
+              tempItem.contentID = content.contentid;
+              tempItem.cotentTypeID = content.contenttypeid;
+              tempItem.title = content.title;
+              tempItem.address = content.addr1;
+              tempItem.image = content.firstimage;
+              tripResult.items.push(tempItem);
+            }
           }
         } else {
           if (result.items !== '') {
             const content = result.items.item;
-            const tempItem = {};
-            tempItem.contentID = content.contentid;
-            tempItem.cotentTypeID = content.contenttypeid;
-            tempItem.title = content.title;
-            tempItem.address = content.addr1;
-            tempItem.image = content.firstimage;
-            tripResult.items.push(tempItem);
+            if (content.contenttypeid !== 25) {
+              const tempItem = {};
+              tempItem.contentID = content.contentid;
+              tempItem.cotentTypeID = content.contenttypeid;
+              tempItem.title = content.title;
+              tempItem.address = content.addr1;
+              tempItem.image = content.firstimage;
+              tripResult.items.push(tempItem);
+            }
           }
         }
       }
@@ -207,11 +212,6 @@ async function getMyPlace(userId, sortOption = 0) {
   }
 }
 
-// 세부 정보 조회 페이지에서 호출, 세부 정보 조회 시 조회 수 올라가고 최근 조회한 여행지에 추가.
-async function getTripInfo(userId, contentId){
-}
-
 module.exports = {
   getMyPlace,
-  getTripInfo,
 };

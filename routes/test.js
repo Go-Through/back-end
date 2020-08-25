@@ -39,9 +39,12 @@ router.get('/', authenticateUser, (req, res, next) => {
  *  }
  */
 router.post('/post_test', authenticateUser, async (req, res, next) => {
-  const testObject = req.body.test;
   let enrollResult;
   try {
+    if (!req.body.test) {
+      res.send('Input body. test');
+    }
+    const testObject = req.body.test;
     enrollResult = await enrollTest(req.user.id, testObject);
   } catch (err) {
     console.error('post_test() error');
