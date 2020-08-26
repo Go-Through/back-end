@@ -24,7 +24,7 @@ router.get('/', authenticateUser, (req, res, next) => {
 });
 
 /**
- * @api {get} /post_test 2. Post Test
+ * @api {post} /test/post_test 2. Post Test
  * @apiName post test
  * @apiGroup 2. Test
  *
@@ -57,9 +57,9 @@ router.post('/post_test', authenticateUser, async (req, res, next) => {
 });
 
 /**
- * @api {get} /get_test 3. get Test
+ * @api {get} /test/get_test 3. get Test
  * @apiName get test
- * @apiGroup 3. Test
+ * @apiGroup 2. Test
  *
  * @apiSuccess {JSON} Object Test object with my friend
  * @apiSuccessExample {JSON} Success-Response:

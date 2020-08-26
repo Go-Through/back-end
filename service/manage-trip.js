@@ -22,7 +22,6 @@ async function callTourPlace(areaCodes, categoryCodes, page) {
   // 대표 이미지가 반드시 있는 정렬 O: 제목순, P: 조회순
   tripParams.params.arrange = 'P';
   tripParams.params.numOfRows = 30;
-  // tripParams.params.contentTypeId = 12;
   tripParams.params.pageNo = page;
   const promises = [];
   // 아무데나 선택한 경우
@@ -48,7 +47,7 @@ async function callTourPlace(areaCodes, categoryCodes, page) {
     } else { // category 있는 경우
       for (const areaCode of areaCodes) {
         const tempParams = JSON.parse(JSON.stringify(tripParams));
-        tripParams.params.areaCode = areaCode;
+        tempParams.params.areaCode = areaCode;
         for (const categoryCode of categoryCodes) {
           const tempParamsVersion2 = JSON.parse(JSON.stringify(tempParams));
           addCategoryParams(tempParamsVersion2, categoryCode);

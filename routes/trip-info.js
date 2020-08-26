@@ -35,6 +35,11 @@ const router = express.Router();
 router.get('/', authenticateUser, async (req, res, next) => {
   let tripInfoResult;
   try {
+    if (req.query.order && (req.query.order < 0 && req.query.order > 2)) {
+      res.send({
+        message: 'Query parameter must range (0~2)',
+      });
+    }
     // eslint-disable-next-line max-len
     tripInfoResult = await getMyPlace(req.user, parseInt(req.query.order, 10));
   } catch (err) {
@@ -46,7 +51,7 @@ router.get('/', authenticateUser, async (req, res, next) => {
 });
 
 /**
- * @api {get} /trip-info/detail/:contentId 2. Detail Info
+ * @api {get} /trip-info/detail 2. Detail Info
  * @apiName detail info
  * @apiGroup 3. Trip
  *
@@ -98,7 +103,7 @@ router.get('/detail', authenticateUser, async (req, res, next) => {
 
 // 추천하는 장소용: query로 위도, 경도 필요 (location based 쓸 예정)
 /**
- * @api {get} /location 3. Recommend Location
+ * @api {get} /trip-info/location 3. Recommend Location
  * @apiName recommend location
  * @apiGroup 3. Trip
  *
@@ -116,7 +121,7 @@ router.get('/location', authenticateUser, async (req, res, next) => {
 
 // 시군구 위치에 따른 여행지 추천, query로 areaCode, sigungu Code 필요 (area Based)
 /**
- * @api {get} /place 4. Area Based Place
+ * @api {get} /trip-info/place 4. Area Based Place
  * @apiName area based place
  * @apiGroup 3. Trip
  *
@@ -134,7 +139,7 @@ router.get('/place', authenticateUser, async (req, res, next) => {
 
 // 근처 숙소 필요
 /**
- * @api {get} /room 5. Room Place
+ * @api {get} /trip-info/room 5. Room Place
  * @apiName room place
  * @apiGroup 3. Trip
  *

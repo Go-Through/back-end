@@ -77,15 +77,18 @@ router.post('/sign_up', passport.authenticate('local-signup', {
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {
- *    "cookie": {
- *      "originalMaxAge": null,
- *      "expires": null,
- *      "httpOnly": true,
- *      "path": "/"
- *    },
- *    "passport": {
- *      "user": 1
- *    }
+ *   "session": {
+ *       "cookie": {
+ *           "originalMaxAge": null,
+ *           "expires": null,
+ *           "httpOnly": true,
+ *           "path": "/"
+ *       },
+ *       "passport": {
+ *           "user": 1
+ *       }
+ *   },
+ *   "nickname": "beoms_test"
  *  }
  */
 router.post('/login', passport.authenticate('local-signin', {
@@ -108,15 +111,18 @@ router.post('/login', passport.authenticate('local-signin', {
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {
- *    "cookie": {
- *      "originalMaxAge": null,
- *      "expires": null,
- *      "httpOnly": true,
- *      "path": "/"
- *    },
- *    "passport": {
- *      "user": 1
- *    }
+ *   "session": {
+ *       "cookie": {
+ *           "originalMaxAge": null,
+ *           "expires": null,
+ *           "httpOnly": true,
+ *           "path": "/"
+ *       },
+ *       "passport": {
+ *           "user": 1
+ *       }
+ *   },
+ *   "nickname": "beoms_test"
  *  }
  */
 router.get('/login/naver', passport.authenticate('naver-signin'));
@@ -141,15 +147,18 @@ router.get('/login/naver/callback', passport.authenticate('naver-signin', {
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {
- *    "cookie": {
- *      "originalMaxAge": null,
- *      "expires": null,
- *      "httpOnly": true,
- *      "path": "/"
- *    },
- *    "passport": {
- *      "user": 1
- *    }
+ *   "session": {
+ *       "cookie": {
+ *           "originalMaxAge": null,
+ *           "expires": null,
+ *           "httpOnly": true,
+ *           "path": "/"
+ *       },
+ *       "passport": {
+ *           "user": 1
+ *       }
+ *   },
+ *   "nickname": "beoms_test"
  *  }
  */
 router.get('/login/kakao', passport.authenticate('kakao-signin'));
