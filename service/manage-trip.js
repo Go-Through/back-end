@@ -141,17 +141,12 @@ async function getTotalPlace(userId) {
 }
 
 // sortOption: 0-count 1-heart 2-title
-async function getMyPlace(userId, sortOption = 0) {
+async function getMyPlace(userInfo, sortOption = 0) {
   try {
     let userTripResult;
-    let sqlResultSet = await models.users.findOne({
-      where: {
-        id: userId,
-      },
-      attributes: ['user_places'],
-    });
-    const userPlaceInfo = sqlResultSet.get();
-    if (!userPlaceInfo.user_places) {
+    const userId = userInfo.id;
+    let sqlResultSet;
+    if (!userInfo.userPlaces) {
       userTripResult = await getTotalPlace(userId);
       await models.users.update({
         userPlaces: userTripResult,
@@ -161,7 +156,7 @@ async function getMyPlace(userId, sortOption = 0) {
         },
       });
     } else {
-      userTripResult = userPlaceInfo.user_places;
+      userTripResult = userInfo.userPlaces;
     }
     for (const tripInfo of userTripResult.items) {
       sqlResultSet = await models.places.findOne({

@@ -58,7 +58,6 @@ module.exports = () => {
         where: {
           id: id,
         },
-        attributes: ['id', 'nickname', 'mem_id', 'social_type'],
       });
       const userInfo = sqlResult.get();
       console.log('deserializeUser');

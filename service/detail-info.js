@@ -1,16 +1,11 @@
 const { callService, baseParams, models } = require('./init-module');
 
-async function checkBasket(userId, contentId) {
+// 하트 누른건지 아닌지 확인하는 함수 (여행지 정보 첫 페이지에서 활용할 예정)
+async function checkBasket(userInfo, contentId) {
   let result = false;
   try {
-    const sqlResult = await models.users.findOne({
-      where: {
-        id: userId,
-      },
-      attributes: ['basket_places'],
-    });
-    if (sqlResult) {
-      const userBasketInfo = sqlResult.get();
+    if (userInfo.basketPlaces) {
+      const userBasketInfo = userInfo.basketPlaces;
       // null 이 아니면
       if (userBasketInfo.basket_places && userBasketInfo.basket_places.basketItems) {
         // basketItems: [content id] 들어갈 예정
@@ -32,8 +27,9 @@ async function checkBasket(userId, contentId) {
 }
 
 // 세부 정보 조회 페이지에서 호출, 세부 정보 조회 시 조회 수 올라가고 최근 조회한 여행지에 추가.
-async function getCommonInfo(userId, contentId, contentTypeId){
+async function getCommonInfo(userInfo, contentId, contentTypeId){
   const result = {};
+  const userId = userInfo.id;
   const tx = await models.sequelize.transaction();
   try {
     let sqlResult;
@@ -69,7 +65,7 @@ async function getCommonInfo(userId, contentId, contentTypeId){
         result.title = info.title;
         result.address = `${info.addr1}\n${info.addr2}`;
         result.heart = false;
-        const basketChkResult = await checkBasket(userId, info.contentid);
+        const basketChkResult = await checkBasket(userInfo, info.contentid);
         if (basketChkResult) {
           result.heart = true;
         }
@@ -93,18 +89,12 @@ async function getCommonInfo(userId, contentId, contentTypeId){
       }
     }
     // user search place 가져오기
-    sqlResult = await models.users.findOne({
-      where: {
-        id: userId,
-      },
-      attributes: ['search_places'],
-    });
-    if (sqlResult) {
+    if (userInfo.searchPlaces) {
       // searchPlace도 마찬가지로 searchItems: [contentId ] 들어갈 예정
-      const userSearch = sqlResult.get();
+      const userSearch = userInfo.searchPlaces;
       const newItems = [];
-      if (userSearch.searchPlaces && userSearch.searchPlaces.searchItems) {
-        for (const searchId of userSearch.searchPlaces.searchItems) {
+      if (userSearch && userSearch.searchItems) {
+        for (const searchId of userSearch.searchItems) {
           if (searchId !== contentId) {
             newItems.push(searchId);
           }

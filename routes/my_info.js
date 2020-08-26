@@ -5,8 +5,8 @@ const { authenticateUser } = require('../service/init-module');
 const router = express.Router();
 
 /**
- * @api {get} / 1. My Info Test
- * @apiName my info test
+ * @api {get} / 1. My Info (TEST)
+ * @apiName my info test call api
  * @apiGroup 4. My Info
  *
  * @apiSuccess {JSON} message
@@ -17,6 +17,9 @@ const router = express.Router();
  *  }
  */
 router.get('/', authenticateUser, (req, res, next) => {
+  res.send({
+    message: 'success',
+  });
 });
 
 /**
@@ -58,7 +61,7 @@ router.get('/serach', authenticateUser, async (req, res, next) => {
  *  {
  *  }
  */
-router.put('change_info', authenticateUser, async (req, res, next) => {
+router.put('/change_info', authenticateUser, async (req, res, next) => {
 });
 
 // event 확인 (요청 왔는지)
@@ -73,7 +76,7 @@ router.put('change_info', authenticateUser, async (req, res, next) => {
  *  {
  *  }
  */
-router.get('event', authenticateUser, async (req, res ,next) => {
+router.get('/event', authenticateUser, async (req, res ,next) => {
 });
 
 // 수락하기
@@ -88,12 +91,27 @@ router.get('event', authenticateUser, async (req, res ,next) => {
  *  {
  *  }
  */
-router.post('post_event', authenticateUser, async (req, res, next) => {
+router.post('/post_event', authenticateUser, async (req, res, next) => {
+});
+
+/**
+ * @api {get} /get_candidate_id 7. Get Candidate ID
+ * @apiName get candidate id
+ * @apiGroup 4. My Info
+ *
+ * @apiSuccess {JSON} message
+ * @apiSuccessExample {JSON} Success-Response:
+ *  HTTP/1.1 200 OK
+ *  {
+ *  }
+ */
+router.get('/get_candidate_id', authenticateUser, async (req, res, next) => {
+
 });
 
 // 회원가입때도 사용 가능 (있는 아이디인지 없는 아이디인지 확인)
 /**
- * @api {post} /enroll_couple 7. Enroll Couple
+ * @api {post} /enroll_couple 8. Enroll Couple
  * @apiName enroll couple
  * @apiGroup 4. My Info
  *

@@ -36,7 +36,7 @@ router.get('/', authenticateUser, async (req, res, next) => {
   let tripInfoResult;
   try {
     // eslint-disable-next-line max-len
-    tripInfoResult = await getMyPlace(req.user.id, parseInt(req.query.order, 10));
+    tripInfoResult = await getMyPlace(req.user, parseInt(req.query.order, 10));
   } catch (err) {
     console.error('trip info error');
     console.error(err.message);
@@ -87,7 +87,7 @@ router.get('/detail', authenticateUser, async (req, res, next) => {
       res.send('Input query params. contentId, contentTypeId');
     }
     // eslint-disable-next-line max-len
-    detailInfo = await getCommonInfo(req.user.id, parseInt(contentId, 10), parseInt(contentTypeId, 10));
+    detailInfo = await getCommonInfo(req.user, parseInt(contentId, 10), parseInt(contentTypeId, 10));
   } catch (err) {
     console.error('detail info error');
     console.error(err.message);

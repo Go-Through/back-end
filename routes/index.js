@@ -92,7 +92,10 @@ router.post('/login', passport.authenticate('local-signin', {
   failureRedirect: '/',
 }), (req, res) => {
   req.session.save(() => {
-    res.send(req.session);
+    res.send({
+      session: req.session,
+      nickname: req.user.nickname,
+    });
   });
 });
 
@@ -122,7 +125,10 @@ router.get('/login/naver/callback', passport.authenticate('naver-signin', {
   failureRedirect: '/',
 }), (req, res) => {
   req.session.save(() => {
-    res.send(req.session);
+    res.send({
+      session: req.session,
+      nickname: req.user.nickname,
+    });
   });
 });
 
@@ -152,7 +158,10 @@ router.get('/login/kakao/callback', passport.authenticate('kakao-signin', {
   failureRedirect: '/',
 }), (req, res) => {
   req.session.save(() => {
-    res.send(req.session);
+    res.send({
+      session: req.session,
+      nickname: req.user.nickname,
+    });
   });
 });
 
