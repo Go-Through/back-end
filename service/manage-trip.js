@@ -144,6 +144,10 @@ async function getMyPlace(userInfo, sortOption = 0) {
   try {
     let userTripResult;
     const userId = userInfo.id;
+    // 테스트 아직 안했을 경우
+    if (!userInfo.testIdx) {
+      return null;
+    }
     let sqlResultSet;
     if (!userInfo.userPlaces) {
       userTripResult = await getTotalPlace(userId);

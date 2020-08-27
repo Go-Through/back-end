@@ -14,7 +14,7 @@ const router = express.Router();
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {
- *    message: 'test'
+ *    message: "test"
  *  }
  */
 router.get('/', authenticateUser, (req, res, next) => {
@@ -35,7 +35,7 @@ router.get('/', authenticateUser, (req, res, next) => {
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {
- *    message: 'success'
+ *    message: "success"
  *  }
  */
 router.post('/post-test', authenticateUser, async (req, res, next) => {
@@ -63,7 +63,8 @@ router.post('/post-test', authenticateUser, async (req, res, next) => {
  * @apiName get test
  * @apiGroup 2. Test
  *
- * @apiSuccess {JSON} Object Test object with my friend
+ * @apiSuccess {JSON} area area in test result with friend
+ * @apiSuccess {JSON} category category in test result with friend
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {
@@ -107,6 +108,11 @@ router.get('/get-test', authenticateUser, async (req, res, next) => {
   let testResult;
   try {
     testResult = await getTotalTest(req.user.id);
+    if (!testResult) {
+      res.send({
+        message: 'Not Exist Test',
+      });
+    }
   } catch (err) {
     console.error('get-test error');
     console.error(err.message);

@@ -11,9 +11,10 @@ const router = express.Router();
  * @apiName trip info
  * @apiGroup 3. Trip
  *
- * @apiParam order 정렬 순서 선택 0-count, 1-bascket, 2-title
+ * @apiParam {int} [order] 정렬 순서 선택 0-count, 1-bascket, 2-title
  *
- * @apiSuccess {JSON} Info 추천여행지 정보
+ * @apiSuccess {Array} items 추천 여행지 정보 배열
+ * @apiSuccess {int} totalCount 총 개수
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {
@@ -58,7 +59,7 @@ router.get('/', authenticateUser, async (req, res, next) => {
  * @apiParam contentId 컨텐츠 아이디 (Tour API)
  * @apiParam contentTypeId 컨텐츠 타입 (Tour API)
  *
- * @apiSuccess {JSON} message
+ * @apiSuccess {string} babycarriageRent 유모차 대여 유무
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {

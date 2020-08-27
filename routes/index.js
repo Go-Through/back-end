@@ -14,12 +14,12 @@ const router = express.Router();
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {
- *    message: 'fail'
+ *    message: "fail"
  *  }
  */
 router.get('/', (req, res, next) => {
   res.send({
-    message: 'Fail',
+    message: "fail",
   });
 });
 
@@ -32,12 +32,12 @@ router.get('/', (req, res, next) => {
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {
- *    message: 'success'
+ *    message: "success"
  *  }
  */
 router.get('/main', authenticateUser, (req, res, next) => {
   res.send({
-    message: 'Success',
+    message: 'success',
   });
 });
 
@@ -54,7 +54,7 @@ router.get('/main', authenticateUser, (req, res, next) => {
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {
- *    message: 'sign up success'
+ *    message: "sign up success"
  *  }
  */
 router.post('/sign-up', passport.authenticate('local-signup', {
@@ -92,8 +92,8 @@ router.post('/sign-up', passport.authenticate('local-signup', {
  *       }
  *   },
  *   "nickname": "beoms_test",
- *   "testflag": true,
- *   "socialType: 'local'
+ *   "testFlag": true,
+ *   "socialType": "local"
  *  }
  */
 router.post('/login', passport.authenticate('local-signin', {
@@ -133,8 +133,8 @@ router.post('/login', passport.authenticate('local-signin', {
  *       }
  *   },
  *   "nickname": "beoms_test",
- *   "testflag": true,
- *   "socialType": 'naver'
+ *   "testFlag": true,
+ *   "socialType": "naver"
  *  }
  */
 router.get('/login/naver', passport.authenticate('naver-signin'));
@@ -177,7 +177,7 @@ router.get('/login/naver/callback', passport.authenticate('naver-signin', {
  *   },
  *   "nickname": "beoms_test",
  *   "testflag": true,
- *   "socialType": 'kakao,
+ *   "socialType": "kakao",
  *  }
  */
 router.get('/login/kakao', passport.authenticate('kakao-signin'));
@@ -204,7 +204,7 @@ router.get('/login/kakao/callback', passport.authenticate('kakao-signin', {
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {
- *    message: 'logout'
+ *    message: "logout"
  *  }
  */
 router.get('/logout', (req, res, next) => {
