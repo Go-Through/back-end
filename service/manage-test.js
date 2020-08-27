@@ -51,6 +51,7 @@ async function enrollTest(userIdx, testObject) {
     // 유저 등록
     sqlResult = await models.users.update({
       testIdx: testId,
+      userPlaces: null,
     }, {
       where: { id: userIdx },
       transaction: tx,
@@ -196,6 +197,7 @@ function reFormatResult(testResult, coupleResult, attribute) {
 
 async function getTotalTest(userId) {
   const testResult = await getTest(userId);
+  if (!testResult) return null;
   let coupleResult;
   if (testResult.with !== null) {
     coupleResult = await getTest(testResult.with);

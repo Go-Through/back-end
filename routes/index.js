@@ -10,7 +10,7 @@ const router = express.Router();
  * @apiName before
  * @apiGroup 1. User
  *
- * @apiSuccess {JSON} message 'fail'
+ * @apiSuccess {string} message 'fail'
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {
@@ -28,7 +28,7 @@ router.get('/', (req, res, next) => {
  * @apiName main
  * @apiGroup 1. User
  *
- * @apiSuccess {JSON} message 'success'
+ * @apiSuccess {string} message 'success'
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {
@@ -43,14 +43,14 @@ router.get('/main', authenticateUser, (req, res, next) => {
 
 /**
  * @api {post} /sign-up 3. Local Sign up
- * @apiName sign_up
+ * @apiName sign up
  * @apiGroup 1. User
  *
- * @apiParam {String} nickname Users nickname
- * @apiParam {String} id Users unique ID
- * @apiParam {String} password Users PW
+ * @apiParam {string} nickname Users nickname
+ * @apiParam {string} id Users unique ID
+ * @apiParam {string} password Users PW
  *
- * @apiSuccess {JSON} message 'sign up success'
+ * @apiSuccess {string} message 'sign up success'
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {
@@ -61,7 +61,7 @@ router.post('/sign-up', passport.authenticate('local-signup', {
   failureRedirect: '/',
 }), (req, res) => {
   res.send({
-    message: 'Sign up success',
+    message: 'sign up success',
   });
 });
 
@@ -70,10 +70,13 @@ router.post('/sign-up', passport.authenticate('local-signup', {
  * @apiName login
  * @apiGroup 1. User
  *
- * @apiParam {String} id Users unique ID
- * @apiParam {String} password Users PW
+ * @apiParam {string} id Users unique ID
+ * @apiParam {string} password Users PW
  *
- * @apiSuccess {JSON} user user info
+ * @apiSuccess {JSON} session cookie info & passport - passport.user is session
+ * @apiSuccess {string} nickname user nickname
+ * @apiSuccess {boolean} testFlag 테스트 했는지 유무 (테스트를 해야 여행지 정보 조회가능)
+ * @apiSuccess {string} socialType 소셜타입: 마이페이지에서 로컬 타입만 정보 수정 가능하기 때문
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {
@@ -111,7 +114,10 @@ router.post('/login', passport.authenticate('local-signin', {
  * @apiName login naver
  * @apiGroup 1. User
  *
- * @apiSuccess {JSON} user user info
+ * @apiSuccess {JSON} session cookie info & passport - passport.user is session
+ * @apiSuccess {string} nickname user nickname
+ * @apiSuccess {boolean} testFlag 테스트 했는지 유무 (테스트를 해야 여행지 정보 조회가능)
+ * @apiSuccess {string} socialType 소셜타입: 마이페이지에서 로컬 타입만 정보 수정 가능하기 때문
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {
@@ -151,7 +157,10 @@ router.get('/login/naver/callback', passport.authenticate('naver-signin', {
  * @apiName login kakao
  * @apiGroup 1. User
  *
- * @apiSuccess {JSON} user user info
+ * @apiSuccess {JSON} session cookie info & passport - passport.user is session
+ * @apiSuccess {string} nickname user nickname
+ * @apiSuccess {boolean} testFlag 테스트 했는지 유무 (테스트를 해야 여행지 정보 조회가능)
+ * @apiSuccess {string} socialType 소셜타입: 마이페이지에서 로컬 타입만 정보 수정 가능하기 때문
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {
@@ -191,7 +200,7 @@ router.get('/login/kakao/callback', passport.authenticate('kakao-signin', {
  * @apiName logout
  * @apiGroup 1. User
  *
- * @apiSuccess {JSON} message 'logout'
+ * @apiSuccess {string} message 'logout'
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {

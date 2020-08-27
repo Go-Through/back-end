@@ -10,7 +10,7 @@ const router = express.Router();
  * @apiName test test call api
  * @apiGroup 2. Test
  *
- * @apiSuccess {JSON} message 'test'
+ * @apiSuccess {string} message 'test'
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {
@@ -28,10 +28,10 @@ router.get('/', authenticateUser, (req, res, next) => {
  * @apiName post test
  * @apiGroup 2. Test
  *
- * @apiParam {Int} id User unique index for database
+ * @apiParam {int} id User unique index for database
  * @apiParam {JSON} test test 안에는 place(array type), concept(array type) 존재
  *
- * @apiSuccess {JSON} message 'success'
+ * @apiSuccess {string} message 'success'
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {
@@ -42,10 +42,12 @@ router.post('/post-test', authenticateUser, async (req, res, next) => {
   let enrollResult;
   try {
     if (!req.body.test) {
-      res.send('Input body. test');
+      res.send({
+        message: 'Input body - test',
+      });
     }
-    const testObject = req.body.test;
-    enrollResult = await enrollTest(req.user.id, testObject);
+    const { test } = req.body;
+    enrollResult = await enrollTest(req.user.id, test);
   } catch (err) {
     console.error('post-test error');
     console.error(err.message);
