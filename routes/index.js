@@ -42,7 +42,7 @@ router.get('/main', authenticateUser, (req, res, next) => {
 });
 
 /**
- * @api {post} /sign_up 3. Local Sign up
+ * @api {post} /sign-up 3. Local Sign up
  * @apiName sign_up
  * @apiGroup 1. User
  *
@@ -57,7 +57,7 @@ router.get('/main', authenticateUser, (req, res, next) => {
  *    message: 'sign up success'
  *  }
  */
-router.post('/sign_up', passport.authenticate('local-signup', {
+router.post('/sign-up', passport.authenticate('local-signup', {
   failureRedirect: '/',
 }), (req, res) => {
   res.send({
@@ -88,7 +88,9 @@ router.post('/sign_up', passport.authenticate('local-signup', {
  *           "user": 1
  *       }
  *   },
- *   "nickname": "beoms_test"
+ *   "nickname": "beoms_test",
+ *   "testflag": true,
+ *   "socialType: 'local'
  *  }
  */
 router.post('/login', passport.authenticate('local-signin', {
@@ -98,6 +100,8 @@ router.post('/login', passport.authenticate('local-signin', {
     res.send({
       session: req.session,
       nickname: req.user.nickname,
+      testFlag: !!req.user.testIdx,
+      socialType: req.user.socialType,
     });
   });
 });
@@ -122,7 +126,9 @@ router.post('/login', passport.authenticate('local-signin', {
  *           "user": 1
  *       }
  *   },
- *   "nickname": "beoms_test"
+ *   "nickname": "beoms_test",
+ *   "testflag": true,
+ *   "socialType": 'naver'
  *  }
  */
 router.get('/login/naver', passport.authenticate('naver-signin'));
@@ -134,6 +140,8 @@ router.get('/login/naver/callback', passport.authenticate('naver-signin', {
     res.send({
       session: req.session,
       nickname: req.user.nickname,
+      testFlag: !!req.user.testIdx,
+      socialType: req.user.socialType,
     });
   });
 });
@@ -158,7 +166,9 @@ router.get('/login/naver/callback', passport.authenticate('naver-signin', {
  *           "user": 1
  *       }
  *   },
- *   "nickname": "beoms_test"
+ *   "nickname": "beoms_test",
+ *   "testflag": true,
+ *   "socialType": 'kakao,
  *  }
  */
 router.get('/login/kakao', passport.authenticate('kakao-signin'));
@@ -170,6 +180,8 @@ router.get('/login/kakao/callback', passport.authenticate('kakao-signin', {
     res.send({
       session: req.session,
       nickname: req.user.nickname,
+      testFlag: !!req.user.testIdx,
+      socialType: req.user.socialType,
     });
   });
 });

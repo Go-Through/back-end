@@ -43,7 +43,7 @@ router.get('/', authenticateUser, async (req, res, next) => {
     // eslint-disable-next-line max-len
     tripInfoResult = await getMyPlace(req.user, parseInt(req.query.order, 10));
   } catch (err) {
-    console.error('trip info error');
+    console.error('trip-info error');
     console.error(err.message);
     throw err;
   }

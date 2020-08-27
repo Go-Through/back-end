@@ -24,7 +24,7 @@ router.get('/', authenticateUser, (req, res, next) => {
 });
 
 /**
- * @api {post} /test/post_test 2. Post Test
+ * @api {post} /test/post-test 2. Post Test
  * @apiName post test
  * @apiGroup 2. Test
  *
@@ -38,7 +38,7 @@ router.get('/', authenticateUser, (req, res, next) => {
  *    message: 'success'
  *  }
  */
-router.post('/post_test', authenticateUser, async (req, res, next) => {
+router.post('/post-test', authenticateUser, async (req, res, next) => {
   let enrollResult;
   try {
     if (!req.body.test) {
@@ -47,7 +47,7 @@ router.post('/post_test', authenticateUser, async (req, res, next) => {
     const testObject = req.body.test;
     enrollResult = await enrollTest(req.user.id, testObject);
   } catch (err) {
-    console.error('post_test() error');
+    console.error('post-test error');
     console.error(err.message);
     throw err;
   }
@@ -57,7 +57,7 @@ router.post('/post_test', authenticateUser, async (req, res, next) => {
 });
 
 /**
- * @api {get} /test/get_test 3. get Test
+ * @api {get} /test/get-test 3. get Test
  * @apiName get test
  * @apiGroup 2. Test
  *
@@ -101,12 +101,12 @@ router.post('/post_test', authenticateUser, async (req, res, next) => {
  *   ]
  *  }
  */
-router.get('/get_test', authenticateUser, async (req, res, next) => {
+router.get('/get-test', authenticateUser, async (req, res, next) => {
   let testResult;
   try {
     testResult = await getTotalTest(req.user.id);
   } catch (err) {
-    console.error('get_test() error');
+    console.error('get-test error');
     console.error(err.message);
     throw err;
   }

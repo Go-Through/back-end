@@ -178,6 +178,18 @@ const authenticateUser = (req, res, next) => {
   }
 };
 
+function isIdValidate(id) {
+  return id.length !== 0;
+}
+
+function isPasswordValidate(pw) {
+  if (pw.length === 0) {
+    return false;
+  }
+  const regPwd = /^.*(?=.{6,20})(?=.*[0-9])(?=.*[a-zA-Z]).*$/; // 6 ~ 20 글자수의 영문, 숫자 판별 정규식
+  return regPwd.test(pw);
+}
+
 module.exports = {
   axios,
   models,
@@ -187,4 +199,6 @@ module.exports = {
   findIncludeName,
   connectDB,
   authenticateUser,
+  isIdValidate,
+  isPasswordValidate,
 };

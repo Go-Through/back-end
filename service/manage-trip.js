@@ -93,7 +93,7 @@ async function getTotalPlace(userId) {
     tripResult.totalCount = 0;
     tripResult.items = [];
     let page = 1;
-    while (tripResult.totalCount < 50) {
+    while (tripResult.totalCount < 70) {
       promiseResult = await callTourPlace(areaCodes, categoryCodes, page);
       for (const result of promiseResult) {
         if (result.numOfRows >= result.totalCount) {

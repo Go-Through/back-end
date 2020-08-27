@@ -5,21 +5,11 @@ const NaverStrategy = require('passport-naver').Strategy;
 const KakaoStrategy = require('passport-kakao').Strategy;
 const fs = require('fs');
 
-const { users } = require('./models');
+const { models, isIdValidate, isPasswordValidate } = require('./service/init-module');
+
+const { users } = models;
 
 const authConfig = JSON.parse(fs.readFileSync(`${__dirname}/config/federated.json`, 'utf8'));
-
-function isIdValidate(id) {
-  return id.length !== 0;
-}
-
-function isPasswordValidate(pw) {
-  if (pw.length === 0) {
-    return false;
-  }
-  const regPwd = /^.*(?=.{6,20})(?=.*[0-9])(?=.*[a-zA-Z]).*$/; // 6 ~ 20 글자수의 영문, 숫자 판별 정규식
-  return regPwd.test(pw);
-}
 
 function loginByThirdparty(info, done) {
   users.findOne({
@@ -55,9 +45,7 @@ module.exports = () => {
   passport.deserializeUser(async (id, done) => { // 매개변수 user 는 serializeUser의 done의 인자 user를 받은 것
     try {
       const sqlResult = await users.findOne({
-        where: {
-          id: id,
-        },
+        where: { id: id },
       });
       const userInfo = sqlResult.get();
       console.log('deserializeUser');
@@ -69,6 +57,7 @@ module.exports = () => {
     }
   });
 
+  // Local Sign-up
   passport.use('local-signup', new LocalStrategy({
     usernameField: 'id',
     passwordField: 'password',
@@ -91,13 +80,11 @@ module.exports = () => {
       }
       const userPassword = generateHash(password);
       const nick = req.body.nickname;
-      const profileImage = null;
       const data = {
         nickname: nick,
         memID: id,
         memPW: userPassword,
         socialType: 'local',
-        image: profileImage,
       };
       users.create(data).then((newUser) => {
         if (!newUser) {
