@@ -3,7 +3,7 @@ const express = require('express');
 const { authenticateUser } = require('../service/init-module');
 const { getMyPlace } = require('../service/manage-trip');
 const { getCommonInfo } = require('../service/detail-info');
-const { recommendLocation, recommendArea } = require('../service/recommend-info');
+const { recommendLocation, recommendArea, recommendStay } = require('../service/recommend-info');
 
 const router = express.Router();
 
@@ -92,6 +92,7 @@ router.get('/detail', authenticateUser, async (req, res, next) => {
  *
  * @apiParam {float} locationX 경도
  * @apiParam {float} locationY 위도
+ * @apiParam {int} nowContentId 지금 보고있는 컨텐츠 아이디
  *
  * @apiSuccess {JSON} message
  * @apiSuccessExample {JSON} Success-Response:
@@ -102,13 +103,13 @@ router.get('/detail', authenticateUser, async (req, res, next) => {
 router.get('/location', authenticateUser, async (req, res, next) => {
   let locationRecommend = {};
   try {
-    const { locationX, locationY } = req.query;
-    if (!locationX || !locationY) {
+    const { locationX, locationY, nowContentId } = req.query;
+    if (!locationX || !locationY || !nowContentId) {
       res.send({
-        message: 'Input query - locationX, locationY',
+        message: 'Input query - locationX, locationY, nowContentId',
       });
     }
-    locationRecommend = await recommendLocation(req.user, locationX, locationY);
+    locationRecommend = await recommendLocation(req.user, locationX, locationY, nowContentId);
   } catch (err) {
     console.error('location error');
     console.error(err.message);
@@ -124,6 +125,7 @@ router.get('/location', authenticateUser, async (req, res, next) => {
  *
  * @apiParam {int} areaCode 지역코드
  * @apiParam {int} [sigunguCode] 시군구코드
+ * @apiParam {int} nowContentId 지금 보고있는 컨텐츠 아이디
  *
  * @apiSuccess {JSON} message
  * @apiSuccessExample {JSON} Success-Response:
@@ -134,13 +136,13 @@ router.get('/location', authenticateUser, async (req, res, next) => {
 router.get('/place', authenticateUser, async (req, res, next) => {
   let areaRecommend = {};
   try {
-    const { areaCode, sigunguCode } = req.query;
-    if (!areaCode) {
+    const { areaCode, sigunguCode, nowContentId } = req.query;
+    if (!areaCode || !nowContentId) {
       res.send({
-        message: 'Input query - areaCode',
+        message: 'Input query - areaCode, nowContentId',
       });
     }
-    areaRecommend = await recommendArea(req.user, areaCode, sigunguCode);
+    areaRecommend = await recommendArea(req.user, areaCode, sigunguCode, nowContentId);
   } catch (err) {
     console.error('location error');
     console.error(err.message);
@@ -150,12 +152,13 @@ router.get('/place', authenticateUser, async (req, res, next) => {
 });
 
 /**
- * @api {get} /trip-info/room 5. Room Place
- * @apiName room place
+ * @api {get} /trip-info/stay 5. Stay Place
+ * @apiName stay place
  * @apiGroup 3. Trip
  *
  * @apiParam {int} areaCode 지역 코드
  * @apiParam {int} [sigunguCode] 시군구코드
+ * @apiParam {int} nowContentId 지금 보고있는 컨텐츠 아이디
  *
  * @apiSuccess {JSON} message
  * @apiSuccessExample {JSON} Success-Response:
@@ -163,7 +166,22 @@ router.get('/place', authenticateUser, async (req, res, next) => {
  *  {
  *  }
  */
-router.get('/room', authenticateUser, async(req, res, next) => {
+router.get('/stay', authenticateUser, async (req, res, next) => {
+  let stayRecommend = {};
+  try {
+    const { areaCode, sigunguCode, nowContentId } = req.query;
+    if (!areaCode || !nowContentId) {
+      res.send({
+        message: 'Input query - areaCode, nowContentId',
+      });
+    }
+    stayRecommend = await recommendStay(req.user, areaCode, sigunguCode, nowContentId);
+  } catch (err) {
+    console.error('location error');
+    console.error(err.message);
+    throw err;
+  }
+  res.send(stayRecommend);
 });
 
 module.exports = router;

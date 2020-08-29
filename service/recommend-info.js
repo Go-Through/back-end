@@ -2,7 +2,17 @@ const {
   callService, baseParams, checkPlaceInfo, itemsToResult,
 } = require('./init-module');
 
-async function recommendLocation(userInfo, locationX, locationY) {
+function dropMyContent(contentId, totalResultItems) {
+  const newItems = [];
+  for (const item of totalResultItems) {
+    if (item.contentID !== contentId) {
+      newItems.push(item);
+    }
+  }
+  return newItems;
+}
+
+async function recommendLocation(userInfo, locationX, locationY, contentId) {
   try {
     const recommendResult = {};
     recommendResult.items = [];
@@ -16,6 +26,7 @@ async function recommendLocation(userInfo, locationX, locationY) {
     locationParams.radius = 10000; // 단위 미터이기 때문에 10km
     const serviceResult = await callService('loactionBasedList', locationParams);
     itemsToResult(serviceResult, recommendResult);
+    recommendResult.items = dropMyContent(contentId, recommendResult.items);
     await checkPlaceInfo(userInfo, recommendResult);
     return recommendResult.items;
   } catch (err) {
@@ -25,7 +36,7 @@ async function recommendLocation(userInfo, locationX, locationY) {
   }
 }
 
-async function recommendArea(userInfo, areaCode, sigunguCode) {
+async function recommendArea(userInfo, areaCode, sigunguCode, contentId) {
   try {
     const recommendAreaResult = {};
     recommendAreaResult.items = [];
@@ -40,6 +51,7 @@ async function recommendArea(userInfo, areaCode, sigunguCode) {
     }
     const serviceResult = await callService('areaBasedList', areaBasedParams);
     itemsToResult(serviceResult, recommendAreaResult);
+    recommendAreaResult.itmes = dropMyContent(contentId, recommendAreaResult.items);
     await checkPlaceInfo(userInfo, recommendAreaResult);
     return recommendAreaResult.items;
   } catch (err) {
@@ -49,7 +61,7 @@ async function recommendArea(userInfo, areaCode, sigunguCode) {
   }
 }
 
-async function recommendStay(userInfo, areaCode, sigunguCode) {
+async function recommendStay(userInfo, areaCode, sigunguCode, contentId) {
   try {
     const recommendStayResult = {};
     recommendStayResult.items = [];
@@ -64,13 +76,20 @@ async function recommendStay(userInfo, areaCode, sigunguCode) {
     }
     let serviceResult = await callService('areaBasedList', stayParams);
     itemsToResult(serviceResult, recommendStayResult);
+    recommendStayResult.items = dropMyContent(contentId, recommendStayResult.items);
     await checkPlaceInfo(userInfo, recommendStayResult);
     for (const item of recommendStayResult.items) {
       const introParams = JSON.parse(JSON.stringify(baseParams));
       introParams.params.contentId = item.contentID;
       introParams.params.contentTypeId = item.contentTypeId;
       serviceResult = await callService('datailIntro', introParams);
+      const info = serviceResult.items.item;
+      item.checkInTime = info.checkintime;
+      item.checkOutTime = info.checkouttime;
+      item.parkAvailable = info.parkinglodging;
+      item.contact = info.infocenterlodging;
     }
+    return recommendStayResult.items;
   } catch (err) {
     console.error('recommendArea() error');
     console.error(err.message);
