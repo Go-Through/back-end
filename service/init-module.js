@@ -170,32 +170,6 @@ async function connectDB() {
   return true;
 }
 
-// 하트 누른건지 아닌지 확인하는 함수
-async function checkBasket(userInfo, contentId) {
-  let result = false;
-  try {
-    if (userInfo.basketPlaces) {
-      const userBasketInfo = userInfo.basketPlaces;
-      // null 이 아니면
-      if (userBasketInfo.basket_places && userBasketInfo.basket_places.basketItems) {
-        // basketItems: [content id] 들어갈 예정
-        const basketResult = userBasketInfo.basket_places.basketItems;
-        for (const basketId of basketResult) {
-          if (basketId === contentId) {
-            result = true;
-            break;
-          }
-        }
-      }
-    }
-  } catch (err) {
-    console.error('checkBasket() error');
-    console.error(err.message);
-    throw err;
-  }
-  return result;
-}
-
 const authenticateUser = (req, res, next) => {
   if (req.isAuthenticated()) {
     next();
@@ -246,6 +220,57 @@ function itemsToResult(result, tripResult) {
   }
 }
 
+function sortItems(sortOption, tripResult) {
+  let option = '';
+  switch (sortOption) {
+    case 0:
+      option = 'place_count';
+      break;
+    case 1:
+      option = 'place_heart';
+      break;
+    case 2:
+      option = 'title';
+      break;
+    default:
+      option = 'place_count';
+      break;
+  }
+  if (sortOption === 2) {
+    // eslint-disable-next-line max-len
+    tripResult.items.sort((a, b) => (a[option] < b[option] ? -1 : a[option] > b[option] ? 1 : 0));
+  } else {
+    // eslint-disable-next-line max-len
+    tripResult.items.sort((a, b) => (a[option] > b[option] ? -1 : a[option] < b[option] ? 1 : 0));
+  }
+}
+
+// 하트 누른건지 아닌지 확인하는 함수
+async function checkBasket(userInfo, contentId) {
+  let result = false;
+  try {
+    if (userInfo.basketPlaces) {
+      const userBasketInfo = userInfo.basketPlaces;
+      // null 이 아니면
+      if (userBasketInfo.basket_places && userBasketInfo.basket_places.basketItems) {
+        // basketItems: [content id] 들어갈 예정
+        const basketResult = userBasketInfo.basket_places.basketItems;
+        for (const basketId of basketResult) {
+          if (basketId === contentId) {
+            result = true;
+            break;
+          }
+        }
+      }
+    }
+  } catch (err) {
+    console.error('checkBasket() error');
+    console.error(err.message);
+    throw err;
+  }
+  return result;
+}
+
 async function checkPlaceInfo(userInfo, tripResult) {
   for (const tripInfo of tripResult.items) {
     const sqlResultSet = await models.places.findOne({
@@ -277,7 +302,8 @@ module.exports = {
   authenticateUser,
   isIdValidate,
   isPasswordValidate,
-  checkBasket,
   itemsToResult,
+  sortItems,
+  checkBasket,
   checkPlaceInfo,
 };

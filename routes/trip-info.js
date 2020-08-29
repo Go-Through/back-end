@@ -2,7 +2,7 @@ const express = require('express');
 
 const { authenticateUser } = require('../service/init-module');
 const { getMyPlace } = require('../service/manage-trip');
-const { getCommonInfo } = require('../service/detail-info');
+const { getCommonInfo, postBasket } = require('../service/detail-info');
 const { recommendLocation, recommendArea, recommendStay } = require('../service/recommend-info');
 
 const router = express.Router();
@@ -12,7 +12,7 @@ const router = express.Router();
  * @apiName trip info
  * @apiGroup 3. Trip
  *
- * @apiParam {int} [order] 정렬 순서 선택 0-count, 1-bascket, 2-title
+ * @apiParam {int} [order] 정렬 순서 선택 0-count, 1-basket, 2-title
  *
  * @apiSuccess {Array} items 추천 여행지 정보 배열
  * @apiSuccess {int} totalCount 총 개수
@@ -109,7 +109,8 @@ router.get('/location', authenticateUser, async (req, res, next) => {
         message: 'Input query - locationX, locationY, nowContentId',
       });
     }
-    locationRecommend = await recommendLocation(req.user, locationX, locationY, nowContentId);
+    locationRecommend = await recommendLocation(req.user,
+      parseFloat(locationX), parseFloat(locationY), parseFloat(nowContentId));
   } catch (err) {
     console.error('location error');
     console.error(err.message);
@@ -142,7 +143,8 @@ router.get('/place', authenticateUser, async (req, res, next) => {
         message: 'Input query - areaCode, nowContentId',
       });
     }
-    areaRecommend = await recommendArea(req.user, areaCode, sigunguCode, nowContentId);
+    areaRecommend = await recommendArea(req.user,
+      parseInt(areaCode, 10), parseInt(sigunguCode, 10), parseInt(nowContentId, 10));
   } catch (err) {
     console.error('location error');
     console.error(err.message);
@@ -159,6 +161,7 @@ router.get('/place', authenticateUser, async (req, res, next) => {
  * @apiParam {int} areaCode 지역 코드
  * @apiParam {int} [sigunguCode] 시군구코드
  * @apiParam {int} nowContentId 지금 보고있는 컨텐츠 아이디
+ * @apiParam {int} [order] 정렬 순서 선택 0-count, 1-basket, 2-title
  *
  * @apiSuccess {JSON} message
  * @apiSuccessExample {JSON} Success-Response:
@@ -169,19 +172,59 @@ router.get('/place', authenticateUser, async (req, res, next) => {
 router.get('/stay', authenticateUser, async (req, res, next) => {
   let stayRecommend = {};
   try {
-    const { areaCode, sigunguCode, nowContentId } = req.query;
+    const {
+      areaCode, sigunguCode, nowContentId, order,
+    } = req.query;
     if (!areaCode || !nowContentId) {
       res.send({
         message: 'Input query - areaCode, nowContentId',
       });
     }
-    stayRecommend = await recommendStay(req.user, areaCode, sigunguCode, nowContentId);
+    if (req.query.order && (req.query.order < 0 && req.query.order > 2)) {
+      res.send({
+        message: 'Query parameter order must range (0~2)',
+      });
+    }
+    stayRecommend = await recommendStay(req.user, parseInt(areaCode, 10),
+      parseInt(sigunguCode, 10), parseInt(nowContentId, 10), parseInt(order, 10));
   } catch (err) {
     console.error('location error');
     console.error(err.message);
     throw err;
   }
   res.send(stayRecommend);
+});
+
+/**
+ * @api {get} /trip-info/post-basket 6. Post Basket
+ * @apiName post basket
+ * @apiGroup 3. Trip
+ *
+ * @apiParam {int} contentId 컨텐츠 아이디
+ *
+ * @apiSuccess {JSON} message success
+ * @apiSuccessExample {JSON} Success-Response:
+ * HTTP/1.1 200 OK
+ *  {
+ *    message: "success",
+ *  }
+ */
+router.post('/post-basket', authenticateUser, async (req, res, next) => {
+  let result;
+  try {
+    const { contentId } = req.query;
+    if (!contentId) {
+      res.send({
+        message: 'Input query - contentId',
+      });
+    }
+    result = await postBasket(req.user, parseInt(contentId, 10));
+  } catch (err) {
+    console.error('post-basket error');
+    console.error(err.message);
+    throw err;
+  }
+  res.send(result);
 });
 
 module.exports = router;

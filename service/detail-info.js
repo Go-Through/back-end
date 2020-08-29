@@ -308,6 +308,55 @@ async function getCommonInfo(userInfo, contentId, contentTypeId) {
   return result;
 }
 
+async function postBasket(userInfo, contentId) {
+  const tx = await models.sequelize.transaction();
+  try {
+    const userBasket = userInfo.basketPlaces;
+    // 하트를 누르지 않은 상태라면
+    const newItems = [];
+    if (userBasket && userBasket.basketItems) {
+      for (const basketId of userBasket.basketItems) {
+        if (basketId !== contentId) {
+          newItems.push(basketId);
+        }
+      }
+    }
+    const newLength = newItems.unshift(contentId);
+    if (newLength > 30) {
+      newItems.pop();
+    }
+    // user 조회 업데이트, place count 업데이트
+    await models.users.update({
+      basketPlaces: { basketItems: newItems },
+    }, {
+      where: { id: userInfo.id },
+      transaction: tx,
+    });
+    const sqlResult = await models.places.findOne({
+      where: {
+        contentID: contentId,
+      },
+    });
+    const placeInfo = sqlResult.get();
+    await models.places.update({
+      placeCount: placeInfo.placeCount + 1,
+    }, {
+      where: { contentID: contentId },
+      transaction: tx,
+    });
+    await tx.commit();
+    return 'success';
+  } catch (err) {
+    if (tx) {
+      await tx.rollback();
+    }
+    console.error('postBasket() error');
+    console.error(err.message);
+    throw err;
+  }
+}
+
 module.exports = {
   getCommonInfo,
+  postBasket,
 };

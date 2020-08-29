@@ -1,5 +1,5 @@
 const {
-  callService, baseParams, models, checkPlaceInfo, itemsToResult,
+  callService, baseParams, models, checkPlaceInfo, itemsToResult, sortItems,
 } = require('./init-module');
 const { getTotalTest } = require('./manage-test');
 
@@ -137,28 +137,7 @@ async function getMyPlace(userInfo, sortOption = 0) {
       userTripResult = userInfo.userPlaces;
     }
     await checkPlaceInfo(userInfo, userTripResult);
-    let option = '';
-    switch (sortOption) {
-      case 0:
-        option = 'place_count';
-        break;
-      case 1:
-        option = 'place_heart';
-        break;
-      case 2:
-        option = 'title';
-        break;
-      default:
-        option = 'place_count';
-        break;
-    }
-    if (sortOption === 2) {
-      // eslint-disable-next-line max-len
-      userTripResult.items.sort((a, b) => (a[option] < b[option] ? -1 : a[option] > b[option] ? 1 : 0));
-    } else {
-      // eslint-disable-next-line max-len
-      userTripResult.items.sort((a, b) => (a[option] > b[option] ? -1 : a[option] < b[option] ? 1 : 0));
-    }
+    sortItems(sortOption, userTripResult);
     if (userTripResult.items.length > 100) {
       userTripResult.items = userTripResult.items.filter((item, idx) => idx < 100);
     }

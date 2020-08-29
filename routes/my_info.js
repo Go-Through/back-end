@@ -3,6 +3,7 @@ const express = require('express');
 const { authenticateUser } = require('../service/init-module');
 const { updateUserInfo } = require('../service/manage-user');
 const { connectCouple, dealWithEvent, checkEvent } = require('../service/manage-couple');
+const { getBasketPlaces, getSearchPlaces } = require('../service/manage_my_place');
 
 const router = express.Router();
 
@@ -81,7 +82,9 @@ router.put('/change-info', authenticateUser, async (req, res, next) => {
     console.error(err.message);
     throw err;
   }
-  res.send(result);
+  res.send({
+    message: result,
+  });
 });
 
 /**

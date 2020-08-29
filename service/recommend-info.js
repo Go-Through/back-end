@@ -1,5 +1,5 @@
 const {
-  callService, baseParams, checkPlaceInfo, itemsToResult,
+  callService, baseParams, checkPlaceInfo, itemsToResult, sortItems,
 } = require('./init-module');
 
 function dropMyContent(contentId, totalResultItems) {
@@ -61,7 +61,7 @@ async function recommendArea(userInfo, areaCode, sigunguCode, contentId) {
   }
 }
 
-async function recommendStay(userInfo, areaCode, sigunguCode, contentId) {
+async function recommendStay(userInfo, areaCode, sigunguCode, contentId, sortOption) {
   try {
     const recommendStayResult = {};
     recommendStayResult.items = [];
@@ -89,6 +89,7 @@ async function recommendStay(userInfo, areaCode, sigunguCode, contentId) {
       item.parkAvailable = info.parkinglodging;
       item.contact = info.infocenterlodging;
     }
+    sortItems(sortOption, recommendStayResult);
     return recommendStayResult.items;
   } catch (err) {
     console.error('recommendArea() error');
