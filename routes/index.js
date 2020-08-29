@@ -50,6 +50,7 @@ router.get('/main', authenticateUser, (req, res, next) => {
  * @apiParam {string} nickname Users nickname
  * @apiParam {string} id Users unique ID
  * @apiParam {string} password Users PW
+ * @apiParam {int} withId 연결하고자 하는 커플 아이디 get-candidate-id 인덱스 결과
  *
  * @apiSuccess {string} message 'sign up success'
  * @apiSuccessExample {JSON} Success-Response:

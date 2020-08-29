@@ -157,15 +157,21 @@ router.get('/event', authenticateUser, async (req, res ,next) => {
  * @apiSuccess {Array} Object 검색 아이디 array (디비 인덱스, 아이디, 닉네임, 생성날짜) 반환
  * @apiSuccessExample {Array} Success-Response:
  *  HTTP/1.1 200 OK
- *  {
- *  }
+ * [
+ *    {
+ *        "id": 2,
+ *        "mem_id": "local2",
+ *        "nickname": "local2",
+ *        "created_at": "2020-08-24T14:12:06.000Z"
+ *    }
+ * ]
  */
 router.get('/get-candidate-id', authenticateUser, async (req, res, next) => {
   let result;
   try {
     const { targetId } = req.query;
     if (targetId) {
-      result = await getTargetUser(targetId);
+      result = await getTargetUser(req.user.id, targetId);
     } else {
       result = {
         message: 'Input query - targetId',

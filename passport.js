@@ -6,6 +6,7 @@ const KakaoStrategy = require('passport-kakao').Strategy;
 const fs = require('fs');
 
 const { models, isIdValidate, isPasswordValidate } = require('./service/init-module');
+const { connectCouple } = require('./service/manage-couple');
 
 const { users } = models;
 
@@ -80,16 +81,18 @@ module.exports = () => {
       }
       const userPassword = generateHash(password);
       const nick = req.body.nickname;
+      const coupleId = req.body.withId;
       const data = {
         nickname: nick,
         memID: id,
         memPW: userPassword,
         socialType: 'local',
       };
-      users.create(data).then((newUser) => {
+      users.create(data).then(async (newUser) => {
         if (!newUser) {
           return done(null, false);
         }
+        await connectCouple(id, coupleId, true);
         return done(null, newUser.get());
       });
     });

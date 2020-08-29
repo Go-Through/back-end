@@ -15,7 +15,7 @@ async function checkExistId(checkId) {
   }
 }
 
-async function getTargetUser(targetId) {
+async function getTargetUser(userId, targetId) {
   const idList = [];
   try {
     const sqlResultSet = await models.users.findAll({
@@ -25,7 +25,9 @@ async function getTargetUser(targetId) {
       attributes: ['id', 'mem_id', 'nickname', 'created_at'],
     });
     for (const sqlResult of sqlResultSet) {
-      idList.push(sqlResult.get());
+      if (sqlResult.get().id !== userId) {
+        idList.push(sqlResult.get());
+      }
     }
   } catch (err) {
     console.error('getTargetUser() error');
@@ -44,7 +46,7 @@ async function updateUserInfo(userId, socialType, updateObject) {
       memID: updateObject.id,
       socialType: 'local',
     },
-  }).then((sqlResult) => {
+  }).then(async (sqlResult) => {
     if (sqlResult) {
       return {
         message: 'ID already exists',
@@ -57,7 +59,7 @@ async function updateUserInfo(userId, socialType, updateObject) {
       memID: updateObject.id,
       memPW: userPassword,
     };
-    models.users.update(data, {
+    await models.users.update(data, {
       where: { id: userId },
     });
     return 'success';
