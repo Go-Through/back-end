@@ -166,7 +166,7 @@ router.get('/event', authenticateUser, async (req, res ,next) => {
  *    }
  * ]
  */
-router.get('/get-candidate-id', authenticateUser, async (req, res, next) => {
+router.get('/get-candidate-id', async (req, res, next) => {
   let result;
   try {
     const { targetId } = req.query;
