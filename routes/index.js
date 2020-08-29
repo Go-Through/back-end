@@ -2,6 +2,7 @@ const express = require('express');
 const passport = require('passport');
 
 const { authenticateUser } = require('../service/init-module');
+const { checkExistId } = require('../service/manage-user');
 
 const router = express.Router();
 
@@ -19,7 +20,7 @@ const router = express.Router();
  */
 router.get('/', (req, res, next) => {
   res.send({
-    message: "fail",
+    message: 'fail',
   });
 });
 
@@ -215,5 +216,38 @@ router.get('/logout', (req, res, next) => {
     });
   });
 });
+
+/**
+ * @api {get} /chk-exist-id 8. Check Exist ID
+ * @apiName chk exist id
+ * @apiGroup 1. User
+ *
+ * @apiParam {string} chkId 체크할 아이디
+ *
+ * @apiSuccess {boolean} message 아이디 있으면 true, 없으면 false
+ * @apiSuccessExample {JSON} Success-Response:
+ * HTTP/1.1 200 OK
+ *  {
+ *    message: true
+ *  }
+ */
+router.get('/chk-exist-id', async (req, res, next) => {
+  try {
+    const { chkId } = req.query;
+    if (!chkId) {
+      res.send({
+        message: 'Input query - chkId',
+      });
+    }
+    const chkResult = await checkExistId(chkId);
+    res.send({
+      message: chkResult,
+    });
+  } catch (err) {
+    console.error('chk exist id error');
+    console.error(err.message);
+    throw err;
+  }
+})
 
 module.exports = router;

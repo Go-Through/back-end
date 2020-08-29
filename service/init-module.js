@@ -170,6 +170,32 @@ async function connectDB() {
   return true;
 }
 
+// 하트 누른건지 아닌지 확인하는 함수
+async function checkBasket(userInfo, contentId) {
+  let result = false;
+  try {
+    if (userInfo.basketPlaces) {
+      const userBasketInfo = userInfo.basketPlaces;
+      // null 이 아니면
+      if (userBasketInfo.basket_places && userBasketInfo.basket_places.basketItems) {
+        // basketItems: [content id] 들어갈 예정
+        const basketResult = userBasketInfo.basket_places.basketItems;
+        for (const basketId of basketResult) {
+          if (basketId === contentId) {
+            result = true;
+            break;
+          }
+        }
+      }
+    }
+  } catch (err) {
+    console.error('checkBasket() error');
+    console.error(err.message);
+    throw err;
+  }
+  return result;
+}
+
 const authenticateUser = (req, res, next) => {
   if (req.isAuthenticated()) {
     next();
@@ -190,6 +216,56 @@ function isPasswordValidate(pw) {
   return regPwd.test(pw);
 }
 
+function itemsToResult(result, tripResult) {
+  if (Array.isArray(result.items.item)) {
+    for (const content of result.items.item) {
+      // 여행 코스 컨텐츠는 추가 안함.
+      if (content.contenttypeid !== 25) {
+        const tempItem = {};
+        tempItem.contentID = content.contentid;
+        tempItem.cotentTypeID = content.contenttypeid;
+        tempItem.title = content.title;
+        tempItem.address = content.addr1;
+        tempItem.image = content.firstimage;
+        tripResult.items.push(tempItem);
+      }
+    }
+  } else {
+    if (result.items !== '') {
+      const content = result.items.item;
+      if (content.contenttypeid !== 25) {
+        const tempItem = {};
+        tempItem.contentID = content.contentid;
+        tempItem.cotentTypeID = content.contenttypeid;
+        tempItem.title = content.title;
+        tempItem.address = content.addr1;
+        tempItem.image = content.firstimage;
+        tripResult.items.push(tempItem);
+      }
+    }
+  }
+}
+
+async function checkPlaceInfo(userInfo, tripResult) {
+  for (const tripInfo of tripResult.items) {
+    const sqlResultSet = await models.places.findOne({
+      where: {
+        contentID: tripInfo.contentID,
+      },
+      attributes: ['place_count', 'place_heart'],
+    });
+    if (sqlResultSet) {
+      const placeInfo = sqlResultSet.get();
+      tripInfo.placeCount = placeInfo.place_count;
+      tripInfo.placeHeart = placeInfo.place_heart;
+    } else {
+      tripInfo.placeCount = 0;
+      tripInfo.placeHeart = 0;
+    }
+    tripInfo.heartFlag = await checkBasket(userInfo, tripInfo.contentID);
+  }
+}
+
 module.exports = {
   axios,
   models,
@@ -201,4 +277,7 @@ module.exports = {
   authenticateUser,
   isIdValidate,
   isPasswordValidate,
+  checkBasket,
+  itemsToResult,
+  checkPlaceInfo,
 };

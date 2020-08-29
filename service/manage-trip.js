@@ -1,4 +1,6 @@
-const { callService, baseParams, models } = require('./init-module');
+const {
+  callService, baseParams, models, checkPlaceInfo, itemsToResult,
+} = require('./init-module');
 const { getTotalTest } = require('./manage-test');
 
 function addCategoryParams(params, categoryCode) {
@@ -101,33 +103,7 @@ async function getTotalPlace(userId) {
         } else {
           tripResult.totalCount += result.numOfRows;
         }
-        if (Array.isArray(result.items.item)) {
-          for (const content of result.items.item) {
-            // 여행 코스 컨텐츠는 추가 안함.
-            if (content.contenttypeid !== 25) {
-              const tempItem = {};
-              tempItem.contentID = content.contentid;
-              tempItem.cotentTypeID = content.contenttypeid;
-              tempItem.title = content.title;
-              tempItem.address = content.addr1;
-              tempItem.image = content.firstimage;
-              tripResult.items.push(tempItem);
-            }
-          }
-        } else {
-          if (result.items !== '') {
-            const content = result.items.item;
-            if (content.contenttypeid !== 25) {
-              const tempItem = {};
-              tempItem.contentID = content.contentid;
-              tempItem.cotentTypeID = content.contenttypeid;
-              tempItem.title = content.title;
-              tempItem.address = content.addr1;
-              tempItem.image = content.firstimage;
-              tripResult.items.push(tempItem);
-            }
-          }
-        }
+        itemsToResult(result, tripResult);
       }
       page += 1;
     }
@@ -148,7 +124,6 @@ async function getMyPlace(userInfo, sortOption = 0) {
     if (!userInfo.testIdx) {
       return null;
     }
-    let sqlResultSet;
     if (!userInfo.userPlaces) {
       userTripResult = await getTotalPlace(userId);
       await models.users.update({
@@ -161,22 +136,7 @@ async function getMyPlace(userInfo, sortOption = 0) {
     } else {
       userTripResult = userInfo.userPlaces;
     }
-    for (const tripInfo of userTripResult.items) {
-      sqlResultSet = await models.places.findOne({
-        where: {
-          contentID: tripInfo.contentID,
-        },
-        attributes: ['place_count', 'place_heart'],
-      });
-      if (sqlResultSet) {
-        const placeInfo = sqlResultSet.get();
-        tripInfo.placeCount = placeInfo.place_count;
-        tripInfo.placeHeart = placeInfo.place_heart;
-      } else {
-        tripInfo.placeCount = 0;
-        tripInfo.placeHeart = 0;
-      }
-    }
+    await checkPlaceInfo(userInfo, userTripResult);
     let option = '';
     switch (sortOption) {
       case 0:

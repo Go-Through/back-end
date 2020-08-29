@@ -59,7 +59,7 @@ router.post('/post-test', authenticateUser, async (req, res, next) => {
 });
 
 /**
- * @api {get} /test/get-test 3. get Test
+ * @api {get} /test/get-test 3. Get Test
  * @apiName get test
  * @apiGroup 2. Test
  *

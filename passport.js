@@ -25,7 +25,7 @@ function loginByThirdparty(info, done) {
     // 신규 유저 회원 가입
     users.create({
       nickname: info.auth_nickname,
-      memID: info.auth_email,
+      memID: info.auth_id,
       socialType: info.auth_type,
       email: info.auth_email,
       image: info.auth_image,

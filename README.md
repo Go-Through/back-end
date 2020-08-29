@@ -1,5 +1,5 @@
 # back-end
-[![Build Status](http://54.180.144.146:8080/buildStatus/icon?job=kn-trip-back-end)](http://54.180.144.146:8080/job/kn-trip-back-end/)
+[![Build Status](http://kntrip.me:8080/buildStatus/icon?job=kn-trip-back-end)](http://kntrip.me:8080/job/kn-trip-back-end/)
 
 For Back End (Server And Database Component)
 

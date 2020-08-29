@@ -1,30 +1,6 @@
-const { callService, baseParams, models } = require('./init-module');
-
-// 하트 누른건지 아닌지 확인하는 함수 (여행지 정보 첫 페이지에서 활용할 예정)
-async function checkBasket(userInfo, contentId) {
-  let result = false;
-  try {
-    if (userInfo.basketPlaces) {
-      const userBasketInfo = userInfo.basketPlaces;
-      // null 이 아니면
-      if (userBasketInfo.basket_places && userBasketInfo.basket_places.basketItems) {
-        // basketItems: [content id] 들어갈 예정
-        const basketResult = userBasketInfo.basket_places.basketItems;
-        for (const basketId of basketResult) {
-          if (basketId === contentId) {
-            result = true;
-            break;
-          }
-        }
-      }
-    }
-  } catch (err) {
-    console.error('checkBasket() error');
-    console.error(err.message);
-    throw err;
-  }
-  return result;
-}
+const {
+  callService, baseParams, models, checkBasket,
+} = require('./init-module');
 
 function makeIntroInfo(contentTypeId, introInfo) {
   const result = {};
@@ -333,6 +309,5 @@ async function getCommonInfo(userInfo, contentId, contentTypeId) {
 }
 
 module.exports = {
-  checkBasket,
   getCommonInfo,
 };

@@ -2,6 +2,19 @@ const bcrypt = require('bcrypt');
 
 const { models, isIdValidate, isPasswordValidate } = require('./init-module');
 
+async function checkExistId(checkId) {
+  try {
+    const sqlResult = await models.users.findOne({
+      where: { memID: checkId },
+    });
+    return !!sqlResult;
+  } catch (err) {
+    console.error('checkExistId() error');
+    console.error(err.message);
+    throw err;
+  }
+}
+
 async function getTargetUser(targetId) {
   const idList = [];
   try {
@@ -53,6 +66,7 @@ async function updateUserInfo(userId, socialType, updateObject) {
 }
 
 module.exports = {
+  checkExistId,
   getTargetUser,
   updateUserInfo,
 };
