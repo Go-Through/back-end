@@ -2,7 +2,7 @@ const express = require('express');
 const passport = require('passport');
 
 const { authenticateUser } = require('../service/init-module');
-const { checkExistId } = require('../service/manage-user');
+const { checkExistId, getTargetUser } = require('../service/manage-user');
 
 const router = express.Router();
 
@@ -219,7 +219,45 @@ router.get('/logout', (req, res, next) => {
 });
 
 /**
- * @api {get} /chk-exist-id 8. Check Exist ID
+ * @api {get} /get-candidate-id 8. Get Candidate ID
+ * @apiName get candidate id
+ * @apiGroup 1. User
+ *
+ * @apiParam {string} targetId 검색하고자 하는 아이디
+ *
+ * @apiSuccess {Array} Object 검색 아이디 array (디비 인덱스, 아이디, 닉네임, 생성날짜) 반환
+ * @apiSuccessExample {Array} Success-Response:
+ *  HTTP/1.1 200 OK
+ * [
+ *    {
+ *        "id": 2,
+ *        "mem_id": "local2",
+ *        "nickname": "local2",
+ *        "created_at": "2020-08-24T14:12:06.000Z"
+ *    }
+ * ]
+ */
+router.get('/get-candidate-id', async (req, res, next) => {
+  let result;
+  try {
+    const { targetId } = req.query;
+    if (targetId) {
+      result = await getTargetUser(req.user.id, targetId);
+    } else {
+      result = {
+        message: 'Input query - targetId',
+      };
+    }
+  } catch (err) {
+    console.error('get-candidate-id error');
+    console.error(err.message);
+    throw err;
+  }
+  res.send(result);
+});
+
+/**
+ * @api {get} /chk-exist-id 9. Check Exist ID
  * @apiName chk exist id
  * @apiGroup 1. User
  *
@@ -249,6 +287,6 @@ router.get('/chk-exist-id', async (req, res, next) => {
     console.error(err.message);
     throw err;
   }
-})
+});
 
 module.exports = router;

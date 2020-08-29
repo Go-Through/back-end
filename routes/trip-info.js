@@ -72,7 +72,7 @@ router.get('/detail', authenticateUser, async (req, res, next) => {
     const { contentId, contentTypeId } = req.query;
     if (!contentId || !contentTypeId) {
       res.send({
-        message: 'Input query - contentId, contentTypeId'
+        message: 'Input query - contentId, contentTypeId',
       });
     }
     // eslint-disable-next-line max-len

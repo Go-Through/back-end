@@ -235,7 +235,7 @@ async function getCommonInfo(userInfo, contentId, contentTypeId) {
         commonInfo.heart = false;
         const basketChkResult = await checkBasket(userInfo, info.contentid);
         if (basketChkResult) {
-          result.heart = true;
+          commonInfo.heart = true;
         }
         commonInfo.introStr = info.overview;
         commonInfo.mapx = info.mapx;
@@ -279,7 +279,7 @@ async function getCommonInfo(userInfo, contentId, contentTypeId) {
         defaults: {
           contentID: contentId,
           contentTypeID: contentTypeId,
-          placeTitle: result.title,
+          placeTitle: result.common.title,
           placeCount: 1,
           placeHeart: 0,
         },
