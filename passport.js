@@ -73,7 +73,7 @@ module.exports = () => {
         memID: id,
         socialType: 'local',
       },
-    }).then((user) => {
+    }).then(async (user) => {
       if (user) {
         return done(null, false, {
           message: 'ID already exists',
@@ -81,19 +81,31 @@ module.exports = () => {
       }
       const userPassword = generateHash(password);
       const nick = req.body.nickname;
-      const coupleId = req.body.withId;
+      const coupleId = req.body.withId ? req.body.withId : null;
+      const tx = await models.sequelize.transaction();
       const data = {
         nickname: nick,
         memID: id,
         memPW: userPassword,
         socialType: 'local',
       };
-      users.create(data).then(async (newUser) => {
-        if (!newUser) {
+      users.create(data, {
+        transaction: tx,
+      }).then(async (newUser) => {
+        if (coupleId) {
+          await connectCouple(id, coupleId, true, tx);
+        }
+        if (!newUser) { // 생성이 안될 경우
           return done(null, false);
         }
-        await connectCouple(id, coupleId, true);
+        await tx.commit();
         return done(null, newUser.get());
+      }).catch(async (err) => {
+        if (tx) {
+          await tx.rollback();
+        }
+        console.error('local sign-up error');
+        console.error(err.message);
       });
     });
   }));

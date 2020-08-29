@@ -25,7 +25,7 @@ async function checkEvent(userInfo) {
 }
 
 // 연결을 요청했습니다!
-async function connectCouple(userId, targetId, connectOption) {
+async function connectCouple(userId, targetId, connectOption, tx) {
   try {
     // 이벤트 등록해줌
     const eventParams = { withEvent: userId };
@@ -34,11 +34,16 @@ async function connectCouple(userId, targetId, connectOption) {
       eventParams.withEvent = 0;
     }
     // 커플 등록 이벤트 - targetId에 userId가 커플 요청했다는 이벤트 등록
-    await models.users.update(eventParams, {
-      where: {
-        id: targetId,
-      },
-    });
+    if (tx) {
+      await models.users.update(eventParams, {
+        where: { id: targetId },
+        transaction: tx,
+      });
+    } else {
+      await models.users.update(eventParams, {
+        where: { id: targetId },
+      });
+    }
   } catch (err) {
     console.error('enrollCouple() error');
     console.error(err.message);
