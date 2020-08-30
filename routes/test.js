@@ -10,7 +10,7 @@ const router = express.Router();
  * @apiName test test call api
  * @apiGroup 2. Test
  *
- * @apiSuccess {string} message 'test'
+ * @apiSuccess {String} message 'test'
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {
@@ -28,10 +28,10 @@ router.get('/', authenticateUser, (req, res, next) => {
  * @apiName post test
  * @apiGroup 2. Test
  *
- * @apiParam {int} id User unique index for database
+ * @apiParam {Number} id User unique index for database
  * @apiParam {JSON} test test 안에는 place(array type), concept(array type) 존재
  *
- * @apiSuccess {string} message 'success'
+ * @apiSuccess {String} message 'success'
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {

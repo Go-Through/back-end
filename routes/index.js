@@ -11,7 +11,7 @@ const router = express.Router();
  * @apiName before
  * @apiGroup 1. User
  *
- * @apiSuccess {string} message 'fail'
+ * @apiSuccess {String} message 'fail'
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {
@@ -29,7 +29,7 @@ router.get('/', (req, res, next) => {
  * @apiName main
  * @apiGroup 1. User
  *
- * @apiSuccess {string} message 'success'
+ * @apiSuccess {String} message 'success'
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {
@@ -47,12 +47,22 @@ router.get('/main', authenticateUser, (req, res, next) => {
  * @apiName sign up
  * @apiGroup 1. User
  *
- * @apiParam {string} nickname Users nickname
- * @apiParam {string} id Users unique ID
- * @apiParam {string} password Users PW
- * @apiParam {int} withId 연결하고자 하는 커플 아이디 get-candidate-id 인덱스 결과
+ * @apiDescription 로컬 가입을 위한 API 이다. nickname, id, password, withId 를 받아
+ * 서버로 POST 한다.
  *
- * @apiSuccess {string} message 'sign up success'
+ * @apiParam {String} nickname Users nickname
+ * @apiParam {String} id Users unique ID
+ * @apiParam {String} password Users PW
+ * @apiParam {Number} withId 연결하고자 하는 커플 아이디 get-candidate-id 인덱스 결과
+ * @apiParamExample {JSON} Request-Example:
+ * {
+ *   "nickname": "local1",
+ *   "id": "local1",
+ *   "password": "a123456",
+ *   "withId": 2,
+ * }
+ *
+ * @apiSuccess {String} message 'sign up success'
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {
@@ -72,13 +82,20 @@ router.post('/sign-up', passport.authenticate('local-signup', {
  * @apiName login
  * @apiGroup 1. User
  *
- * @apiParam {string} id Users unique ID
- * @apiParam {string} password Users PW
+ * @apiDescription 로컬 로그인을 위한 API 이다. id와 password 가 필요하다.
+ *
+ * @apiParam {String} id Users unique ID
+ * @apiParam {String} password Users PW
+ * @apiParamExample {JSON} Request-Example:
+ * {
+ *   "id": "local1",
+ *   "password": "a123456"
+ * }
  *
  * @apiSuccess {JSON} session cookie info & passport - passport.user is session
- * @apiSuccess {string} nickname user nickname
- * @apiSuccess {boolean} testFlag 테스트 했는지 유무 (테스트를 해야 여행지 정보 조회가능)
- * @apiSuccess {string} socialType 소셜타입: 마이페이지에서 로컬 타입만 정보 수정 가능하기 때문
+ * @apiSuccess {String} nickname user nickname
+ * @apiSuccess {Boolean} testFlag 테스트 했는지 유무 (테스트를 해야 여행지 정보 조회가능)
+ * @apiSuccess {String} socialType 소셜타입: 마이페이지에서 로컬 타입만 정보 수정 가능하기 때문
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {
@@ -116,10 +133,13 @@ router.post('/login', passport.authenticate('local-signin', {
  * @apiName login naver
  * @apiGroup 1. User
  *
+ * @apiDescription API 콜을 하면, Naver sign up, login을 하기 위한 콜백 URL 로 자동 연결되며
+ * 회원가입과 동시에 로그인이 진행되고 예시와 같은 결과값을 받을 수 있다.
+ *
  * @apiSuccess {JSON} session cookie info & passport - passport.user is session
- * @apiSuccess {string} nickname user nickname
- * @apiSuccess {boolean} testFlag 테스트 했는지 유무 (테스트를 해야 여행지 정보 조회가능)
- * @apiSuccess {string} socialType 소셜타입: 마이페이지에서 로컬 타입만 정보 수정 가능하기 때문
+ * @apiSuccess {String} nickname user nickname
+ * @apiSuccess {Boolean} testFlag 테스트 했는지 유무 (테스트를 해야 여행지 정보 조회가능)
+ * @apiSuccess {String} socialType 소셜타입: 마이페이지에서 로컬 타입만 정보 수정 가능하기 때문
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {
@@ -159,10 +179,13 @@ router.get('/login/naver/callback', passport.authenticate('naver-signin', {
  * @apiName login kakao
  * @apiGroup 1. User
  *
+ * @apiDescription API 콜을 하면, Kakao sign up, login을 하기 위한 콜백 URL 로 자동 연결되며
+ * 회원가입과 동시에 로그인이 진행되고 예시와 같은 결과값을 받을 수 있다.
+ *
  * @apiSuccess {JSON} session cookie info & passport - passport.user is session
- * @apiSuccess {string} nickname user nickname
- * @apiSuccess {boolean} testFlag 테스트 했는지 유무 (테스트를 해야 여행지 정보 조회가능)
- * @apiSuccess {string} socialType 소셜타입: 마이페이지에서 로컬 타입만 정보 수정 가능하기 때문
+ * @apiSuccess {String} nickname user nickname
+ * @apiSuccess {Boolean} testFlag 테스트 했는지 유무 (테스트를 해야 여행지 정보 조회가능)
+ * @apiSuccess {String} socialType 소셜타입: 마이페이지에서 로컬 타입만 정보 수정 가능하기 때문
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {
@@ -223,10 +246,12 @@ router.get('/logout', (req, res, next) => {
  * @apiName get candidate id
  * @apiGroup 1. User
  *
- * @apiParam {string} targetId 검색하고자 하는 아이디
+ * @apiDescription API 콜을 통해 아이디에 해당하는 다른 유저들의 후보를 가져올 수 있다.
  *
- * @apiSuccess {Array} Object 검색 아이디 array (디비 인덱스, 아이디, 닉네임, 생성날짜) 반환
- * @apiSuccessExample {JSON} Success-Response:
+ * @apiParam {String} targetId 검색하고자 하는 아이디
+ *
+ * @apiSuccess {Object} Object 검색 아이디 array (디비 인덱스, 아이디, 닉네임, 생성날짜) 반환
+ * @apiSuccessExample {Object} Success-Response:
  *  HTTP/1.1 200 OK
  * [
  *    {
@@ -265,9 +290,11 @@ router.get('/get-candidate-id', async (req, res, next) => {
  * @apiName chk exist id
  * @apiGroup 1. User
  *
- * @apiParam {string} chkId 체크할 아이디
+ * @apiDescription 있는 아이디인지 체크할 수 있다.
  *
- * @apiSuccess {boolean} message 아이디 있으면 true, 없으면 false
+ * @apiParam {String} chkId 체크할 아이디
+ *
+ * @apiSuccess {Boolean} message 아이디 있으면 true, 없으면 false
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {

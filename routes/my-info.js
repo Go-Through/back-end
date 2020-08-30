@@ -12,7 +12,7 @@ const router = express.Router();
  * @apiName my info test call api
  * @apiGroup 4. My Info
  *
- * @apiSuccess {string} message 'success'
+ * @apiSuccess {String} message 'success'
  * @apiSuccessExample {JSON} Success-Response:
  *  HTTP/1.1 200 OK
  *  {
@@ -108,7 +108,7 @@ router.get('/search', authenticateUser, async (req, res, next) => {
  * @apiSuccessExample {JSON} Success-Response:
  *  HTTP/1.1 200 OK
  *  {
- *    message: 'success'
+ *    message: "success"
  *  }
  */
 router.put('/change-info', authenticateUser, async (req, res, next) => {
@@ -135,14 +135,14 @@ router.put('/change-info', authenticateUser, async (req, res, next) => {
  * @apiName post event
  * @apiGroup 4. My Info
  *
- * @apiParam {int} targetId 등록하고자 하는 커플 아이디의 디비 인덱스 (get_candidate_id 참고)
- * @apiParam {boolean} connectOption 연결 요청 = true, 연결 해제 = false
+ * @apiParam {Number} targetId 등록하고자 하는 커플 아이디의 디비 인덱스 (get_candidate_id 참고)
+ * @apiParam {Boolean} connectOption 연결 요청 = true, 연결 해제 = false
  *
  * @apiSuccess {JSON} message 'post event success'
  * @apiSuccessExample {JSON} Success-Response:
  *  HTTP/1.1 200 OK
  *  {
- *    message: 'post event success'
+ *    message: "post event success"
  *  }
  */
 router.post('/post-event', authenticateUser, async (req, res, next) => {
@@ -204,9 +204,9 @@ router.get('/event', authenticateUser, async (req, res ,next) => {
  * @apiName process couple
  * @apiGroup 4. My Info
  *
- * @apiParam {boolean} acceptOption 수락하기-true, 거절하기-false
+ * @apiParam {Boolean} acceptOption 수락하기-true, 거절하기-false
  *
- * @apiSuccess {JSON} message "connect success"
+ * @apiSuccess {JSON} message 'connect success'
  * @apiSuccessExample {JSON} Success-Response:
  *  HTTP/1.1 200 OK
  *  {

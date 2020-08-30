@@ -12,10 +12,10 @@ const router = express.Router();
  * @apiName trip info
  * @apiGroup 3. Trip
  *
- * @apiParam {int} [order] 정렬 순서 선택 0-count, 1-basket, 2-title
+ * @apiParam {Number=0,1,2} [order] 정렬 순서 선택 0-count, 1-basket, 2-title
  *
- * @apiSuccess {Array} items 추천 여행지 정보 배열
- * @apiSuccess {int} totalCount 총 개수
+ * @apiSuccess {Object} items 추천 여행지 정보 배열
+ * @apiSuccess {Number} totalCount 총 개수
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {
@@ -57,10 +57,10 @@ router.get('/', authenticateUser, async (req, res, next) => {
  * @apiName detail info
  * @apiGroup 3. Trip
  *
- * @apiParam contentId 컨텐츠 아이디 (Tour API)
- * @apiParam contentTypeId 컨텐츠 타입 (Tour API)
+ * @apiParam {Number} contentId 컨텐츠 아이디 (Tour API)
+ * @apiParam {Number} contentTypeId 컨텐츠 타입 (Tour API)
  *
- * @apiSuccess {JSON} Object 정보
+ * @apiSuccess {JSON} Object 상세 정보, 키 안의 key, value 값 다 다름.
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  * {
@@ -128,11 +128,11 @@ router.get('/detail', authenticateUser, async (req, res, next) => {
  * @apiName recommend location
  * @apiGroup 3. Trip
  *
- * @apiParam {float} locationX 경도
- * @apiParam {float} locationY 위도
- * @apiParam {int} nowContentId 지금 보고있는 컨텐츠 아이디
+ * @apiParam {Number} locationX 경도
+ * @apiParam {Number} locationY 위도
+ * @apiParam {Number} nowContentId 지금 보고있는 컨텐츠 아이디
  *
- * @apiSuccess {JSON} message
+ * @apiSuccess {JSON} message 위치 기반 추천 장소
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  * [
@@ -172,9 +172,9 @@ router.get('/location', authenticateUser, async (req, res, next) => {
  * @apiName area based place
  * @apiGroup 3. Trip
  *
- * @apiParam {int} areaCode 지역코드
- * @apiParam {int} [sigunguCode] 시군구코드
- * @apiParam {int} nowContentId 지금 보고있는 컨텐츠 아이디
+ * @apiParam {Number} areaCode 지역코드
+ * @apiParam {Number} [sigunguCode] 시군구코드
+ * @apiParam {Number} nowContentId 지금 보고있는 컨텐츠 아이디
  *
  * @apiSuccess {JSON} message
  * @apiSuccessExample {JSON} Success-Response:
@@ -216,10 +216,10 @@ router.get('/area', authenticateUser, async (req, res, next) => {
  * @apiName stay place
  * @apiGroup 3. Trip
  *
- * @apiParam {int} areaCode 지역 코드
- * @apiParam {int} [sigunguCode] 시군구코드
- * @apiParam {int} nowContentId 지금 보고있는 컨텐츠 아이디
- * @apiParam {int} [order] 정렬 순서 선택 0-count, 1-basket, 2-title
+ * @apiParam {Number} areaCode 지역 코드
+ * @apiParam {Number} [sigunguCode] 시군구코드
+ * @apiParam {Number} nowContentId 지금 보고있는 컨텐츠 아이디
+ * @apiParam {Number=0,1,2} [order] 정렬 순서 선택 0-count, 1-basket, 2-title
  *
  * @apiSuccess {JSON} message
  * @apiSuccessExample {JSON} Success-Response:
@@ -272,7 +272,7 @@ router.get('/stay', authenticateUser, async (req, res, next) => {
  * @apiName post basket
  * @apiGroup 3. Trip
  *
- * @apiParam {int} contentId 컨텐츠 아이디
+ * @apiParam {Number} contentId 컨텐츠 아이디
  *
  * @apiSuccess {JSON} message 성공 시 'success' 실패시 반영 안되고 'fail'
  * @apiSuccessExample {JSON} Success-Response:
