@@ -37,6 +37,15 @@ router.get('/', authenticateUser, (req, res, next) => {
  *  }
  */
 router.get('/basket', authenticateUser, async (req, res, next) => {
+  let result;
+  try {
+    result = await getBasketPlaces(req.user);
+  } catch (err) {
+    console.error('basket error');
+    console.error(err.message);
+    throw err;
+  }
+  res.send(result);
 });
 
 /**
@@ -51,6 +60,15 @@ router.get('/basket', authenticateUser, async (req, res, next) => {
  *  }
  */
 router.get('/search', authenticateUser, async (req, res, next) => {
+  let result;
+  try {
+    result = await getSearchPlaces(req.user);
+  } catch (err) {
+    console.error('search error');
+    console.error(err.message);
+    throw err;
+  }
+  res.send(result);
 });
 
 /**

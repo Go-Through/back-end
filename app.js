@@ -26,7 +26,7 @@ const indexRouter = require('./routes/index');
 const shortestRouter = require('./routes/shortest');
 const testRouter = require('./routes/test');
 const tripInfoRouter = require('./routes/trip-info');
-const myInfoRouter = require('./routes/my_info');
+const myInfoRouter = require('./routes/my-info');
 
 const app = express();
 

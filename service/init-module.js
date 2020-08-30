@@ -277,12 +277,11 @@ async function checkPlaceInfo(userInfo, tripResult) {
       where: {
         contentID: tripInfo.contentID,
       },
-      attributes: ['place_count', 'place_heart'],
     });
     if (sqlResultSet) {
       const placeInfo = sqlResultSet.get();
-      tripInfo.placeCount = placeInfo.place_count;
-      tripInfo.placeHeart = placeInfo.place_heart;
+      tripInfo.placeCount = placeInfo.placeCount;
+      tripInfo.placeHeart = placeInfo.placeHeart;
     } else {
       tripInfo.placeCount = 0;
       tripInfo.placeHeart = 0;
