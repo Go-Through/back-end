@@ -83,7 +83,6 @@ async function recommendStay(userInfo, areaCode, sigunguCode, contentId, sortOpt
       introParams.params.contentId = item.contentID;
       introParams.params.contentTypeId = item.contentTypeID;
       serviceResult = await callService('detailIntro', introParams);
-      console.log(serviceResult);
       const info = serviceResult.items.item;
       item.checkInTime = info.checkintime;
       item.checkOutTime = info.checkouttime;

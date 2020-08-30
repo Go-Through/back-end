@@ -67,23 +67,35 @@ async function connectCouple(userId, targetId, connectOption, tx) {
     console.error(err.message);
     throw err;
   }
-  return 'success';
+  return {
+    message: 'post event success',
+  };
 }
 
 // 수락하기 or 거절하기
 async function dealWithEvent(userInfo, eventOption) {
   const userId = userInfo.id;
   const eventId = userInfo.withEvent;
+  const tx = await models.sequelize.transaction();
   try {
     // 수락하기
     if (eventOption) {
-      // 커플 등록 (withEvent 에 커플 user idx 들어갈 예정)
+      // 커플 등록 (withId 에 커플 user idx 들어갈 예정)
       await models.users.update({
         withID: eventId,
         withEvent: null,
         userPlaces: null,
       }, {
-        where: { id: [userId, eventId] },
+        where: { id: userId },
+        transaction: tx,
+      });
+      await models.users.update({
+        withID: userId,
+        withEvent: null,
+        userPlaces: null,
+      }, {
+        where: { id: eventId },
+        transaction: tx,
       });
     } else { // 거절하기 - 이벤트 없애줌.
       await models.users.update({
@@ -92,7 +104,14 @@ async function dealWithEvent(userInfo, eventOption) {
         where: { id: eventId },
       });
     }
+    await tx.commit();
+    return {
+      message: 'connect success',
+    };
   } catch (err) {
+    if (tx) {
+      await tx.rollback();
+    }
     console.error('dealWithEvent() error');
     console.error(err.message);
     throw err;

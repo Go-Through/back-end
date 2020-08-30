@@ -12,11 +12,11 @@ const router = express.Router();
  * @apiName my info test call api
  * @apiGroup 4. My Info
  *
- * @apiSuccess {string} message success
+ * @apiSuccess {string} message 'success'
  * @apiSuccessExample {JSON} Success-Response:
  *  HTTP/1.1 200 OK
  *  {
- *    message: 'success'
+ *    message: "success"
  *  }
  */
 router.get('/', authenticateUser, (req, res, next) => {
@@ -33,8 +33,21 @@ router.get('/', authenticateUser, (req, res, next) => {
  * @apiSuccess {JSON} basket 찜한 장소
  * @apiSuccessExample {JSON} Success-Response:
  *  HTTP/1.1 200 OK
- *  {
- *  }
+ * {
+ *   "items": [
+ *       {
+ *           "contentID": 125452,
+ *           "contentTypeID": 12,
+ *           "title": "청계산",
+ *           "address": "서울특별시 서초구 원터길\n경기도 성남시ㆍ과천시ㆍ의왕시",
+ *           "image": "http://tong.visitkorea.or.kr/cms/resource/41/2023841_image2_1.jpg",
+ *           "placeCount": 1,
+ *           "placeHeart": 1,
+ *           "heartFlag": true
+ *       }
+ *   ],
+ *   "totalCount": 1
+ * }
  */
 router.get('/basket', authenticateUser, async (req, res, next) => {
   let result;
@@ -53,11 +66,24 @@ router.get('/basket', authenticateUser, async (req, res, next) => {
  * @apiName search
  * @apiGroup 4. My Info
  *
- * @apiSuccess {JSON} bascket 조회한 장소
+ * @apiSuccess {JSON} search 조회한 장소
  * @apiSuccessExample {JSON} Success-Response:
  *  HTTP/1.1 200 OK
- *  {
- *  }
+ * {
+ *   "items": [
+ *       {
+ *           "contentID": 125452,
+ *           "contentTypeID": 12,
+ *           "title": "청계산",
+ *           "address": "서울특별시 서초구 원터길\n경기도 성남시ㆍ과천시ㆍ의왕시",
+ *           "image": "http://tong.visitkorea.or.kr/cms/resource/41/2023841_image2_1.jpg",
+ *           "placeCount": 1,
+ *           "placeHeart": 1,
+ *           "heartFlag": true
+ *       }
+ *   ],
+ *   "totalCount": 1
+ * }
  */
 router.get('/search', authenticateUser, async (req, res, next) => {
   let result;
@@ -78,10 +104,11 @@ router.get('/search', authenticateUser, async (req, res, next) => {
  *
  * @apiParam {JSON} updateObject 구성요소: nickname 바꿀 닉네임, id 바꿀 아이디, 아이디 규칙 지켜야함, password 바꿀 패스워드, 패스워드 규칙 지켜야 함.
  *
- * @apiSuccess {JSON} message success 메시지 다양함 (길이문제, 실패, 성공, 이미 존재)
+ * @apiSuccess {JSON} message 'success' 메시지 다양함 (길이문제, 실패, 성공, 이미 존재)
  * @apiSuccessExample {JSON} Success-Response:
  *  HTTP/1.1 200 OK
  *  {
+ *    message: 'success'
  *  }
  */
 router.put('/change-info', authenticateUser, async (req, res, next) => {
@@ -100,9 +127,7 @@ router.put('/change-info', authenticateUser, async (req, res, next) => {
     console.error(err.message);
     throw err;
   }
-  res.send({
-    message: result,
-  });
+  res.send(result);
 });
 
 /**
@@ -113,10 +138,11 @@ router.put('/change-info', authenticateUser, async (req, res, next) => {
  * @apiParam {int} targetId 등록하고자 하는 커플 아이디의 디비 인덱스 (get_candidate_id 참고)
  * @apiParam {boolean} connectOption 연결 요청 = true, 연결 해제 = false
  *
- * @apiSuccess {JSON} message
+ * @apiSuccess {JSON} message 'post event success'
  * @apiSuccessExample {JSON} Success-Response:
  *  HTTP/1.1 200 OK
  *  {
+ *    message: 'post event success'
  *  }
  */
 router.post('/post-event', authenticateUser, async (req, res, next) => {
@@ -180,16 +206,17 @@ router.get('/event', authenticateUser, async (req, res ,next) => {
  *
  * @apiParam {boolean} acceptOption 수락하기-true, 거절하기-false
  *
- * @apiSuccess {JSON} message
+ * @apiSuccess {JSON} message "connect success"
  * @apiSuccessExample {JSON} Success-Response:
  *  HTTP/1.1 200 OK
  *  {
+ *    message: "connect success"
  *  }
  */
-router.post('process-couple', authenticateUser, async (req, res, next) => {
+router.post('/process-couple', authenticateUser, async (req, res, next) => {
   let result;
   try {
-    const { acceptOption } = req.query;
+    const { acceptOption } = req.body;
     if (acceptOption) {
       result = await dealWithEvent(req.user, acceptOption);
     } else {

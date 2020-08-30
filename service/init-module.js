@@ -282,6 +282,8 @@ async function checkPlaceInfo(userInfo, tripResult) {
       const placeInfo = sqlResultSet.get();
       tripInfo.contentTypeID = placeInfo.contentTypeID;
       tripInfo.title = placeInfo.placeTitle;
+      tripInfo.address = placeInfo.address;
+      tripInfo.image = placeInfo.image;
       tripInfo.placeCount = placeInfo.placeCount;
       tripInfo.placeHeart = placeInfo.placeHeart;
     } else {
