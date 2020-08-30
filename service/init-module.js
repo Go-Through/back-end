@@ -171,7 +171,7 @@ async function connectDB() {
 }
 
 const authenticateUser = (req, res, next) => {
-  if (req.isAuthenticated()) {
+  if (req.session.passport.user) {
     next();
   } else {
     res.status(301).redirect('/');
@@ -197,7 +197,7 @@ function itemsToResult(result, tripResult) {
       if (content.contenttypeid !== 25) {
         const tempItem = {};
         tempItem.contentID = content.contentid;
-        tempItem.cotentTypeID = content.contenttypeid;
+        tempItem.contentTypeID = content.contenttypeid;
         tempItem.title = content.title;
         tempItem.address = content.addr1;
         tempItem.image = content.firstimage;
@@ -210,7 +210,7 @@ function itemsToResult(result, tripResult) {
       if (content.contenttypeid !== 25) {
         const tempItem = {};
         tempItem.contentID = content.contentid;
-        tempItem.cotentTypeID = content.contenttypeid;
+        tempItem.contentTypeID = content.contenttypeid;
         tempItem.title = content.title;
         tempItem.address = content.addr1;
         tempItem.image = content.firstimage;
@@ -252,9 +252,9 @@ async function checkBasket(userInfo, contentId) {
     if (userInfo.basketPlaces) {
       const userBasketInfo = userInfo.basketPlaces;
       // null 이 아니면
-      if (userBasketInfo.basket_places && userBasketInfo.basket_places.basketItems) {
+      if (userBasketInfo && userBasketInfo.basketItems) {
         // basketItems: [content id] 들어갈 예정
-        const basketResult = userBasketInfo.basket_places.basketItems;
+        const basketResult = userBasketInfo.basketItems;
         for (const basketId of basketResult) {
           if (basketId === contentId) {
             result = true;
@@ -280,6 +280,8 @@ async function checkPlaceInfo(userInfo, tripResult) {
     });
     if (sqlResultSet) {
       const placeInfo = sqlResultSet.get();
+      tripInfo.contentTypeID = placeInfo.contentTypeID;
+      tripInfo.title = placeInfo.placeTitle;
       tripInfo.placeCount = placeInfo.placeCount;
       tripInfo.placeHeart = placeInfo.placeHeart;
     } else {

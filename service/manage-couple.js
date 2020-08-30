@@ -4,6 +4,7 @@ const { models } = require('./init-module');
 async function checkEvent(userInfo) {
   const userId = userInfo.id;
   const eventId = userInfo.withEvent;
+  let result;
   try {
     // 커플 해제
     if (eventId === 0) {
@@ -14,14 +15,31 @@ async function checkEvent(userInfo) {
       }, {
         where: { id: userId },
       });
-      return 'disconnect';
+      result = {
+        message: 'disconnect',
+      };
+    } else {
+      const sqlResult = await models.users.findOne({
+        where: {
+          id: eventId,
+        },
+        attributes: ['id', 'mem_id'],
+      });
+      if (sqlResult) {
+        result = sqlResult.get();
+        result.message = 'connect';
+      } else {
+        result = {
+          message: 'not user',
+        };
+      }
     }
   } catch (err) {
     console.error('checkEvent() error');
     console.error(err.message);
     throw err;
   }
-  return eventId;
+  return result;
 }
 
 // 연결을 요청했습니다!
@@ -45,7 +63,7 @@ async function connectCouple(userId, targetId, connectOption, tx) {
       });
     }
   } catch (err) {
-    console.error('enrollCouple() error');
+    console.error('connectCouple() error');
     console.error(err.message);
     throw err;
   }

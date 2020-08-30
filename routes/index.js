@@ -226,7 +226,7 @@ router.get('/logout', (req, res, next) => {
  * @apiParam {string} targetId 검색하고자 하는 아이디
  *
  * @apiSuccess {Array} Object 검색 아이디 array (디비 인덱스, 아이디, 닉네임, 생성날짜) 반환
- * @apiSuccessExample {Array} Success-Response:
+ * @apiSuccessExample {JSON} Success-Response:
  *  HTTP/1.1 200 OK
  * [
  *    {
@@ -242,7 +242,11 @@ router.get('/get-candidate-id', async (req, res, next) => {
   try {
     const { targetId } = req.query;
     if (targetId) {
-      result = await getTargetUser(req.user.id, targetId);
+      if (req.user) {
+        result = await getTargetUser(targetId, req.user.id);
+      } else {
+        result = await getTargetUser(targetId);
+      }
     } else {
       result = {
         message: 'Input query - targetId',
@@ -283,7 +287,7 @@ router.get('/chk-exist-id', async (req, res, next) => {
       message: chkResult,
     });
   } catch (err) {
-    console.error('chk exist id error');
+    console.error('chk-exist-id error');
     console.error(err.message);
     throw err;
   }

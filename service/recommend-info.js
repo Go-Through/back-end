@@ -17,14 +17,14 @@ async function recommendLocation(userInfo, locationX, locationY, contentId) {
     const recommendResult = {};
     recommendResult.items = [];
     const locationParams = JSON.parse(JSON.stringify(baseParams));
-    locationParams.numOfRows = 15;
-    locationParams.listYN = 'Y';
+    locationParams.params.numOfRows = 15;
+    locationParams.params.listYN = 'Y';
     // 대표 이미지가 반드시 있는 정렬, 거리순 가까운 것부터
-    locationParams.arrange = 'S';
-    locationParams.mapX = locationX;
-    locationParams.mapY = locationY;
-    locationParams.radius = 10000; // 단위 미터이기 때문에 10km
-    const serviceResult = await callService('loactionBasedList', locationParams);
+    locationParams.params.arrange = 'S';
+    locationParams.params.mapX = locationX;
+    locationParams.params.mapY = locationY;
+    locationParams.params.radius = 10000; // 단위 미터이기 때문에 10km
+    const serviceResult = await callService('locationBasedList', locationParams);
     itemsToResult(serviceResult, recommendResult);
     recommendResult.items = dropMyContent(contentId, recommendResult.items);
     await checkPlaceInfo(userInfo, recommendResult);
@@ -41,13 +41,13 @@ async function recommendArea(userInfo, areaCode, sigunguCode, contentId) {
     const recommendAreaResult = {};
     recommendAreaResult.items = [];
     const areaBasedParams = JSON.parse(JSON.stringify(baseParams));
-    areaBasedParams.numOfRows = 15;
-    areaBasedParams.listYN = 'Y';
+    areaBasedParams.params.numOfRows = 15;
+    areaBasedParams.params.listYN = 'Y';
     // 대표 이미지 있는 조회순 정렬
-    areaBasedParams.arrange = 'P';
-    areaBasedParams.areaCode = areaCode;
+    areaBasedParams.params.arrange = 'P';
+    areaBasedParams.params.areaCode = areaCode;
     if (areaCode && sigunguCode) {
-      areaBasedParams.sigunguCode = sigunguCode;
+      areaBasedParams.params.sigunguCode = sigunguCode;
     }
     const serviceResult = await callService('areaBasedList', areaBasedParams);
     itemsToResult(serviceResult, recommendAreaResult);
@@ -66,23 +66,24 @@ async function recommendStay(userInfo, areaCode, sigunguCode, contentId, sortOpt
     const recommendStayResult = {};
     recommendStayResult.items = [];
     const stayParams = JSON.parse(JSON.stringify(baseParams));
-    stayParams.numOfRows = 15;
-    stayParams.listYN = 'Y';
+    stayParams.params.numOfRows = 15;
+    stayParams.params.listYN = 'Y';
     // 대표 이미지 있는 조회순 정렬
-    stayParams.arrange = 'P';
-    stayParams.areaCode = areaCode;
+    stayParams.params.arrange = 'P';
+    stayParams.params.areaCode = areaCode;
     if (areaCode && sigunguCode) {
-      stayParams.sigunguCode = sigunguCode;
+      stayParams.params.sigunguCode = sigunguCode;
     }
-    let serviceResult = await callService('areaBasedList', stayParams);
+    let serviceResult = await callService('searchStay', stayParams);
     itemsToResult(serviceResult, recommendStayResult);
     recommendStayResult.items = dropMyContent(contentId, recommendStayResult.items);
     await checkPlaceInfo(userInfo, recommendStayResult);
     for (const item of recommendStayResult.items) {
       const introParams = JSON.parse(JSON.stringify(baseParams));
       introParams.params.contentId = item.contentID;
-      introParams.params.contentTypeId = item.contentTypeId;
-      serviceResult = await callService('datailIntro', introParams);
+      introParams.params.contentTypeId = item.contentTypeID;
+      serviceResult = await callService('detailIntro', introParams);
+      console.log(serviceResult);
       const info = serviceResult.items.item;
       item.checkInTime = info.checkintime;
       item.checkOutTime = info.checkouttime;

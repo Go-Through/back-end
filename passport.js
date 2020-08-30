@@ -81,7 +81,7 @@ module.exports = () => {
       }
       const userPassword = generateHash(password);
       const nick = req.body.nickname;
-      const coupleId = req.body.withId ? req.body.withId : null;
+      const coupleId = req.body.withId ? parseInt(req.body.withId, 10) : null;
       const tx = await models.sequelize.transaction();
       const data = {
         nickname: nick,
@@ -93,7 +93,7 @@ module.exports = () => {
         transaction: tx,
       }).then(async (newUser) => {
         if (coupleId) {
-          await connectCouple(id, coupleId, true, tx);
+          await connectCouple(newUser.get().id, coupleId, true, tx);
         }
         if (!newUser) { // 생성이 안될 경우
           return done(null, false);

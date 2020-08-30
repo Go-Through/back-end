@@ -12,11 +12,11 @@ const router = express.Router();
  * @apiName my info test call api
  * @apiGroup 4. My Info
  *
- * @apiSuccess {JSON} message
+ * @apiSuccess {string} message success
  * @apiSuccessExample {JSON} Success-Response:
  *  HTTP/1.1 200 OK
  *  {
- *    message: ''
+ *    message: 'success'
  *  }
  */
 router.get('/', authenticateUser, (req, res, next) => {
@@ -144,11 +144,16 @@ router.post('/post-event', authenticateUser, async (req, res, next) => {
  * @apiGroup 4. My Info
  *
  * @apiSuccess {JSON} message event 있는지 없는지, 해제 이벤트가 있을 시 알아서 처리되며,
- * 이 사실을 알지 못함 message = 'disconnect', 등록 이벤트가 있을 시 요청한 아아디의 디비 인덱스 리턴, 이벤트 없으면 'no event'
+ * 이 사실을 알지 못함 message = 'disconnect', 등록 이벤트가 있을 시 요청한 아아디의 디비 인덱스와 아이디 리턴, 이벤트 없으면 'no event', 유저 없으면 'no user'
  * @apiSuccessExample {JSON} Success-Response:
  *  HTTP/1.1 200 OK
- *  {
- *  }
+ * {
+ *   "message": {
+ *       "id": 4,
+ *       "mem_id": "local3",
+ *       "message": "connect"
+ *   }
+ * }
  */
 router.get('/event', authenticateUser, async (req, res ,next) => {
   let result;
@@ -169,7 +174,7 @@ router.get('/event', authenticateUser, async (req, res ,next) => {
 });
 
 /**
- * @api {post} /my-info/process-couple 8. Process Couple
+ * @api {post} /my-info/process-couple 7. Process Couple
  * @apiName process couple
  * @apiGroup 4. My Info
  *

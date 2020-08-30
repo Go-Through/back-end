@@ -6,7 +6,7 @@ const { enrollTest, getTotalTest } = require('../service/manage-test');
 const router = express.Router();
 
 /**
- * @api {get} /test 1. Test (TEST)
+ * @api {get} /test 1. Test test api (TEST)
  * @apiName test test call api
  * @apiGroup 2. Test
  *

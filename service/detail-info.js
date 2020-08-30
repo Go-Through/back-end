@@ -31,7 +31,7 @@ function makeIntroInfo(contentTypeId, introInfo) {
     result.use = useInfo;
     facilityInfo.key1 = `유모차 대여 ${introInfo.chkbabycarriage}`;
     facilityInfo.key2 = `신용카드 ${introInfo.chkcreditcard}`;
-    facilityInfo.key3 = introInfo.parking;
+    facilityInfo.key3 = `주차 ${introInfo.parking}`;
     result.facility = facilityInfo;
   } else if (contentTypeId === 14) {
     useInfo.key1 = {
@@ -57,7 +57,7 @@ function makeIntroInfo(contentTypeId, introInfo) {
     result.use = useInfo;
     facilityInfo.key1 = `유모차 대여 ${introInfo.chkbabycarriageculture}`;
     facilityInfo.key2 = `신용카드 ${introInfo.chkcreditcardculture}`;
-    facilityInfo.key3 = introInfo.parkingculture;
+    facilityInfo.key3 = `주차 ${introInfo.parkingculture}`;
     result.facility = facilityInfo;
   } else if (contentTypeId === 15) {
     useInfo.key1 = {
@@ -83,7 +83,7 @@ function makeIntroInfo(contentTypeId, introInfo) {
     result.use = useInfo;
     facilityInfo.key1 = `예매처 ${introInfo.bookingplace}`;
     facilityInfo.key2 = `할인 ${introInfo.discountinfofestival}`;
-    facilityInfo.key3 = introInfo.placeinfo;
+    facilityInfo.key3 = `정보 ${introInfo.placeinfo}`;
     result.facility = facilityInfo;
   } else if (contentTypeId === 28) {
     useInfo.key1 = {
@@ -109,7 +109,7 @@ function makeIntroInfo(contentTypeId, introInfo) {
     result.use = useInfo;
     facilityInfo.key1 = `유모차 대여 ${introInfo.chkbabycarriageleports}`;
     facilityInfo.key2 = `신용카드 ${introInfo.chkcreditcardleports}`;
-    facilityInfo.key3 = introInfo.parkingleports;
+    facilityInfo.key3 = `주차 ${introInfo.parkingleports}`;
     result.facility = facilityInfo;
   } else if (contentTypeId === 32) {
     useInfo.key1 = {
@@ -135,7 +135,7 @@ function makeIntroInfo(contentTypeId, introInfo) {
     result.use = useInfo;
     facilityInfo.key1 = `바베큐 ${introInfo.barbecue}`;
     facilityInfo.key2 = `객실 내 취사 ${introInfo.chkcooking}`;
-    facilityInfo.key3 = introInfo.parkinglodging;
+    facilityInfo.key3 = `주차 ${introInfo.parkinglodging}`;
     result.facility = facilityInfo;
   } else if (contentTypeId === 38) {
     useInfo.key1 = {
@@ -161,7 +161,7 @@ function makeIntroInfo(contentTypeId, introInfo) {
     result.use = useInfo;
     facilityInfo.key1 = `유모차 대여 ${introInfo.chkbabycarriageshopping}`;
     facilityInfo.key2 = `신용카드 ${introInfo.chkcreditcardshopping}`;
-    facilityInfo.key3 = introInfo.parkingshopping;
+    facilityInfo.key3 = `주차 ${introInfo.parkingshopping}`;
     result.facility = facilityInfo;
   } else if (contentTypeId === 39) {
     useInfo.key1 = {
@@ -187,7 +187,7 @@ function makeIntroInfo(contentTypeId, introInfo) {
     result.use = useInfo;
     facilityInfo.key1 = `어린이 놀이방 ${introInfo.kidsfacility}`;
     facilityInfo.key2 = `신용카드 ${introInfo.chkcreditcardfood}`;
-    facilityInfo.key3 = introInfo.parkingfood;
+    facilityInfo.key3 = `주차 ${introInfo.parkingfood}`;
     result.facility = facilityInfo;
   }
   return result;
@@ -238,6 +238,8 @@ async function getCommonInfo(userInfo, contentId, contentTypeId) {
           commonInfo.heart = true;
         }
         commonInfo.introStr = info.overview;
+        commonInfo.areaCode = info.areacode;
+        commonInfo.sigunguCode = info.sigungucode;
         commonInfo.mapx = info.mapx;
         commonInfo.mapy = info.mapy;
         commonInfo.homepage = info.homepage;
@@ -280,6 +282,8 @@ async function getCommonInfo(userInfo, contentId, contentTypeId) {
           contentID: contentId,
           contentTypeID: contentTypeId,
           placeTitle: result.common.title,
+          address: result.common.address,
+          image: result.common.firstimage,
           placeCount: 1,
           placeHeart: 0,
         },
@@ -339,7 +343,7 @@ async function postBasket(userInfo, contentId) {
     });
     const placeInfo = sqlResult.get();
     await models.places.update({
-      placeCount: placeInfo.placeCount + 1,
+      placeHeart: placeInfo.placeHeart + 1,
     }, {
       where: { contentID: contentId },
       transaction: tx,

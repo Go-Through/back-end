@@ -26,6 +26,16 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    address: {
+      field: 'address',
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    image: {
+      field: 'image',
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   }, {
     timestamps: true,
     underscored: true,

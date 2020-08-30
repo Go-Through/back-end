@@ -15,17 +15,24 @@ async function checkExistId(checkId) {
   }
 }
 
-async function getTargetUser(userId, targetId) {
+async function getTargetUser(targetId, userId) {
   const idList = [];
   try {
     const sqlResultSet = await models.users.findAll({
       where: {
         memID: targetId,
+        withID: null,
       },
       attributes: ['id', 'mem_id', 'nickname', 'created_at'],
     });
-    for (const sqlResult of sqlResultSet) {
-      if (sqlResult.get().id !== userId) {
+    if (userId) {
+      for (const sqlResult of sqlResultSet) {
+        if (sqlResult.get().id !== userId) {
+          idList.push(sqlResult.get());
+        }
+      }
+    } else{
+      for (const sqlResult of sqlResultSet) {
         idList.push(sqlResult.get());
       }
     }
