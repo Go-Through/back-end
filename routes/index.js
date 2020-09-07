@@ -109,8 +109,7 @@ router.post('/login', passport.authenticate('local-signin', {
 }), (req, res) => {
   req.session.save(() => {
     res.send({
-      sessionID: req.sessionID,
-      sessionData: req.session.cookie,
+      connectSID: req.header.cookie,
       nickname: req.user.nickname,
       testFlag: !!req.user.testIdx,
       socialType: req.user.socialType,
