@@ -99,17 +99,6 @@ router.post('/sign-up', passport.authenticate('local-signup', {
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {
- *   "session": {
- *       "cookie": {
- *           "originalMaxAge": null,
- *           "expires": null,
- *           "httpOnly": true,
- *           "path": "/"
- *       },
- *       "passport": {
- *           "user": 1
- *       }
- *   },
  *   "nickname": "beoms_test",
  *   "testFlag": true,
  *   "socialType": "local"
@@ -120,7 +109,6 @@ router.post('/login', passport.authenticate('local-signin', {
 }), (req, res) => {
   req.session.save(() => {
     res.send({
-      session: req.session,
       nickname: req.user.nickname,
       testFlag: !!req.user.testIdx,
       socialType: req.user.socialType,
@@ -143,17 +131,6 @@ router.post('/login', passport.authenticate('local-signin', {
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {
- *   "session": {
- *       "cookie": {
- *           "originalMaxAge": null,
- *           "expires": null,
- *           "httpOnly": true,
- *           "path": "/"
- *       },
- *       "passport": {
- *           "user": 1
- *       }
- *   },
  *   "nickname": "beoms_test",
  *   "testFlag": true,
  *   "socialType": "naver"
@@ -166,7 +143,6 @@ router.get('/login/naver/callback', passport.authenticate('naver-signin', {
 }), (req, res) => {
   req.session.save(() => {
     res.send({
-      session: req.session,
       nickname: req.user.nickname,
       testFlag: !!req.user.testIdx,
       socialType: req.user.socialType,
@@ -189,17 +165,6 @@ router.get('/login/naver/callback', passport.authenticate('naver-signin', {
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {
- *   "session": {
- *       "cookie": {
- *           "originalMaxAge": null,
- *           "expires": null,
- *           "httpOnly": true,
- *           "path": "/"
- *       },
- *       "passport": {
- *           "user": 1
- *       }
- *   },
  *   "nickname": "beoms_test",
  *   "testflag": true,
  *   "socialType": "kakao",
@@ -212,7 +177,6 @@ router.get('/login/kakao/callback', passport.authenticate('kakao-signin', {
 }), (req, res) => {
   req.session.save(() => {
     res.send({
-      session: req.session,
       nickname: req.user.nickname,
       testFlag: !!req.user.testIdx,
       socialType: req.user.socialType,
