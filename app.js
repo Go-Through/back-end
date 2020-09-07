@@ -35,7 +35,9 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // CORS 허용
-app.use(cors());
+app.use(cors({
+  credential: true,
+}));
 
 app.use(logger('dev'));
 app.use(express.json());

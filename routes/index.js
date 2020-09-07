@@ -53,7 +53,7 @@ router.get('/main', authenticateUser, (req, res, next) => {
  * @apiParam {String} nickname Users nickname
  * @apiParam {String} id Users unique ID
  * @apiParam {String} password Users PW
- * @apiParam {Number} withId 연결하고자 하는 커플 아이디 get-candidate-id 인덱스 결과
+ * @apiParam {Number} [withId] 연결하고자 하는 커플 아이디 get-candidate-id 인덱스 결과
  * @apiParamExample {JSON} Request-Example:
  * {
  *   "nickname": "local1",
