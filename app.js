@@ -49,7 +49,10 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
   store: sessionStore,
-  cookie: { secure: false, },
+  cookie: {
+    secure: false,
+    sameSite: 'None',
+  },
 }));
 app.use(passport.initialize());
 app.use(passport.session());
