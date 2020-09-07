@@ -7,7 +7,7 @@ const passport = require('passport');
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
 const fs = require('fs');
-const cors = require('cors');
+// const cors = require('cors');
 
 // session key
 const secretResult = JSON.parse(fs.readFileSync(`${__dirname}/session-key.json`, 'utf8'));
@@ -35,9 +35,15 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // CORS 허용
-app.use(cors({
+/* app.use(cors({
   credential: true,
-}));
+})); */
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, X-AUTHENTICATION, X-IP, Content-Type, Accept');
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+});
 
 app.use(logger('dev'));
 app.use(express.json());
