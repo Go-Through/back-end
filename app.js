@@ -36,6 +36,7 @@ app.set('view engine', 'ejs');
 
 // CORS 허용
 app.use(cors({
+  origin: '*',
   credential: true,
 }));
 
