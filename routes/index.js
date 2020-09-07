@@ -108,8 +108,8 @@ router.post('/login', passport.authenticate('local-signin', {
   failureRedirect: '/',
 }), (req, res) => {
   req.session.save(() => {
-    console.log(req);
     res.send({
+      session: req.session,
       nickname: req.user.nickname,
       testFlag: !!req.user.testIdx,
       socialType: req.user.socialType,
