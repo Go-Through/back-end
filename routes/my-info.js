@@ -105,6 +105,14 @@ router.get('/search', authenticateUser, async (req, res, next) => {
  * @apiDescription 회원정보를 수정하는 API, 수정완료 후 logout API를 통해 세션 로그아웃이 필요
  *
  * @apiParam {JSON} updateObject 구성요소: nickname 바꿀 닉네임, id 바꿀 아이디, 아이디 규칙 지켜야함, password 바꿀 패스워드, 패스워드 규칙 지켜야 함.
+ * @apiParamExample {JSON} Request-Example:
+ * {
+ *   "updateObject":{
+ *       "nickname": "new_local1",
+ *       "id": "new_local1",
+ *       "password": "a123456"
+ *   }
+ * }
  *
  * @apiSuccess {JSON} message 'success' 메시지 다양함 (길이문제, 실패, 성공, 이미 존재)
  * @apiSuccessExample {JSON} Success-Response:
@@ -139,8 +147,13 @@ router.put('/change-info', authenticateUser, async (req, res, next) => {
  *
  * @apiParam {Number} targetId 등록하고자 하는 커플 아이디의 디비 인덱스 (get_candidate_id 참고)
  * @apiParam {Boolean} connectOption 연결 요청 = true, 연결 해제 = false
+ * @apiParamExample {JSON} Request-Example:
+ * {
+ *   "targetId": 2,
+ *   "connectOption": true
+ * }
  *
- * @apiSuccess {JSON} message 'post event success'
+ * @apiSuccess {String} message 'post event success'
  * @apiSuccessExample {JSON} Success-Response:
  *  HTTP/1.1 200 OK
  *  {
@@ -171,8 +184,10 @@ router.post('/post-event', authenticateUser, async (req, res, next) => {
  * @apiName get event
  * @apiGroup 4. My Info
  *
- * @apiSuccess {JSON} message event 있는지 없는지, 해제 이벤트가 있을 시 알아서 처리되며,
+ * @apiDescription event 있는지 없는지, 해제 이벤트가 있을 시 알아서 처리되며,
  * 이 사실을 알지 못함 message = 'disconnect', 등록 이벤트가 있을 시 요청한 아아디의 디비 인덱스와 아이디 리턴, 이벤트 없으면 'no event', 유저 없으면 'no user'
+ *
+ * @apiSuccess {JSON} message Event Info
  * @apiSuccessExample {JSON} Success-Response:
  *  HTTP/1.1 200 OK
  * {
@@ -207,8 +222,12 @@ router.get('/event', authenticateUser, async (req, res ,next) => {
  * @apiGroup 4. My Info
  *
  * @apiParam {Boolean} acceptOption 수락하기-true, 거절하기-false
+ * @apiParamRequest {JSON} Request-Response:
+ * {
+ *   "acceptOption": true
+ * }
  *
- * @apiSuccess {JSON} message 'connect success'
+ * @apiSuccess {String} message 'connect success'
  * @apiSuccessExample {JSON} Success-Response:
  *  HTTP/1.1 200 OK
  *  {

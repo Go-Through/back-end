@@ -279,6 +279,10 @@ router.get('/stay', authenticateUser, async (req, res, next) => {
  * @apiGroup 3. Trip
  *
  * @apiParam {Number} contentId 컨텐츠 아이디
+ * @apiParamExample {JSON} Request-Example:
+ * {
+ *   "contentId": 125452
+ * }
  *
  * @apiSuccess {JSON} message 성공 시 'success' 실패시 반영 안되고 'fail'
  * @apiSuccessExample {JSON} Success-Response:
