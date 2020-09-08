@@ -69,10 +69,10 @@ async function updateUserInfo(userId, socialType, updateObject) {
     await models.users.update(data, {
       where: { id: userId },
     });
-    return {
-      message: 'success',
-    };
   });
+  return {
+    message: 'success',
+  };
 }
 
 module.exports = {

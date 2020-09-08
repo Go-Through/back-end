@@ -102,6 +102,8 @@ router.get('/search', authenticateUser, async (req, res, next) => {
  * @apiName change info
  * @apiGroup 4. My Info
  *
+ * @apiDescription 회원정보를 수정하는 API, 수정완료 후 logout API를 통해 세션 로그아웃이 필요
+ *
  * @apiParam {JSON} updateObject 구성요소: nickname 바꿀 닉네임, id 바꿀 아이디, 아이디 규칙 지켜야함, password 바꿀 패스워드, 패스워드 규칙 지켜야 함.
  *
  * @apiSuccess {JSON} message 'success' 메시지 다양함 (길이문제, 실패, 성공, 이미 존재)
@@ -148,7 +150,7 @@ router.put('/change-info', authenticateUser, async (req, res, next) => {
 router.post('/post-event', authenticateUser, async (req, res, next) => {
   let result;
   try {
-    const { targetId, connectOption } = req.query;
+    const { targetId, connectOption } = req.body;
     if (targetId && connectOption) {
       result = await connectCouple(req.user.id, targetId, connectOption);
     } else {

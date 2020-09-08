@@ -41,12 +41,13 @@ router.get('/', authenticateUser, (req, res, next) => {
 router.post('/post-test', authenticateUser, async (req, res, next) => {
   let enrollResult;
   try {
-    if (!req.body.test) {
+    const { test } = req.body;
+    if (!test) {
       res.send({
         message: 'Input body - test',
       });
+      return;
     }
-    const { test } = req.body;
     enrollResult = await enrollTest(req.user.id, test);
   } catch (err) {
     console.error('post-test error');
@@ -112,6 +113,7 @@ router.get('/get-test', authenticateUser, async (req, res, next) => {
       res.send({
         message: 'Not Exist Test',
       });
+      return;
     }
   } catch (err) {
     console.error('get-test error');

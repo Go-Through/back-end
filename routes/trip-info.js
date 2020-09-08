@@ -41,6 +41,7 @@ router.get('/', authenticateUser, async (req, res, next) => {
       res.send({
         message: 'Query parameter order must range (0~2)',
       });
+      return;
     }
     // eslint-disable-next-line max-len
     tripInfoResult = await getMyPlace(req.user, parseInt(req.query.order, 10));
@@ -112,6 +113,7 @@ router.get('/detail', authenticateUser, async (req, res, next) => {
       res.send({
         message: 'Input query - contentId, contentTypeId',
       });
+      return;
     }
     // eslint-disable-next-line max-len
     detailInfo = await getCommonInfo(req.user, parseInt(contentId, 10), parseInt(contentTypeId, 10));
@@ -156,6 +158,7 @@ router.get('/location', authenticateUser, async (req, res, next) => {
       res.send({
         message: 'Input query - locationX, locationY, nowContentId',
       });
+      return;
     }
     locationRecommend = await recommendLocation(req.user,
       parseFloat(locationX), parseFloat(locationY), parseFloat(nowContentId));
@@ -200,6 +203,7 @@ router.get('/area', authenticateUser, async (req, res, next) => {
       res.send({
         message: 'Input query - areaCode, nowContentId',
       });
+      return;
     }
     areaRecommend = await recommendArea(req.user,
       parseInt(areaCode, 10), parseInt(sigunguCode, 10), parseInt(nowContentId, 10));
@@ -251,11 +255,13 @@ router.get('/stay', authenticateUser, async (req, res, next) => {
       res.send({
         message: 'Input query - areaCode, nowContentId',
       });
+      return;
     }
     if (req.query.order && (req.query.order < 0 && req.query.order > 2)) {
       res.send({
         message: 'Query parameter order must range (0~2)',
       });
+      return;
     }
     stayRecommend = await recommendStay(req.user, parseInt(areaCode, 10),
       parseInt(sigunguCode, 10), parseInt(nowContentId, 10), parseInt(order, 10));
@@ -289,6 +295,7 @@ router.post('/post-basket', authenticateUser, async (req, res, next) => {
       res.send({
         message: 'Input query - contentId',
       });
+      return;
     }
     result = await postBasket(req.user, parseInt(contentId, 10));
   } catch (err) {

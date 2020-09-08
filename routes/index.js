@@ -92,7 +92,6 @@ router.post('/sign-up', passport.authenticate('local-signup', {
  *   "password": "a123456"
  * }
  *
- * @apiSuccess {JSON} session cookie info & passport - passport.user is session
  * @apiSuccess {String} nickname user nickname
  * @apiSuccess {Boolean} testFlag 테스트 했는지 유무 (테스트를 해야 여행지 정보 조회가능)
  * @apiSuccess {String} socialType 소셜타입: 마이페이지에서 로컬 타입만 정보 수정 가능하기 때문
@@ -124,7 +123,6 @@ router.post('/login', passport.authenticate('local-signin', {
  * @apiDescription API 콜을 하면, Naver sign up, login을 하기 위한 콜백 URL 로 자동 연결되며
  * 회원가입과 동시에 로그인이 진행되고 예시와 같은 결과값을 받을 수 있다.
  *
- * @apiSuccess {JSON} session cookie info & passport - passport.user is session
  * @apiSuccess {String} nickname user nickname
  * @apiSuccess {Boolean} testFlag 테스트 했는지 유무 (테스트를 해야 여행지 정보 조회가능)
  * @apiSuccess {String} socialType 소셜타입: 마이페이지에서 로컬 타입만 정보 수정 가능하기 때문
@@ -158,7 +156,6 @@ router.get('/login/naver/callback', passport.authenticate('naver-signin', {
  * @apiDescription API 콜을 하면, Kakao sign up, login을 하기 위한 콜백 URL 로 자동 연결되며
  * 회원가입과 동시에 로그인이 진행되고 예시와 같은 결과값을 받을 수 있다.
  *
- * @apiSuccess {JSON} session cookie info & passport - passport.user is session
  * @apiSuccess {String} nickname user nickname
  * @apiSuccess {Boolean} testFlag 테스트 했는지 유무 (테스트를 해야 여행지 정보 조회가능)
  * @apiSuccess {String} socialType 소셜타입: 마이페이지에서 로컬 타입만 정보 수정 가능하기 때문
@@ -189,7 +186,7 @@ router.get('/login/kakao/callback', passport.authenticate('kakao-signin', {
  * @apiName logout
  * @apiGroup 1. User
  *
- * @apiSuccess {string} message 'logout'
+ * @apiSuccess {String} message 'logout'
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {
@@ -272,6 +269,7 @@ router.get('/chk-exist-id', async (req, res, next) => {
       res.send({
         message: 'Input query - chkId',
       });
+      return;
     }
     const chkResult = await checkExistId(chkId);
     res.send({

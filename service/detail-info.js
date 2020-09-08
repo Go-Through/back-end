@@ -222,7 +222,7 @@ async function getCommonInfo(userInfo, contentId, contentTypeId) {
         sqlResult = await models.tourArea.findOne({
           where: {
             areaCode: info.areacode,
-            sigunguCode: info.sigungucode,
+            sigunguCode: info.sigungucode || null,
           },
           attributes: ['area_name', 'sigungu_name'],
         });
