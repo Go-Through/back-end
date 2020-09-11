@@ -28,8 +28,14 @@ router.get('/', authenticateUser, (req, res, next) => {
  * @apiName post test
  * @apiGroup 2. Test
  *
- * @apiParam {Number} id User unique index for database
  * @apiParam {JSON} test test 안에는 place(array type), concept(array type) 존재
+ * @apiParamExample {JSON} Request-Example:
+ * {
+ *   "test": {
+ *       "place": ["아무데나"],
+ *       "concept": ["전체"]
+ *   }
+ * }
  *
  * @apiSuccess {String} message 'success'
  * @apiSuccessExample {JSON} Success-Response:
