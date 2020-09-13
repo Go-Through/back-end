@@ -72,7 +72,7 @@ async function enrollTest(userIdx, testObject) {
         });
         if (!sqlResult[1]) {
           await models.citys.update({
-            cityCount: (sqlResult.citys.get()).cityCount += 1,
+            cityCount: sqlResult[0].dataValues.cityCount += 1,
           }, {
             where: { areaIndex: areaItem.id },
             transaction: tx,
