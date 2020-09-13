@@ -171,7 +171,7 @@ async function connectDB() {
 }
 
 const authenticateUser = (req, res, next) => {
-  if (req.session.passport.user) {
+  if (req.session.passport) {
     next();
   } else {
     res.status(301).redirect('/');
