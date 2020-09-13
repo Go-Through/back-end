@@ -1,4 +1,4 @@
-const { models, changeToTourName, findIncludeName } = require('./init-module');
+const { models, changeToTourName, findIncludeName, changeToFrontName } = require('./init-module');
 
 // Test 등록하는 함수 - 유저 정보에도 입력하고, place 의 경우 도시 테이블에도 결과 반영해줘야한다.
 async function enrollTest(userIdx, testObject) {
@@ -216,7 +216,29 @@ async function getTotalTest(userId) {
   return totalResult;
 }
 
+async function getTotalHashtag(userId) {
+  const totalResult = await getTotalTest(userId);
+  const areaArr = totalResult.area;
+  const categoryArr = totalResult.category;
+  for (let areaInfo of areaArr) {
+    if (areaInfo === 0) {
+      areaInfo = { area_name: '아무데나' };
+    } else {
+      areaInfo.area_name = changeToFrontName(0, areaInfo.area_name);
+    }
+  }
+  for (let categoryInfo of categoryArr) {
+    if (categoryInfo === 0) {
+      categoryInfo = { category_name: '전체' };
+    } else {
+      categoryInfo.category_name = changeToFrontName(1, categoryInfo.category_name);
+    }
+  }
+  return totalResult;
+}
+
 module.exports = {
   enrollTest,
   getTotalTest,
+  getTotalHashtag,
 };

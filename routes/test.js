@@ -1,7 +1,7 @@
 const express = require('express');
 
 const { authenticateUser } = require('../service/init-module');
-const { enrollTest, getTotalTest } = require('../service/manage-test');
+const { enrollTest, getTotalHashtag } = require('../service/manage-test');
 
 const router = express.Router();
 
@@ -114,7 +114,7 @@ router.post('/post-test', authenticateUser, async (req, res, next) => {
 router.get('/get-test', authenticateUser, async (req, res, next) => {
   let testResult;
   try {
-    testResult = await getTotalTest(req.user.id);
+    testResult = await getTotalHashtag(req.user.id);
     if (!testResult) {
       res.send({
         message: 'Not Exist Test',

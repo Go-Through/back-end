@@ -196,7 +196,10 @@ function makeIntroInfo(contentTypeId, introInfo) {
 // 세부 정보 조회 페이지에서 호출, 세부 정보 조회 시 조회 수 올라가고 최근 조회한 여행지에 추가.
 async function getCommonInfo(userInfo, contentId, contentTypeId) {
   const result = {};
-  const userId = userInfo.id;
+  let userId;
+  if (userInfo) {
+    userId = userInfo.id;
+  }
   const tx = await models.sequelize.transaction();
   try {
     let sqlResult;
@@ -251,7 +254,7 @@ async function getCommonInfo(userInfo, contentId, contentTypeId) {
       }
     }
     // user search place 가져오기
-    if (userInfo.searchPlaces) {
+    if (userInfo && userInfo.searchPlaces) {
       // searchPlace도 마찬가지로 searchItems: [contentId ] 들어갈 예정
       const userSearch = userInfo.searchPlaces;
       const newItems = [];

@@ -118,8 +118,12 @@ router.get('/detail', async (req, res, next) => {
       });
       return;
     }
-    // eslint-disable-next-line max-len
-    detailInfo = await getCommonInfo(req.user, parseInt(contentId, 10), parseInt(contentTypeId, 10));
+    if (req.user) {
+      // eslint-disable-next-line max-len
+      detailInfo = await getCommonInfo(req.user, parseInt(contentId, 10), parseInt(contentTypeId, 10));
+    } else {
+      detailInfo = await getCommonInfo(null, parseInt(contentId, 10), parseInt(contentTypeId, 10));
+    }
   } catch (err) {
     console.error('detail error');
     console.error(err.message);

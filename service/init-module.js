@@ -102,6 +102,60 @@ function changeToTourName(testIdx, testArr) {
   return result;
 }
 
+function changeToFrontName(testIdx, str) {
+  if (testIdx === 0) {
+    switch (str) {
+      case '서울':
+        str = '서울특별시';
+        break;
+      case '인천':
+        str = '인천광역시';
+        break;
+      case '대전':
+        str = '대전광역시';
+        break;
+      case '대구':
+        str = '대구광역시';
+        break;
+      case '광주':
+        str = '광주광역시';
+        break;
+      case '울산':
+        str = '울산광역시';
+        break;
+      case '세종특별자치시':
+        str = '세종특별시';
+        break;
+      case '부산':
+        str = '부산광역시';
+        break;
+      default:
+        break;
+    }
+  } else if (testIdx === 1) {
+    switch (str) {
+      case '해수욕장':
+        str = '바다';
+        break;
+      case '체험관광지':
+        str = '체험';
+        break
+      case '미술관/화랑':
+        str = '미술관';
+        break;
+      case '레포츠':
+        str = '액티비티';
+        break;
+      case '역사관광지':
+        str = '역사';
+        break;
+      default:
+        break;
+    }
+  }
+  return str;
+}
+
 // Tour API 명칭 중 name 포함하는 컨셉들이나 지역 반환
 async function findIncludeName(result, tableName, name) {
   if (name === 0) {
@@ -171,7 +225,7 @@ async function connectDB() {
 }
 
 const authenticateUser = (req, res, next) => {
-  if (req.session.passport) {
+  if (req.session.passport && req.session.passport.user) {
     next();
   } else {
     res.status(301).redirect('/');
@@ -300,6 +354,7 @@ module.exports = {
   baseParams,
   callService,
   changeToTourName,
+  changeToFrontName,
   findIncludeName,
   connectDB,
   authenticateUser,
