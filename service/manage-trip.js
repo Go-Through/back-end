@@ -124,7 +124,7 @@ async function getMyPlace(userInfo, sortOption = 0) {
     if (!userInfo.testIdx) {
       return null;
     }
-    if (!userInfo.userPlaces) {
+    if (userInfo.userPlaces === null) {
       userTripResult = await getTotalPlace(userId);
       await models.users.update({
         userPlaces: userTripResult,
