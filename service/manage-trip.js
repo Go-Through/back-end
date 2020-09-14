@@ -15,7 +15,7 @@ function addCategoryParams(params, categoryCode) {
   }
 }
 
-async function callTourPlace(areaCodes, categoryCodes, page) {
+async function callTourPlace(areaCodes, categoryCodes) {
   // Trip Info
   const service = 'areaBasedList';
   const tripParams = JSON.parse(JSON.stringify(baseParams));
@@ -23,8 +23,8 @@ async function callTourPlace(areaCodes, categoryCodes, page) {
   // A: 제목순, B: 조회순
   // 대표 이미지가 반드시 있는 정렬 O: 제목순, P: 조회순
   tripParams.params.arrange = 'P';
-  tripParams.params.numOfRows = 30;
-  tripParams.params.pageNo = page;
+  tripParams.params.numOfRows = 100;
+  tripParams.params.pageNo = 1;
   const promises = [];
   // 아무데나 선택한 경우
   if (areaCodes.length === 0) {
@@ -64,10 +64,9 @@ async function callTourPlace(areaCodes, categoryCodes, page) {
 async function getTotalPlace(userId) {
   try {
     const totalResult = await getTotalTest(userId);
-
     // Call Service 를 하기 전 total Result 에서 code 뽑아 내기.
     const areaCodes = []; // 아무데나 인 경우 빌 예정
-    const categoryCodes = []; // 전체 일 경우 빌 예정
+    let categoryCodes = []; // 전체 일 경우 빌 예정
     if (!totalResult.area.includes(0)) {
       for (const areaInfo of totalResult.area) {
         areaCodes.push(areaInfo.area_code);
@@ -94,18 +93,19 @@ async function getTotalPlace(userId) {
     let promiseResult;
     tripResult.totalCount = 0;
     tripResult.items = [];
-    let page = 1;
-    while (tripResult.totalCount < 70) {
-      promiseResult = await callTourPlace(areaCodes, categoryCodes, page);
-      for (const result of promiseResult) {
-        if (result.numOfRows >= result.totalCount) {
-          tripResult.totalCount += result.totalCount;
-        } else {
-          tripResult.totalCount += result.numOfRows;
-        }
-        itemsToResult(result, tripResult);
+    promiseResult = await callTourPlace(areaCodes, categoryCodes);
+    // 처음 했을 때 아무런 결과가 나오지 않을 때 - 맞는 게 없는 거임: 지역으로 추천
+    if (promiseResult.length === 1 && promiseResult[0].totalCount === 0) {
+      categoryCodes = [];
+      promiseResult = await callTourPlace(areaCodes, categoryCodes);
+    }
+    for (const result of promiseResult) {
+      if (result.numOfRows >= result.totalCount) {
+        tripResult.totalCount += result.totalCount;
+      } else {
+        tripResult.totalCount += result.numOfRows;
       }
-      page += 1;
+      itemsToResult(result, tripResult);
     }
     return tripResult;
   } catch (err) {
