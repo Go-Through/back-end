@@ -196,10 +196,6 @@ function makeIntroInfo(contentTypeId, introInfo) {
 // 세부 정보 조회 페이지에서 호출, 세부 정보 조회 시 조회 수 올라가고 최근 조회한 여행지에 추가.
 async function getCommonInfo(userInfo, contentId, contentTypeId) {
   const result = {};
-  let userId;
-  if (userInfo) {
-    userId = userInfo.id;
-  }
   const tx = await models.sequelize.transaction();
   try {
     let sqlResult;
@@ -231,14 +227,19 @@ async function getCommonInfo(userInfo, contentId, contentTypeId) {
         });
         if (sqlResult) {
           const areaInfo = sqlResult.get();
-          commonInfo.area = `${areaInfo.area_name} ${areaInfo.sigungu_name}`;
+          commonInfo.area = `${areaInfo.area_name} ${areaInfo.sigungu_name || null}`;
         }
         commonInfo.title = info.title;
-        commonInfo.address = `${info.addr1}\n${info.addr2}`;
+        commonInfo.address = `${info.addr1}\n${info.addr2 || null}`;
         commonInfo.heart = false;
-        const basketChkResult = await checkBasket(userInfo, info.contentid);
+        let basketChkResult = false;
+        if (userInfo) {
+          basketChkResult = await checkBasket(userInfo, info.contentid);
+        }
         if (basketChkResult) {
           commonInfo.heart = true;
+        } else {
+          commonInfo.heart = false;
         }
         commonInfo.introStr = info.overview;
         commonInfo.areaCode = info.areacode;
@@ -253,55 +254,57 @@ async function getCommonInfo(userInfo, contentId, contentTypeId) {
         result.intro = makeIntroInfo(contentTypeId, info);
       }
     }
-    // user search place 가져오기
-    if (userInfo && userInfo.searchPlaces) {
+    if (userInfo) { // user search place 가져오기 (로그인 되어 있는 상태)
       // searchPlace도 마찬가지로 searchItems: [contentId ] 들어갈 예정
+      const userId = userInfo.id;
       const userSearch = userInfo.searchPlaces;
       const newItems = [];
-      if (userSearch && userSearch.searchItems) {
+      if (userSearch && userSearch.searchItems) { // 기존 정보 있을 때
         for (const searchId of userSearch.searchItems) {
           if (searchId !== contentId) {
             newItems.push(searchId);
           }
         }
+        const newLength = newItems.unshift(contentId);
+        if (newLength > 30) {
+          newItems.pop();
+        }
+      } else { // 기존 정보 없을 때
+        newItems.push(contentId);
       }
-      const newLength = newItems.unshift(contentId);
-      if (newLength > 30) {
-        newItems.pop();
-      }
-      // user 조회 업데이트, place count 업데이트
       await models.users.update({
         searchPlaces: { searchItems: newItems },
       }, {
         where: { id: userId },
         transaction: tx,
       });
-      sqlResult = await models.places.findOrCreate({
-        where: {
-          contentID: contentId,
-        },
+    }
+    // place count 업데이트
+    sqlResult = await models.places.findOrCreate({
+      where: {
+        contentID: contentId,
+      },
+      transaction: tx,
+      defaults: {
+        contentID: contentId,
+        contentTypeID: contentTypeId,
+        placeTitle: result.common.title,
+        address: result.common.address,
+        image: result.common.firstimage,
+        placeCount: 1,
+        placeHeart: 0,
+      },
+    });
+    const placeInfo = sqlResult[0];
+    const created = sqlResult[1];
+    // 이미 create 된 거면
+    if (!created) {
+      await models.places.update({
+        placeCount: (placeInfo.get()).placeCount + 1,
+      }, {
+        where: { contentID: contentId },
         transaction: tx,
-        defaults: {
-          contentID: contentId,
-          contentTypeID: contentTypeId,
-          placeTitle: result.common.title,
-          address: result.common.address,
-          image: result.common.firstimage,
-          placeCount: 1,
-          placeHeart: 0,
-        },
       });
-      const placeInfo = sqlResult[0];
-      const created = sqlResult[1];
-      // 이미 create 된 거면
-      if (!created) {
-        await models.places.update({
-          placeCount: (placeInfo.get()).placeCount + 1,
-        }, {
-          where: { contentID: contentId },
-          transaction: tx,
-        });
-      }
     }
     await tx.commit();
   } catch (err) {
