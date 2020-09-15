@@ -116,6 +116,7 @@ router.post('/login', passport.authenticate('local-signin', {
 });
 
 /**
+ * @apiIgnore 이용 불가
  * @api {get} /login/naver 5. Naver Login
  * @apiName login naver
  * @apiGroup 1. User
@@ -134,6 +135,7 @@ router.post('/login', passport.authenticate('local-signin', {
  *   "socialType": "naver"
  *  }
  */
+/*
 router.get('/login/naver', passport.authenticate('naver-signin'));
 // naver 로그인 연동 콜백
 router.get('/login/naver/callback', passport.authenticate('naver-signin', {
@@ -147,8 +149,10 @@ router.get('/login/naver/callback', passport.authenticate('naver-signin', {
     });
   });
 });
+ */
 
 /**
+ * @apiIgnore 이용 불가
  * @api {get} /login/kakao 6. Kakao Login
  * @apiName login kakao
  * @apiGroup 1. User
@@ -167,6 +171,7 @@ router.get('/login/naver/callback', passport.authenticate('naver-signin', {
  *   "socialType": "kakao",
  *  }
  */
+/*
 router.get('/login/kakao', passport.authenticate('kakao-signin'));
 // kakao 로그인 연동 콜백
 router.get('/login/kakao/callback', passport.authenticate('kakao-signin', {
@@ -180,6 +185,7 @@ router.get('/login/kakao/callback', passport.authenticate('kakao-signin', {
     });
   });
 });
+ */
 
 /**
  * @api {get} /logout 7. Logout
@@ -228,9 +234,9 @@ router.get('/get-candidate-id', async (req, res, next) => {
   try {
     const { targetId } = req.query;
     if (targetId) {
-      if (req.user) {
+      if (req.user) { // 로그인 되어 있는 상태에서 사용하는 경우
         result = await getTargetUser(targetId, req.user.id);
-      } else {
+      } else { // 회원가입 시 사용하는 경우
         result = await getTargetUser(targetId);
       }
     } else {

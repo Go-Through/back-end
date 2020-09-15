@@ -3,6 +3,7 @@ const { models } = require('./init-module');
 // Event 왔는지 확인 (로그인 했을 때나 마이페이지 접속 시) // 연결 요청이 왔습니다! 또는 해제
 async function checkEvent(userInfo) {
   const userId = userInfo.id;
+  const withId = userInfo.withID;
   const eventId = userInfo.withEvent;
   let result;
   try {
@@ -13,7 +14,7 @@ async function checkEvent(userInfo) {
         withEvent: null,
         userPlaces: null,
       }, {
-        where: { id: userId },
+        where: { id: [userId, withId] },
       });
       result = {
         message: 'disconnect',

@@ -14,6 +14,7 @@ const secretResult = JSON.parse(fs.readFileSync(`${__dirname}/session-key.json`,
 
 // for session database
 const env = 'envForSession';
+// eslint-disable-next-line import/no-dynamic-require
 const options = require(`${__dirname}/config/config.json`)[env];
 const sessionStore = new MySQLStore(options);
 

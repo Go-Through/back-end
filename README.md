@@ -3,6 +3,8 @@
 
 For Back End (Server And Database Component)
 
+0. [API DOCS](http://kntrip.me:8000/docs)
+
 1. Express Application Generator
 ```shell script
 npm install express-generator -g

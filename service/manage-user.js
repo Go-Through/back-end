@@ -48,12 +48,13 @@ async function updateUserInfo(userId, socialType, updateObject) {
   if (!isIdValidate(updateObject.id)) return { message: 'ID length error' };
   if (!isPasswordValidate(updateObject.password)) return { message: 'PW length error' };
   const generateHash = (pw) => bcrypt.hashSync(pw, bcrypt.genSaltSync(8), null);
-  models.users.findOne({
-    where: {
-      memID: updateObject.id,
-      socialType: 'local',
-    },
-  }).then(async (sqlResult) => {
+  try {
+    const sqlResult = await models.users.findOne({
+      where: {
+        memID: updateObject.id,
+        socialType,
+      },
+    });
     if (sqlResult) {
       return {
         message: 'ID already exists',
@@ -69,10 +70,14 @@ async function updateUserInfo(userId, socialType, updateObject) {
     await models.users.update(data, {
       where: { id: userId },
     });
-  });
-  return {
-    message: 'success',
-  };
+    return {
+      message: 'success',
+    };
+  } catch (err) {
+    console.error('updateUserInfo() error');
+    console.error(err.message);
+    throw err;
+  }
 }
 
 module.exports = {

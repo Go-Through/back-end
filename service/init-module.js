@@ -328,9 +328,7 @@ async function checkBasket(userInfo, contentId) {
 async function checkPlaceInfo(userInfo, tripResult) {
   for (const tripInfo of tripResult.items) {
     const sqlResultSet = await models.places.findOne({
-      where: {
-        contentID: tripInfo.contentID,
-      },
+      where: { contentID: tripInfo.contentID },
     });
     if (sqlResultSet) {
       const placeInfo = sqlResultSet.get();

@@ -1,17 +1,18 @@
 const bcrypt = require('bcrypt');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const NaverStrategy = require('passport-naver').Strategy;
-const KakaoStrategy = require('passport-kakao').Strategy;
-const fs = require('fs');
+// const NaverStrategy = require('passport-naver').Strategy;
+// const KakaoStrategy = require('passport-kakao').Strategy;
+// const fs = require('fs');
 
 const { models, isIdValidate, isPasswordValidate } = require('./service/init-module');
 const { connectCouple } = require('./service/manage-couple');
 
 const { users } = models;
 
-const authConfig = JSON.parse(fs.readFileSync(`${__dirname}/config/federated.json`, 'utf8'));
+// const authConfig = JSON.parse(fs.readFileSync(`${__dirname}/config/federated.json`, 'utf8'));
 
+/*
 function loginByThirdparty(info, done) {
   users.findOne({
     where: {
@@ -36,6 +37,7 @@ function loginByThirdparty(info, done) {
     });
   });
 }
+*/
 
 module.exports = () => {
   passport.serializeUser((user, done) => { // Strategy 성공 시 호출
@@ -46,13 +48,13 @@ module.exports = () => {
   passport.deserializeUser(async (id, done) => { // 매개변수 user 는 serializeUser의 done의 인자 user를 받은 것
     try {
       const sqlResult = await users.findOne({
-        where: { id: id },
+        where: { id },
       });
       const userInfo = sqlResult.get();
       console.log('deserializeUser');
       done(null, userInfo);
     } catch (err) {
-      console.error('deserialize() error');
+      console.error('deserializeUser() error');
       console.error(err.message);
       throw err;
     }
@@ -145,6 +147,7 @@ module.exports = () => {
     });
   }));
 
+  /*
   // accessToken: OAuth token 이용해 오픈 API 호출
   // refreshToken: token 만료됐을 때 재발급 요청
   // profile: 사용자 정보
@@ -182,4 +185,5 @@ module.exports = () => {
       auth_image: _profile.properties.profile_image,
     }, done);
   }));
+  */
 };

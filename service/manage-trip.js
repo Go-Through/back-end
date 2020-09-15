@@ -65,8 +65,8 @@ async function getTotalPlace(userId) {
   try {
     const totalResult = await getTotalTest(userId);
     // Call Service 를 하기 전 total Result 에서 code 뽑아 내기.
-    const areaCodes = []; // 아무데나 인 경우 빌 예정
-    let categoryCodes = []; // 전체 일 경우 빌 예정
+    let areaCodes = []; // 아무데나 인 경우 빌 예정
+    const categoryCodes = []; // 전체 일 경우 빌 예정
     if (!totalResult.area.includes(0)) {
       for (const areaInfo of totalResult.area) {
         areaCodes.push(areaInfo.area_code);
@@ -96,7 +96,7 @@ async function getTotalPlace(userId) {
     promiseResult = await callTourPlace(areaCodes, categoryCodes);
     // 처음 했을 때 아무런 결과가 나오지 않을 때 - 맞는 게 없는 거임: 지역으로 추천
     if (promiseResult.length === 1 && promiseResult[0].totalCount === 0) {
-      categoryCodes = [];
+      areaCodes = [];
       promiseResult = await callTourPlace(areaCodes, categoryCodes);
     }
     for (const result of promiseResult) {
