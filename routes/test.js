@@ -108,7 +108,8 @@ router.post('/post-test', authenticateUser, async (req, res, next) => {
  *           "category_code": "A01011200",
  *           "category_name": "해수욕장"
  *       }
- *   ]
+ *   ],
+ *   "message": "OK"
  *  }
  */
 router.get('/get-test', authenticateUser, async (req, res, next) => {
