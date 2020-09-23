@@ -167,8 +167,13 @@ router.get('/location', async (req, res, next) => {
       });
       return;
     }
-    locationRecommend = await recommendLocation(req.user,
-      parseFloat(locationX), parseFloat(locationY), parseFloat(nowContentId));
+    if (req.user) {
+      locationRecommend = await recommendLocation(req.user,
+        parseFloat(locationX), parseFloat(locationY), parseFloat(nowContentId));
+    } else {
+      locationRecommend = await recommendLocation(null,
+        parseFloat(locationX), parseFloat(locationY), parseFloat(nowContentId));
+    }
   } catch (err) {
     console.error('location error');
     console.error(err.message);
@@ -212,8 +217,13 @@ router.get('/area', async (req, res, next) => {
       });
       return;
     }
-    areaRecommend = await recommendArea(req.user,
-      parseInt(areaCode, 10), parseInt(sigunguCode, 10), parseInt(nowContentId, 10));
+    if (req.user) {
+      areaRecommend = await recommendArea(req.user,
+        parseInt(areaCode, 10), parseInt(sigunguCode, 10), parseInt(nowContentId, 10));
+    } else {
+      areaRecommend = await recommendArea(null,
+        parseInt(areaCode, 10), parseInt(sigunguCode, 10), parseInt(nowContentId, 10));
+    }
   } catch (err) {
     console.error('location error');
     console.error(err.message);
@@ -270,8 +280,13 @@ router.get('/stay', async (req, res, next) => {
       });
       return;
     }
-    stayRecommend = await recommendStay(req.user, parseInt(areaCode, 10),
-      parseInt(sigunguCode, 10), parseInt(nowContentId, 10), parseInt(order, 10));
+    if (req.user) {
+      stayRecommend = await recommendStay(req.user, parseInt(areaCode, 10),
+        parseInt(sigunguCode, 10), parseInt(nowContentId, 10), parseInt(order, 10));
+    } else {
+      stayRecommend = await recommendStay(null, parseInt(areaCode, 10),
+        parseInt(sigunguCode, 10), parseInt(nowContentId, 10), parseInt(order, 10));
+    }
   } catch (err) {
     console.error('location error');
     console.error(err.message);

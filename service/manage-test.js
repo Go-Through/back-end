@@ -213,6 +213,7 @@ async function getTotalTest(userId) {
     totalResult.area = (reFormatResult(testResult, coupleResult, 'area', totalResult)).area;
     totalResult.category = (reFormatResult(testResult, coupleResult, 'category', totalResult)).category;
   }
+  totalResult.message = 'OK';
   return totalResult;
 }
 

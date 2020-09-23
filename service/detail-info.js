@@ -230,7 +230,7 @@ async function getCommonInfo(userInfo, contentId, contentTypeId) {
           commonInfo.area = `${areaInfo.area_name} ${areaInfo.sigungu_name || null}`;
         }
         commonInfo.title = info.title;
-        commonInfo.address = `${info.addr1}\n${info.addr2 || null}`;
+        commonInfo.address = info.addr1;
         commonInfo.heart = false;
         let basketChkResult = false;
         if (userInfo) {

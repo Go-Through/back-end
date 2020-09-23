@@ -358,7 +358,11 @@ async function checkPlaceInfo(userInfo, tripResult) {
       tripInfo.placeCount = 0;
       tripInfo.placeHeart = 0;
     }
-    tripInfo.heartFlag = await checkBasket(userInfo, contentId);
+    if (userInfo) {
+      tripInfo.heartFlag = await checkBasket(userInfo, contentId);
+    } else {
+      tripInfo.heartFlag = false;
+    }
   }
 }
 
