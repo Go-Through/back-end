@@ -219,6 +219,7 @@ async function getTotalTest(userId) {
 
 async function getTotalHashtag(userId) {
   const totalResult = await getTotalTest(userId);
+  if (!totalResult) return null;
   const areaArr = totalResult.area;
   const categoryArr = totalResult.category;
   for (let areaInfo of areaArr) {
