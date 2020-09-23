@@ -326,12 +326,28 @@ async function checkBasket(userInfo, contentId) {
 }
 
 async function checkPlaceInfo(userInfo, tripResult) {
+  const resultContentID = [];
   for (const tripInfo of tripResult.items) {
-    const sqlResultSet = await models.places.findOne({
-      where: { contentID: tripInfo.contentID },
+    resultContentID.push(tripInfo.contentID);
+  }
+  const placeInfoArr = {};
+  try {
+    const sqlResultSet = await models.places.findAll({
+      where: { contentID: resultContentID },
     });
-    if (sqlResultSet) {
-      const placeInfo = sqlResultSet.get();
+    for (const sqlResult of sqlResultSet) {
+      const sqlInfo = sqlResult.get();
+      placeInfoArr[sqlInfo.contentID] = sqlResult.get();
+    }
+  } catch (err) {
+    console.error('checkPlaceInfo() error');
+    console.error(err.message);
+    throw err;
+  }
+  for (const tripInfo of tripResult.items) {
+    const contentId = tripInfo.contentID;
+    if (placeInfoArr.hasOwnProperty(contentId)) {
+      const placeInfo = placeInfoArr[contentId];
       tripInfo.contentTypeID = placeInfo.contentTypeID;
       tripInfo.title = placeInfo.placeTitle;
       tripInfo.address = placeInfo.address;
@@ -342,7 +358,7 @@ async function checkPlaceInfo(userInfo, tripResult) {
       tripInfo.placeCount = 0;
       tripInfo.placeHeart = 0;
     }
-    tripInfo.heartFlag = await checkBasket(userInfo, tripInfo.contentID);
+    tripInfo.heartFlag = await checkBasket(userInfo, contentId);
   }
 }
 
