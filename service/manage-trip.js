@@ -20,10 +20,9 @@ async function callTourPlace(areaCodes, categoryCodes) {
   const service = 'areaBasedList';
   const tripParams = JSON.parse(JSON.stringify(baseParams));
   tripParams.params.listYN = 'Y'; // Y는 목록, N은 개수
-  // A: 제목순, B: 조회순
   // 대표 이미지가 반드시 있는 정렬 O: 제목순, P: 조회순
   tripParams.params.arrange = 'P';
-  tripParams.params.numOfRows = 100;
+  tripParams.params.numOfRows = 50;
   tripParams.params.pageNo = 1;
   const promises = [];
   // 아무데나 선택한 경우
