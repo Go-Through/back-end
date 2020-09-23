@@ -220,7 +220,7 @@ router.get('/event', authenticateUser, async (req, res ,next) => {
  * @apiGroup 4. My Info
  *
  * @apiParam {Boolean} acceptOption 수락하기-true, 거절하기-false
- * @apiParamRequest {JSON} Request-Response:
+ * @apiParamExample {JSON} Request-Response:
  * {
  *   "acceptOption": true
  * }
