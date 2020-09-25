@@ -38,7 +38,8 @@ async function callService(service, params) {
 function changeToTourName(testIdx, testArr) {
   const result = [];
   if (testIdx === 0) {
-    for (const locationName of testArr) {
+    for (let locationName of testArr) {
+      locationName = locationName.trim();
       switch (locationName) {
         case '아무데나':
           result.push(0);
@@ -73,7 +74,8 @@ function changeToTourName(testIdx, testArr) {
       }
     }
   } else if (testIdx === 1) {
-    for (const conceptName of testArr) {
+    for (let conceptName of testArr) {
+      conceptName = conceptName.trim();
       switch (conceptName) {
         case '전체':
           result.push(0);
@@ -103,57 +105,60 @@ function changeToTourName(testIdx, testArr) {
 }
 
 function changeToFrontName(testIdx, str) {
+  let result;
   if (testIdx === 0) {
     switch (str) {
       case '서울':
-        str = '서울특별시';
+        result = '서울특별시';
         break;
       case '인천':
-        str = '인천광역시';
+        result = '인천광역시';
         break;
       case '대전':
-        str = '대전광역시';
+        result = '대전광역시';
         break;
       case '대구':
-        str = '대구광역시';
+        result = '대구광역시';
         break;
       case '광주':
-        str = '광주광역시';
+        result = '광주광역시';
         break;
       case '울산':
-        str = '울산광역시';
+        result = '울산광역시';
         break;
       case '세종특별자치시':
-        str = '세종특별시';
+        result = '세종특별시';
         break;
       case '부산':
-        str = '부산광역시';
+        result = '부산광역시';
         break;
       default:
+        result = str;
         break;
     }
   } else if (testIdx === 1) {
     switch (str) {
       case '해수욕장':
-        str = '바다';
+        result = '바다';
         break;
       case '체험관광지':
-        str = '체험';
-        break
+        result = '체험';
+        break;
       case '미술관/화랑':
-        str = '미술관';
+        result = '미술관';
         break;
       case '레포츠':
-        str = '액티비티';
+        result = '액티비티';
         break;
       case '역사관광지':
-        str = '역사';
+        result = '역사';
         break;
       default:
+        result = str;
         break;
     }
   }
-  return str;
+  return result;
 }
 
 // Tour API 명칭 중 name 포함하는 컨셉들이나 지역 반환
@@ -162,48 +167,28 @@ async function findIncludeName(result, tableName, name) {
     result.push(0);
     return true;
   }
-  const { Op } = models.Sequelize;
   let statement;
-  let sqlResultSet;
+  let sqlResult;
   try {
     if (tableName === 'tourArea') {
       statement = {
         where: {
-          areaName: {
-            [Op.like]: `%${name}%`,
-          },
+          areaName: name,
           sigunguCode: null,
           sigunguName: null,
         },
         attributes: ['id', 'area_name'],
       };
-      sqlResultSet = await models.tourArea.findAll(statement);
+      sqlResult = await models.tourArea.findOne(statement);
     } else if (tableName === 'tourCategory') {
       statement = {
         where: {
           categoryName: name,
         },
       };
-      sqlResultSet = await models.tourCategory.findOne(statement);
-      // 같은 단어가 없을 시 단어를 포함하는 단어들을 찾는다.
-      if (!sqlResultSet) {
-        statement = {
-          where: {
-            categoryName: {
-              [Op.like]: `%${name}%`,
-            },
-          },
-          attributes: ['id'],
-        };
-        sqlResultSet = await models.tourCategory.findAll(statement);
-      } else {
-        result.push(sqlResultSet.get());
-        return true;
-      }
+      sqlResult = await models.tourCategory.findOne(statement);
     }
-    for (const sqlResult of sqlResultSet) {
-      result.push(sqlResult.get());
-    }
+    result.push(sqlResult.get());
   } catch (err) {
     console.error('findIncludeName() error');
     console.error(err.message);
@@ -247,8 +232,8 @@ function isPasswordValidate(pw) {
 function itemsToResult(result, tripResult) {
   if (Array.isArray(result.items.item)) {
     for (const content of result.items.item) {
-      // 여행 코스 컨텐츠는 추가 안함.
-      if (content.contenttypeid !== 25) {
+      // 여행 코스 컨텐츠는 추가 안함. 조회 이미지 있는 것만 넣기
+      if (content.contenttypeid !== 25 && content.firstimage) {
         const tempItem = {};
         tempItem.contentID = content.contentid;
         tempItem.contentTypeID = content.contenttypeid;
@@ -261,7 +246,7 @@ function itemsToResult(result, tripResult) {
   } else {
     if (result.items !== '') {
       const content = result.items.item;
-      if (content.contenttypeid !== 25) {
+      if (content.contenttypeid !== 25 && content.firstimage) {
         const tempItem = {};
         tempItem.contentID = content.contentid;
         tempItem.contentTypeID = content.contenttypeid;
@@ -303,7 +288,7 @@ function sortItems(sortOption, tripResult) {
 async function checkBasket(userInfo, contentId) {
   let result = false;
   try {
-    if (userInfo.basketPlaces) {
+    if (userInfo && userInfo.basketPlaces) {
       const userBasketInfo = userInfo.basketPlaces;
       // null 이 아니면
       if (userBasketInfo && userBasketInfo.basketItems) {

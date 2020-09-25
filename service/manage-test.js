@@ -163,7 +163,7 @@ function reFormatResult(testResult, coupleResult, attribute) {
 
   if (testResult[attribute].includes(0)) { // 나는 전체 선택했을 경우
     if (coupleResult[attribute].includes(0)) { // 커플은 전체 선택했을 경우
-      totalResult[attribute] = [];
+      totalResult[attribute] = [0];
     } else { // 커플은 전체 선택 안했을 경우
       totalResult[attribute] = coupleResult[attribute];
     }

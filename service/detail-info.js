@@ -227,19 +227,13 @@ async function getCommonInfo(userInfo, contentId, contentTypeId) {
         });
         if (sqlResult) {
           const areaInfo = sqlResult.get();
-          commonInfo.area = `${areaInfo.area_name} ${areaInfo.sigungu_name || null}`;
+          commonInfo.area = `${areaInfo.area_name} ${areaInfo.sigungu_name || ''}`;
         }
         commonInfo.title = info.title;
         commonInfo.address = info.addr1;
         commonInfo.heart = false;
-        let basketChkResult = false;
         if (userInfo) {
-          basketChkResult = await checkBasket(userInfo, info.contentid);
-        }
-        if (basketChkResult) {
-          commonInfo.heart = true;
-        } else {
-          commonInfo.heart = false;
+          commonInfo.heart = await checkBasket(userInfo, info.contentid);
         }
         commonInfo.introStr = info.overview;
         commonInfo.areaCode = info.areacode;
@@ -248,7 +242,6 @@ async function getCommonInfo(userInfo, contentId, contentTypeId) {
         commonInfo.mapy = info.mapy;
         commonInfo.homepage = info.homepage;
         commonInfo.firstimage = info.firstimage;
-        commonInfo.firstimage2 = info.firstimage2;
         result.common = commonInfo;
       } else { // Intro
         result.intro = makeIntroInfo(contentTypeId, info);
@@ -290,7 +283,7 @@ async function getCommonInfo(userInfo, contentId, contentTypeId) {
         contentTypeID: contentTypeId,
         placeTitle: result.common.title,
         address: result.common.address,
-        image: result.common.firstimage,
+        image: result.common.firstimage || null,
         placeCount: 1,
         placeHeart: 0,
       },
