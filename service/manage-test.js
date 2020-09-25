@@ -8,7 +8,6 @@ async function enrollTest(userIdx, testObject) {
   const conceptArr = testObject.concept;
   const tourPlaceArr = changeToTourName(0, placeArr);
   const tourConceptArr = changeToTourName(1, conceptArr);
-  console.log(tourPlaceArr, tourConceptArr);
   const tx = await models.sequelize.transaction();
   try {
     // Tour API 형식에 맞게 등록해주기
