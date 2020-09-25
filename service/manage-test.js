@@ -1,4 +1,6 @@
-const { models, changeToTourName, findIncludeName, changeToFrontName } = require('./init-module');
+const {
+  models, changeToTourName, findIncludeName, changeToFrontName,
+} = require('./init-module');
 
 // Test 등록하는 함수 - 유저 정보에도 입력하고, place 의 경우 도시 테이블에도 결과 반영해줘야한다.
 async function enrollTest(userIdx, testObject) {
@@ -6,6 +8,7 @@ async function enrollTest(userIdx, testObject) {
   const conceptArr = testObject.concept;
   const tourPlaceArr = changeToTourName(0, placeArr);
   const tourConceptArr = changeToTourName(1, conceptArr);
+  console.log(tourPlaceArr, tourConceptArr);
   const tx = await models.sequelize.transaction();
   try {
     // Tour API 형식에 맞게 등록해주기

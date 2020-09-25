@@ -196,15 +196,25 @@ router.get('/login/kakao/callback', passport.authenticate('kakao-signin', {
  * @apiSuccessExample {JSON} Success-Response:
  * HTTP/1.1 200 OK
  *  {
- *    message: "logout"
+ *    message: "fail"
  *  }
  */
 router.get('/logout', (req, res, next) => {
-  req.logout();
+  /* req.logout();
   req.session.save(() => {
     res.send({
       message: 'logout',
     });
+  }); */
+  req.session.destroy((err) => {
+    if (err) {
+      console.error(err);
+      res.redirect('/');
+    } else {
+      res.send({
+        message: 'logout',
+      });
+    }
   });
 });
 

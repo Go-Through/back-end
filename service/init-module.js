@@ -95,6 +95,9 @@ function changeToTourName(testIdx, testArr) {
         case '역사':
           result.push('역사관광지');
           break;
+        case '관광지':
+          result.push('관광단지');
+          break;
         default:
           result.push(conceptName);
           break;
@@ -153,6 +156,9 @@ function changeToFrontName(testIdx, str) {
       case '역사관광지':
         result = '역사';
         break;
+      case '관광단지':
+        result = '관광지';
+        break;
       default:
         result = str;
         break;
@@ -188,7 +194,10 @@ async function findIncludeName(result, tableName, name) {
       };
       sqlResult = await models.tourCategory.findOne(statement);
     }
-    result.push(sqlResult.get());
+    if (sqlResult) {
+      const info = sqlResult.get();
+      result.push(info);
+    }
   } catch (err) {
     console.error('findIncludeName() error');
     console.error(err.message);
