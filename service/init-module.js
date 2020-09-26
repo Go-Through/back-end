@@ -39,7 +39,8 @@ function changeToTourName(testIdx, testArr) {
   const result = [];
   if (testIdx === 0) {
     for (let locationName of testArr) {
-      locationName = locationName.trim();
+      const tuningResult = locationName.match(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]+/);
+      locationName = tuningResult[0].trim();
       switch (locationName) {
         case '아무데나':
           result.push(0);
@@ -75,7 +76,8 @@ function changeToTourName(testIdx, testArr) {
     }
   } else if (testIdx === 1) {
     for (let conceptName of testArr) {
-      conceptName = conceptName.trim();
+      const tuningResult = conceptName.match(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]+/);
+      conceptName = tuningResult[0].trim();
       switch (conceptName) {
         case '전체':
           result.push(0);
