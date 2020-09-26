@@ -126,7 +126,7 @@ router.put('/change-info', authenticateUser, async (req, res, next) => {
   try {
     const { updateObject } = req.body;
     if (updateObject) {
-      result = await updateUserInfo(req.user.id, req.user.socialType, updateObject);
+      result = await updateUserInfo(req.user, updateObject);
     } else {
       result = {
         message: 'Input body - updateObject',
@@ -168,7 +168,7 @@ router.post('/post-event', authenticateUser, async (req, res, next) => {
       result = await connectCouple(req.user.id, targetId, connectOption);
     } else {
       result = {
-        message: 'Input query - targetId, connectOption',
+        message: 'Input body - targetId, connectOption',
       };
     }
   } catch (err) {
@@ -240,7 +240,7 @@ router.post('/process-couple', authenticateUser, async (req, res, next) => {
       result = await dealWithEvent(req.user, acceptOption);
     } else {
       result = {
-        message: 'Input query - acceptOption',
+        message: 'Input body - acceptOption',
       };
     }
   } catch (err) {

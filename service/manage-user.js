@@ -44,21 +44,24 @@ async function getTargetUser(targetId, userId) {
   return idList;
 }
 
-async function updateUserInfo(userId, socialType, updateObject) {
+async function updateUserInfo(userInfo, updateObject) {
   if (!isIdValidate(updateObject.id)) return { message: 'ID length error' };
   if (!isPasswordValidate(updateObject.password)) return { message: 'PW length error' };
   const generateHash = (pw) => bcrypt.hashSync(pw, bcrypt.genSaltSync(8), null);
   try {
-    const sqlResult = await models.users.findOne({
-      where: {
-        memID: updateObject.id,
-        socialType,
-      },
-    });
-    if (sqlResult) {
-      return {
-        message: 'ID already exists',
-      };
+    // 다른 아이디일때만 존재하는지 체크
+    if (updateObject.id !== userInfo.memID) {
+      const sqlResult = await models.users.findOne({
+        where: {
+          memID: updateObject.id,
+          socialType: userInfo.socialType,
+        },
+      });
+      if (sqlResult) {
+        return {
+          message: 'ID already exists',
+        };
+      }
     }
     const userPassword = generateHash(updateObject.password);
     const nick = updateObject.nickname;
@@ -68,7 +71,7 @@ async function updateUserInfo(userId, socialType, updateObject) {
       memPW: userPassword,
     };
     await models.users.update(data, {
-      where: { id: userId },
+      where: { id: userInfo.id },
     });
     return {
       message: 'success',
