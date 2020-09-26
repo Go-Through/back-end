@@ -145,7 +145,7 @@ router.put('/change-info', authenticateUser, async (req, res, next) => {
  * @apiName post event
  * @apiGroup 4. My Info
  *
- * @apiParam {Number} targetId 등록하고자 하는 커플 아이디의 디비 인덱스 (get_candidate_id 참고)
+ * @apiParam {Number} [targetId] 등록하고자 하는 커플 아이디의 디비 인덱스 (get_candidate_id 참고)
  * @apiParam {Boolean} connectOption 연결 요청 = true, 연결 해제 = false
  * @apiParamExample {JSON} Request-Example:
  * {
@@ -164,8 +164,16 @@ router.post('/post-event', authenticateUser, async (req, res, next) => {
   let result;
   try {
     const { targetId, connectOption } = req.body;
-    if (targetId && connectOption) {
-      result = await connectCouple(req.user.id, targetId, connectOption);
+    if (connectOption === true) {
+      if (targetId) {
+        result = await connectCouple(req.user.id, targetId, connectOption);
+      } else {
+        result = {
+          message: 'Input body - targetId, connectOption',
+        };
+      }
+    } else if (connectOption === false) { // 연결 해제
+      result = await connectCouple(req.user.id, req.user.withID, connectOption);
     } else {
       result = {
         message: 'Input body - targetId, connectOption',

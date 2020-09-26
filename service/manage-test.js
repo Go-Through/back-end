@@ -160,18 +160,17 @@ async function getTest(userId) {
 }
 
 function reFormatResult(testResult, coupleResult, attribute) {
-  const totalResult = {};
-  let intersection;
+  let totalResult = [];
 
   if (testResult[attribute].includes(0)) { // 나는 전체 선택했을 경우
     if (coupleResult[attribute].includes(0)) { // 커플은 전체 선택했을 경우
-      totalResult[attribute] = [0];
+      totalResult = [0];
     } else { // 커플은 전체 선택 안했을 경우
-      totalResult[attribute] = coupleResult[attribute];
+      totalResult = coupleResult[attribute];
     }
   } else { // 나는 전체 선택 안했을 경우
     if (coupleResult[attribute].includes(0)) { // 커플은 전체 선택했을 경우
-      totalResult[attribute] = testResult[attribute];
+      totalResult = testResult[attribute];
     } else { // 둘 다 전체 선택 안했을 경우
       const idList = [[], []];
       for (const myInfo of testResult[attribute]) {
@@ -180,6 +179,8 @@ function reFormatResult(testResult, coupleResult, attribute) {
       for (const coupleInfo of coupleResult[attribute]) {
         idList[1].push(coupleInfo.id);
       }
+      console.log(idList[0], idList[1])
+      /*
       intersection = idList[0].filter((x) => idList[1].includes(x));
       for (const myInfo of testResult[attribute]) {
         if ((intersection.includes(myInfo.id)) && (!(totalResult[attribute].includes(myInfo.id)))) {
@@ -192,8 +193,17 @@ function reFormatResult(testResult, coupleResult, attribute) {
           totalResult[attribute].push(coupleInfo);
         }
       }
+      */
+      totalResult = [...idList[0]];
+      console.log(totalResult)
+      totalResult = idList[1].forEach((value) => {
+        if (!totalResult.includes(value)) {
+          totalResult.push(value);
+        }
+      });
     }
   }
+  console.log(totalResult)
   return totalResult;
 }
 
@@ -201,7 +211,7 @@ async function getTotalTest(userId) {
   const testResult = await getTest(userId);
   if (!testResult) return null;
   let coupleResult;
-  if (testResult.with !== null) {
+  if (testResult.with) {
     coupleResult = await getTest(testResult.with);
   } else {
     coupleResult = null;
@@ -212,8 +222,8 @@ async function getTotalTest(userId) {
     totalResult.area = testResult.area; // [id, areaCode, areaName]
     totalResult.category = testResult.category; // [id, categoryCode, categoryName]
   } else { // 커플 등록되어 있는데 테스트도 한 경우
-    totalResult.area = (reFormatResult(testResult, coupleResult, 'area', totalResult)).area;
-    totalResult.category = (reFormatResult(testResult, coupleResult, 'category', totalResult)).category;
+    totalResult.area = (reFormatResult(testResult, coupleResult, 'area', totalResult));
+    totalResult.category = (reFormatResult(testResult, coupleResult, 'category', totalResult));
   }
   totalResult.message = 'OK';
   return totalResult;
