@@ -179,31 +179,20 @@ function reFormatResult(testResult, coupleResult, attribute) {
       for (const coupleInfo of coupleResult[attribute]) {
         idList[1].push(coupleInfo.id);
       }
-      console.log(idList[0], idList[1])
-      /*
-      intersection = idList[0].filter((x) => idList[1].includes(x));
-      for (const myInfo of testResult[attribute]) {
-        if ((intersection.includes(myInfo.id)) && (!(totalResult[attribute].includes(myInfo.id)))) {
-          totalResult[attribute].push(myInfo);
-        }
-      }
-      for (const coupleInfo of coupleResult[attribute]) {
-        // eslint-disable-next-line max-len
-        if ((intersection.includes(coupleInfo.id)) && (!(totalResult[attribute].includes(coupleInfo.id)))) {
-          totalResult[attribute].push(coupleInfo);
-        }
-      }
-      */
-      totalResult = [...idList[0]];
-      console.log(totalResult)
-      totalResult = idList[1].forEach((value) => {
-        if (!totalResult.includes(value)) {
-          totalResult.push(value);
+      testResult[attribute].forEach((myInfo) => {
+        totalResult.push(myInfo);
+      });
+      const restId = [];
+      idList[1].forEach((value) => {
+        if (!idList[0].includes(value)) restId.push(value);
+      });
+      coupleResult[attribute].forEach((coupleInfo) => {
+        if (restId.includes(coupleInfo.id)) {
+          totalResult.push(coupleInfo);
         }
       });
     }
   }
-  console.log(totalResult)
   return totalResult;
 }
 
