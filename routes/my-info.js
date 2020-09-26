@@ -185,7 +185,8 @@ router.post('/post-event', authenticateUser, async (req, res, next) => {
  * @apiGroup 4. My Info
  *
  * @apiDescription event 있는지 없는지, 해제 이벤트가 있을 시 알아서 처리되며,
- * 이 사실을 알지 못함 message = 'disconnect', 등록 이벤트가 있을 시 요청한 아아디의 디비 인덱스와 아이디 리턴, 이벤트 없으면 'no event', 유저 없으면 'no user'
+ * 이 사실을 알지 못함 - message = 'disconnect',
+ * 등록 이벤트가 있을 시 요청한 아아디의 디비 인덱스와 아이디 리턴, 이벤트 없으면 'no event', 유저 없으면 'no user'
  *
  * @apiSuccess {JSON} object Event Info
  * @apiSuccessExample {JSON} Success-Response:

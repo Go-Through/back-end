@@ -314,12 +314,12 @@ router.get('/stay', async (req, res, next) => {
  *  }
  */
 router.post('/post-basket', authenticateUser, async (req, res, next) => {
-  let result = 'fail';
+  let result;
   try {
     const { contentId } = req.body;
     if (!contentId) {
       res.send({
-        message: 'Input query - contentId',
+        message: 'Input body - contentId',
       });
       return;
     }
