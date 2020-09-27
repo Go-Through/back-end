@@ -244,7 +244,8 @@ function itemsToResult(result, tripResult) {
   if (Array.isArray(result.items.item)) {
     for (const content of result.items.item) {
       // 여행 코스 컨텐츠는 추가 안함. 조회 이미지 있는 것만 넣기
-      if (content.contenttypeid !== 25 && content.firstimage) {
+      if (content.contenttypeid !== 25 && content.firstimage && content.addr1
+        && content.contentid && content.contenttypeid && content.title) {
         const tempItem = {};
         tempItem.contentID = content.contentid;
         tempItem.contentTypeID = content.contenttypeid;
@@ -257,7 +258,8 @@ function itemsToResult(result, tripResult) {
   } else {
     if (result.items !== '') {
       const content = result.items.item;
-      if (content.contenttypeid !== 25 && content.firstimage) {
+      if (content.contenttypeid !== 25 && content.firstimage && content.addr1
+        && content.contentid && content.contenttypeid && content.title) {
         const tempItem = {};
         tempItem.contentID = content.contentid;
         tempItem.contentTypeID = content.contenttypeid;
