@@ -58,12 +58,16 @@ async function connectCouple(userId, targetId, connectOption, tx) {
         where: { id: targetId },
         transaction: tx,
       });
+      await tx.commit();
     } else {
       await models.users.update(eventParams, {
         where: { id: targetId },
       });
     }
   } catch (err) {
+    if (tx) {
+      await tx.rollback();
+    }
     console.error('connectCouple() error');
     console.error(err.message);
     throw err;

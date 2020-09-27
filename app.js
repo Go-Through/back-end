@@ -50,7 +50,8 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
   store: sessionStore,
-}));
+  cookie: { maxAge: 3600000 * 3 },
+})); // 3시간 쿠키 만료
 app.use(passport.initialize());
 app.use(passport.session());
 passportConfig();
