@@ -344,12 +344,12 @@ async function postBasket(userInfo, contentId) {
           newItems.push(basketId);
         }
       }
+      const newLength = newItems.unshift(contentId);
+      if (newLength > 30) {
+        newItems.pop();
+      }
     } else { // 정보 없었으면
       newItems.push(contentId);
-    }
-    const newLength = newItems.unshift(contentId);
-    if (newLength > 30) {
-      newItems.pop();
     }
     // user 조회 업데이트, place count 업데이트
     await models.users.update({
