@@ -169,7 +169,7 @@ function changeToFrontName(testIdx, str) {
   return result;
 }
 
-// Tour API 명칭 중 name 포함하는 컨셉들이나 지역 반환
+// Tour API 명칭 중 name인 컨셉들이나 지역 반환
 async function findIncludeName(result, tableName, name) {
   if (name === 0) {
     result.push(0);
@@ -183,16 +183,13 @@ async function findIncludeName(result, tableName, name) {
         where: {
           areaName: name,
           sigunguCode: null,
-          sigunguName: null,
         },
         attributes: ['id', 'area_name'],
       };
       sqlResult = await models.tourArea.findOne(statement);
     } else if (tableName === 'tourCategory') {
       statement = {
-        where: {
-          categoryName: name,
-        },
+        where: { categoryName: name },
       };
       sqlResult = await models.tourCategory.findOne(statement);
     }
@@ -272,7 +269,7 @@ function itemsToResult(result, tripResult) {
   }
 }
 
-function sortItems(sortOption, tripResult) {
+function sortItems(sortOption = 0, tripResult) {
   let option = '';
   switch (sortOption) {
     case 0:

@@ -7,189 +7,210 @@ function makeIntroInfo(contentTypeId, introInfo) {
   const useInfo = {};
   const facilityInfo = {};
   // 키 값이 총 8가지 (이용안내 - 문의 및 안내, 이용시간, 쉬는날, 이용요금, 관람 소요 / 편의시설)
-  if (contentTypeId === 12) {
-    useInfo.key1 = {
-      key: '문의 및 안내',
-      value: introInfo.infocenter,
-    };
-    useInfo.key2 = {
-      key: '이용 시간',
-      value: introInfo.usetime,
-    };
-    useInfo.key3 = {
-      key: '이용 시기',
-      value: introInfo.useseason,
-    };
-    useInfo.key4 = {
-      key: '쉬는 날',
-      value: introInfo.restdate,
-    };
-    useInfo.key5 = {
-      key: '수용 인원',
-      value: introInfo.accomcount,
-    };
-    result.use = useInfo;
-    facilityInfo.key1 = `유모차 대여 ${introInfo.chkbabycarriage}`;
-    facilityInfo.key2 = `애완동물 ${introInfo.chkpet}`;
-    facilityInfo.key3 = `주차 ${introInfo.parking}`;
-    result.facility = facilityInfo;
-  } else if (contentTypeId === 14) {
-    useInfo.key1 = {
-      key: '문의 및 안내',
-      value: introInfo.infocenterculture,
-    };
-    useInfo.key2 = {
-      key: '이용 시간',
-      value: introInfo.usetimeculture,
-    };
-    useInfo.key3 = {
-      key: '쉬는 날',
-      value: introInfo.restdateculture,
-    };
-    useInfo.key4 = {
-      key: '이용 요금',
-      value: introInfo.usefee,
-    };
-    useInfo.key5 = {
-      key: '관람 소요 시간',
-      value: introInfo.spendtime,
-    };
-    result.use = useInfo;
-    facilityInfo.key1 = `유모차 대여 ${introInfo.chkbabycarriageculture}`;
-    facilityInfo.key2 = `애완동물 ${introInfo.chkpetculture}`;
-    facilityInfo.key3 = `주차 ${introInfo.parkingculture}`;
-    result.facility = facilityInfo;
-  } else if (contentTypeId === 15) {
-    useInfo.key1 = {
-      key: '문의 및 안내',
-      value: introInfo.eventhomepage,
-    };
-    useInfo.key2 = {
-      key: '이용 시간',
-      value: introInfo.playtime,
-    };
-    useInfo.key3 = {
-      key: '이용 요금',
-      value: introInfo.usefeefestival,
-    };
-    useInfo.key4 = {
-      key: '행사 시작일',
-      value: introInfo.eventstartdate,
-    };
-    useInfo.key5 = {
-      key: '행사 종료일',
-      value: introInfo.eventenddate,
-    };
-    result.use = useInfo;
-    facilityInfo.key1 = `예매처 ${introInfo.bookingplace}`;
-    facilityInfo.key2 = `할인 ${introInfo.discountinfofestival}`;
-    facilityInfo.key3 = '';
-    result.facility = facilityInfo;
-  } else if (contentTypeId === 28) {
-    useInfo.key1 = {
-      key: '문의 및 안내',
-      value: introInfo.infocenterleports,
-    };
-    useInfo.key2 = {
-      key: '이용 시간',
-      value: introInfo.usetimeleports,
-    };
-    useInfo.key3 = {
-      key: '쉬는 날',
-      value: introInfo.restdateleports,
-    };
-    useInfo.key4 = {
-      key: '이용 요금',
-      value: introInfo.usefeeleports,
-    };
-    useInfo.key5 = {
-      key: '예약 안내',
-      value: introInfo.reservation,
-    };
-    result.use = useInfo;
-    facilityInfo.key1 = `유모차 대여 ${introInfo.chkbabycarriageleports}`;
-    facilityInfo.key2 = `애완동물 ${introInfo.chkpetleports}`;
-    facilityInfo.key3 = `주차 ${introInfo.parkingleports}`;
-    result.facility = facilityInfo;
-  } else if (contentTypeId === 32) {
-    useInfo.key1 = {
-      key: '문의 및 안내',
-      value: introInfo.infocenterlodging,
-    };
-    useInfo.key2 = {
-      key: '입실 시간',
-      value: introInfo.checkintime,
-    };
-    useInfo.key3 = {
-      key: '퇴실 시간',
-      value: introInfo.checkouttime,
-    };
-    useInfo.key4 = {
-      key: '수용 가능 인원',
-      value: introInfo.accomcountlodging,
-    };
-    useInfo.key5 = {
-      key: '예약 안내',
-      value: introInfo.reservationurl,
-    };
-    result.use = useInfo;
-    facilityInfo.key1 = `바베큐 ${introInfo.barbecue}`;
-    facilityInfo.key2 = `객실 내 취사 ${introInfo.chkcooking}`;
-    facilityInfo.key3 = `주차 ${introInfo.parkinglodging}`;
-    result.facility = facilityInfo;
-  } else if (contentTypeId === 38) {
-    useInfo.key1 = {
-      key: '문의 및 안내',
-      value: introInfo.infocentershopping,
-    };
-    useInfo.key2 = {
-      key: '이용 시간',
-      value: introInfo.opentime,
-    };
-    useInfo.key3 = {
-      key: '쉬는 날',
-      value: introInfo.restdateshopping,
-    };
-    useInfo.key4 = {
-      key: '매장 안내',
-      value: introInfo.shopguide,
-    };
-    useInfo.key5 = {
-      key: '바로 가기',
-      value: introInfo.culturecenter,
-    };
-    result.use = useInfo;
-    facilityInfo.key1 = `유모차 대여 ${introInfo.chkbabycarriageshopping}`;
-    facilityInfo.key2 = `애완동물 ${introInfo.chkpetshopping}`;
-    facilityInfo.key3 = `주차 ${introInfo.parkingshopping}`;
-    result.facility = facilityInfo;
-  } else if (contentTypeId === 39) {
-    useInfo.key1 = {
-      key: '문의 및 안내',
-      value: introInfo.infocenterfood,
-    };
-    useInfo.key2 = {
-      key: '이용 시간',
-      value: introInfo.opentimefood,
-    };
-    useInfo.key3 = {
-      key: '쉬는 날',
-      value: introInfo.restdatefood,
-    };
-    useInfo.key4 = {
-      key: '포장',
-      value: introInfo.packing,
-    };
-    useInfo.key5 = {
-      key: '좌석 수',
-      value: introInfo.seat,
-    };
-    result.use = useInfo;
-    facilityInfo.key1 = `어린이 놀이방 ${introInfo.kidsfacility}`;
-    facilityInfo.key2 = `신용카드 ${introInfo.chkcreditcardfood}`;
-    facilityInfo.key3 = `주차 ${introInfo.parkingfood}`;
-    result.facility = facilityInfo;
+  switch (contentTypeId) {
+    case 12:
+      useInfo.key1 = {
+        key: '문의 및 안내',
+        value: introInfo.infocenter || '정보 없음',
+      };
+      useInfo.key2 = {
+        key: '이용 시간',
+        value: introInfo.usetime || '정보 없음',
+      };
+      useInfo.key3 = {
+        key: '이용 시기',
+        value: introInfo.useseason || '정보 없음',
+      };
+      useInfo.key4 = {
+        key: '쉬는 날',
+        value: introInfo.restdate || '정보 없음',
+      };
+      useInfo.key5 = {
+        key: '수용 인원',
+        value: introInfo.accomcount || '정보 없음',
+      };
+      facilityInfo.key1 = `유모차 대여 ${introInfo.chkbabycarriage || '정보 없음'}`;
+      facilityInfo.key2 = `애완동물 ${introInfo.chkpet || '정보 없음'}`;
+      facilityInfo.key3 = `주차 ${introInfo.parking || '정보 없음'}`;
+      break;
+    case 14:
+      useInfo.key1 = {
+        key: '문의 및 안내',
+        value: introInfo.infocenterculture || '정보 없음',
+      };
+      useInfo.key2 = {
+        key: '이용 시간',
+        value: introInfo.usetimeculture || '정보 없음',
+      };
+      useInfo.key3 = {
+        key: '쉬는 날',
+        value: introInfo.restdateculture || '정보 없음',
+      };
+      useInfo.key4 = {
+        key: '이용 요금',
+        value: introInfo.usefee || '정보 없음',
+      };
+      useInfo.key5 = {
+        key: '관람 소요 시간',
+        value: introInfo.spendtime || '정보 없음',
+      };
+      facilityInfo.key1 = `유모차 대여 ${introInfo.chkbabycarriageculture || '정보 없음'}`;
+      facilityInfo.key2 = `애완동물 ${introInfo.chkpetculture || '정보 없음'}`;
+      facilityInfo.key3 = `주차 ${introInfo.parkingculture || '정보 없음'}`;
+      break;
+    case 15:
+      useInfo.key1 = {
+        key: '문의 및 안내',
+        value: introInfo.eventhomepage || '정보 없음',
+      };
+      useInfo.key2 = {
+        key: '이용 시간',
+        value: introInfo.playtime || '정보 없음',
+      };
+      useInfo.key3 = {
+        key: '이용 요금',
+        value: introInfo.usefeefestival || '정보 없음',
+      };
+      useInfo.key4 = {
+        key: '행사 시작일',
+        value: introInfo.eventstartdate || '정보 없음',
+      };
+      useInfo.key5 = {
+        key: '행사 종료일',
+        value: introInfo.eventenddate || '정보 없음',
+      };
+      facilityInfo.key1 = `예매처 ${introInfo.bookingplace || '정보 없음'}`;
+      facilityInfo.key2 = `할인 ${introInfo.discountinfofestival || '정보 없음'}`;
+      facilityInfo.key3 = '';
+      break;
+    case 28:
+      useInfo.key1 = {
+        key: '문의 및 안내',
+        value: introInfo.infocenterleports || '정보 없음',
+      };
+      useInfo.key2 = {
+        key: '이용 시간',
+        value: introInfo.usetimeleports || '정보 없음',
+      };
+      useInfo.key3 = {
+        key: '쉬는 날',
+        value: introInfo.restdateleports || '정보 없음',
+      };
+      useInfo.key4 = {
+        key: '이용 요금',
+        value: introInfo.usefeeleports || '정보 없음',
+      };
+      useInfo.key5 = {
+        key: '예약 안내',
+        value: introInfo.reservation || '정보 없음',
+      };
+      facilityInfo.key1 = `유모차 대여 ${introInfo.chkbabycarriageleports || '정보 없음'}`;
+      facilityInfo.key2 = `애완동물 ${introInfo.chkpetleports || '정보 없음'}`;
+      facilityInfo.key3 = `주차 ${introInfo.parkingleports || '정보 없음'}`;
+      break;
+    case 32:
+      useInfo.key1 = {
+        key: '문의 및 안내',
+        value: introInfo.infocenterlodging || '정보 없음',
+      };
+      useInfo.key2 = {
+        key: '입실 시간',
+        value: introInfo.checkintime || '정보 없음',
+      };
+      useInfo.key3 = {
+        key: '퇴실 시간',
+        value: introInfo.checkouttime || '정보 없음',
+      };
+      useInfo.key4 = {
+        key: '수용 가능 인원',
+        value: introInfo.accomcountlodging || '정보 없음',
+      };
+      useInfo.key5 = {
+        key: '예약 안내',
+        value: introInfo.reservationurl || '정보 없음',
+      };
+      facilityInfo.key1 = `바베큐 ${introInfo.barbecue || '정보 없음'}`;
+      facilityInfo.key2 = `객실 내 취사 ${introInfo.chkcooking || '정보 없음'}`;
+      facilityInfo.key3 = `주차 ${introInfo.parkinglodging || '정보 없음'}`;
+      break;
+    case 38:
+      useInfo.key1 = {
+        key: '문의 및 안내',
+        value: introInfo.infocentershopping || '정보 없음',
+      };
+      useInfo.key2 = {
+        key: '이용 시간',
+        value: introInfo.opentime || '정보 없음',
+      };
+      useInfo.key3 = {
+        key: '쉬는 날',
+        value: introInfo.restdateshopping || '정보 없음',
+      };
+      useInfo.key4 = {
+        key: '매장 안내',
+        value: introInfo.shopguide || '정보 없음',
+      };
+      useInfo.key5 = {
+        key: '바로 가기',
+        value: introInfo.culturecenter || '정보 없음',
+      };
+      facilityInfo.key1 = `유모차 대여 ${introInfo.chkbabycarriageshopping || '정보 없음'}`;
+      facilityInfo.key2 = `애완동물 ${introInfo.chkpetshopping || '정보 없음'}`;
+      facilityInfo.key3 = `주차 ${introInfo.parkingshopping || '정보 없음'}`;
+      break;
+    case 39:
+      useInfo.key1 = {
+        key: '문의 및 안내',
+        value: introInfo.infocenterfood || '정보 없음',
+      };
+      useInfo.key2 = {
+        key: '이용 시간',
+        value: introInfo.opentimefood || '정보 없음',
+      };
+      useInfo.key3 = {
+        key: '쉬는 날',
+        value: introInfo.restdatefood || '정보 없음',
+      };
+      useInfo.key4 = {
+        key: '포장',
+        value: introInfo.packing || '정보 없음',
+      };
+      useInfo.key5 = {
+        key: '좌석 수',
+        value: introInfo.seat || '정보 없음',
+      };
+      facilityInfo.key1 = `어린이 놀이방 ${introInfo.kidsfacility || '정보 없음'}`;
+      facilityInfo.key2 = `신용카드 ${introInfo.chkcreditcardfood || '정보 없음'}`;
+      facilityInfo.key3 = `주차 ${introInfo.parkingfood || '정보 없음'}`;
+      break;
+    default:
+      useInfo.key1 = {
+        key: '문의 및 안내',
+        value: introInfo.infocenter || '정보 없음',
+      };
+      useInfo.key2 = {
+        key: '이용 시간',
+        value: introInfo.usetime || '정보 없음',
+      };
+      useInfo.key3 = {
+        key: '이용 시기',
+        value: introInfo.useseason || '정보 없음',
+      };
+      useInfo.key4 = {
+        key: '쉬는 날',
+        value: introInfo.restdate || '정보 없음',
+      };
+      useInfo.key5 = {
+        key: '수용 인원',
+        value: introInfo.accomcount || '정보 없음',
+      };
+      facilityInfo.key1 = `유모차 대여 ${introInfo.chkbabycarriage || '정보 없음'}`;
+      facilityInfo.key2 = `애완동물 ${introInfo.chkpet || '정보 없음'}`;
+      facilityInfo.key3 = `주차 ${introInfo.parking || '정보 없음'}`;
+      break;
   }
+  result.use = useInfo;
+  result.facility = facilityInfo;
   return result;
 }
 
@@ -323,6 +344,8 @@ async function postBasket(userInfo, contentId) {
           newItems.push(basketId);
         }
       }
+    } else { // 정보 없었으면
+      newItems.push(contentId);
     }
     const newLength = newItems.unshift(contentId);
     if (newLength > 30) {

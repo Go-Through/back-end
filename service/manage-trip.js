@@ -93,8 +93,15 @@ async function getTotalPlace(userId) {
     tripResult.totalCount = 0;
     tripResult.items = [];
     promiseResult = await callTourPlace(areaCodes, categoryCodes);
-    // 처음 했을 때 아무런 결과가 나오지 않을 때 - 맞는 게 없는 거임: 지역으로 추천
-    if (promiseResult.length === 1 && promiseResult[0].totalCount === 0) {
+    for (const result of promiseResult) {
+      if (result.numOfRows >= result.totalCount) {
+        tripResult.totalCount += result.totalCount;
+      } else {
+        tripResult.totalCount += result.numOfRows;
+      }
+    }
+    // 아무런 결과가 나오지 않을 때 - 맞는 게 없는 거임: 지역으로 추천
+    if (tripResult.totalCount === 0) {
       areaCodes = [];
       promiseResult = await callTourPlace(areaCodes, categoryCodes);
     }

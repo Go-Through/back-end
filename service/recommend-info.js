@@ -84,10 +84,10 @@ async function recommendStay(userInfo, areaCode, sigunguCode, contentId, sortOpt
       introParams.params.contentTypeId = item.contentTypeID;
       serviceResult = await callService('detailIntro', introParams);
       const info = serviceResult.items.item;
-      item.checkInTime = info.checkintime;
-      item.checkOutTime = info.checkouttime;
-      item.parkAvailable = info.parkinglodging;
-      item.contact = info.infocenterlodging;
+      item.checkInTime = info.checkintime || '정보 없음';
+      item.checkOutTime = info.checkouttime || '정보 없음';
+      item.parkAvailable = info.parkinglodging || '정보 없음';
+      item.contact = info.infocenterlodging || '정보 없음';
     }
     sortItems(sortOption, recommendStayResult);
     return recommendStayResult.items;

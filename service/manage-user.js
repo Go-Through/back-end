@@ -25,13 +25,13 @@ async function getTargetUser(targetId, userId) {
       },
       attributes: ['id', 'mem_id', 'nickname', 'created_at'],
     });
-    if (userId) {
+    if (userId) { // 자신의 아이디와 똑같은 것은 안 보여줌.
       for (const sqlResult of sqlResultSet) {
         if (sqlResult.get().id !== userId) {
           idList.push(sqlResult.get());
         }
       }
-    } else{
+    } else {
       for (const sqlResult of sqlResultSet) {
         idList.push(sqlResult.get());
       }

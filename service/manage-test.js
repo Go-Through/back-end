@@ -106,7 +106,7 @@ async function getTest(userId) {
     });
     const userInfo = sqlResult.get();
     const testId = userInfo.test_idx;
-    result.with = userInfo.with_id;
+    result.with = userInfo.with_id; // 커플 아이디 정보
     // 테스트 정보 없으면 여행지 정보 쓸 수 없음.
     if (testId === null) {
       return null;
@@ -198,9 +198,9 @@ function reFormatResult(testResult, coupleResult, attribute) {
 
 async function getTotalTest(userId) {
   const testResult = await getTest(userId);
-  if (!testResult) return null;
+  if (!testResult) return null; // 본인 테스트 안했을 때 result 없음
   let coupleResult;
-  if (testResult.with) {
+  if (testResult.with) { // 커플 있을 때
     coupleResult = await getTest(testResult.with);
   } else {
     coupleResult = null;
