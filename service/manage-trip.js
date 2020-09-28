@@ -15,6 +15,19 @@ function addCategoryParams(params, categoryCode) {
   }
 }
 
+function mixResult(itemArr) {
+  let i = 0;
+  let x;
+  const newItems = [];
+  while (itemArr.length > 0) {
+    x = Math.floor(Math.random() * itemArr.length);
+    newItems[i] = itemArr[x];
+    i += 1;
+    itemArr.splice(x, 1);
+  }
+  return newItems;
+}
+
 async function callTourPlace(areaCodes, categoryCodes) {
   // Trip Info
   const service = 'areaBasedList';
@@ -113,6 +126,7 @@ async function getTotalPlace(userId) {
       }
       itemsToResult(result, tripResult);
     }
+    tripResult.items = mixResult(tripResult.items);
     return tripResult;
   } catch (err) {
     console.error('getTotalPlace() error');
